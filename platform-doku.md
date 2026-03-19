@@ -18,7 +18,7 @@ Cluster (docker-desktop)
 └── ollama           → Lokales LLM (Ollama + Open WebUI)
 ```
 
-**Erreichbare Services (keine Port-Angabe nötig):**
+**Erreichbare Services:**
 - http://grafana.local → Grafana Dashboard
 - http://opencost.local → OpenCost Chargeback
 - http://ollama.local → Open WebUI (Ollama)
@@ -27,7 +27,7 @@ Cluster (docker-desktop)
 
 ## ⚠️ Wichtig: Cluster Kontext
 
-Dieser Stack läuft auf **docker-desktop**. Wenn du auch CRC (OpenShift Local) nutzt, stelle sicher dass der richtige Kontext aktiv ist:
+Dieser Stack läuft auf **docker-desktop**. Wenn du auch CRC (OpenShift Local) nutzt:
 
 ```bash
 kubectl config current-context   # sollte "docker-desktop" zeigen
@@ -36,7 +36,7 @@ kubectl config current-context   # sollte "docker-desktop" zeigen
 export KUBECONFIG=~/.kube/config
 ```
 
-**NIEMALS** `export KUBECONFIG=~/.crc/machines/crc/kubeconfig` in `~/.zshrc` eintragen — das bricht docker-desktop Befehle!
+**NIEMALS** `export KUBECONFIG=~/.crc/machines/crc/kubeconfig` in `~/.zshrc` eintragen!
 
 Für CRC nur temporär setzen:
 ```bash
@@ -128,8 +128,6 @@ grafana-password   # Passwort holen
 # Login: admin / <passwort>
 ```
 
-**Dashboard:** Dashboards → Kubernetes / Compute Resources / Namespace
-
 ---
 
 ## Phase 3 — Chargeback (OpenCost)
@@ -157,7 +155,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
 
-# /etc/hosts einmalig anpassen
+# /etc/hosts einmalig anpassen — dauerhaft auf 127.0.0.1
 sudo sh -c 'echo "127.0.0.1 grafana.local opencost.local ollama.local" >> /etc/hosts'
 
 # Ingress Ressourcen anwenden
@@ -165,20 +163,20 @@ kubectl apply -f ~/ingress.yaml
 kubectl get ingress -A
 ```
 
-### ⚠️ Bekanntes Problem: Ingress nach Docker Desktop Neustart
+### Warum 127.0.0.1 und Port-Forward?
 
-Nach jedem Docker Desktop Neustart:
-- Die External-IP des Ingress Controllers ändert sich (interne IP, nicht erreichbar von außen)
-- Das `ollama-start` Script löst das automatisch mit `sudo kubectl port-forward` auf Port 80
-- Beim ersten Start wird einmalig das sudo Passwort abgefragt
-- Falls Port 80 bereits belegt: `sudo pkill -f "port-forward svc/ingress-nginx"` dann neu starten
+Docker Desktop's LoadBalancer IP ist instabil und ändert sich nach Neustarts.  
+Die Lösung: `/etc/hosts` dauerhaft auf `127.0.0.1` — der `ollama-start` Script startet  
+immer einen `sudo kubectl port-forward` auf Port 80 als stabilen Tunnel.
+
+So ändert sich nie etwas an den URLs — egal wie oft Docker Desktop neugestartet wird.
 
 ---
 
 ## Ollama + Open WebUI (Helm Chart)
 
 ```bash
-ollama-start   # Pods starten + Port-Forward auf Port 80
+ollama-start   # Pods starten + stabiler Port-Forward auf Port 80
 ollama-stop    # Pods stoppen + RAM freigeben
 ```
 
@@ -222,14 +220,11 @@ kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=
 kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
 sleep 10
 
-# /etc/hosts auf 127.0.0.1 setzen falls nötig
-CURRENT_IP=$(grep "grafana.local" /etc/hosts | awk '{print $1}')
-if [ "$CURRENT_IP" != "127.0.0.1" ]; then
-  echo "🌐 /etc/hosts wird auf 127.0.0.1 gesetzt..."
-  sudo sed -i '' "s/.*grafana.local.*/127.0.0.1        grafana.local opencost.local ollama.local/" /etc/hosts
-fi
+# Alten Port-Forward killen falls noch aktiv
+sudo pkill -f "port-forward svc/ingress-nginx" 2>/dev/null
+sleep 2
 
-# Port-Forward auf Port 80 (sudo nötig für privilegierten Port)
+# Stabiler Port-Forward auf Port 80 — /etc/hosts bleibt immer 127.0.0.1
 sudo kubectl port-forward svc/ingress-nginx-controller 80:80 -n ingress-nginx &
 
 echo "✅ Done!"
@@ -248,6 +243,7 @@ wait
 echo "🛑 Stopping Ollama + Open WebUI..."
 pkill -f "port-forward svc/ollama-ollama" 2>/dev/null
 pkill -f "port-forward svc/ollama-open-webui" 2>/dev/null
+sudo pkill -f "port-forward svc/ingress-nginx" 2>/dev/null
 kubectl scale deployment ollama-ollama -n ollama --replicas=0
 kubectl scale deployment ollama-open-webui -n ollama --replicas=0
 echo "✅ Done! RAM freigegeben."
@@ -314,7 +310,7 @@ grafana-password
 monitoring-start
 monitoring-stop
 
-# Port 80 freigeben wenn belegt
+# Port-Forward manuell killen
 sudo pkill -f "port-forward svc/ingress-nginx"
 ```
 

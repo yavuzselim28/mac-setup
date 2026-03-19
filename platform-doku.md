@@ -25,7 +25,7 @@ Cluster (docker-desktop)
 
 ---
 
-## Phase 1 — Fundament (Namespaces, Quotas, RBAC)
+## Phase 1 — Fundament (Namespaces, Quotas, RBAC, LimitRange, NetworkPolicy)
 
 ### 1.1 Namespaces erstellen
 
@@ -62,7 +62,7 @@ ResourceQuotas begrenzen wie viel CPU, RAM und Pods ein Tenant verbrauchen darf.
 Das ist der technische Unterbau des Chargeback Modells — Quota = gebuchte Kapazität.
 
 **Wichtig:** Pods müssen `resources.requests` und `resources.limits` gesetzt haben,  
-sonst werden sie von der Quota abgelehnt!
+sonst werden sie von der Quota abgelehnt — deshalb gibt es LimitRange (siehe 1.4)!
 
 ```yaml
 # ~/quotas.yaml
@@ -124,15 +124,70 @@ kubectl apply -f ~/quotas.yaml
 kubectl get resourcequota -A
 ```
 
-**Logik:**
-- Phoenix ist ein größerer Kunde → mehr Quota
-- Atlas ist ein kleinerer Kunde → weniger Quota
-- Prod hat immer mehr Kapazität als Dev
+### 1.4 LimitRange
 
-### 1.4 RBAC (Role Based Access Control)
+LimitRange setzt Standardwerte für CPU/RAM wenn ein Pod keine Requests/Limits definiert.
 
-RBAC steuert wer was im Cluster darf.  
-Jeder Tenant bekommt eine Role (Berechtigungen) und ein RoleBinding (wer bekommt diese Role).
+**Warum wichtig?**  
+Ohne LimitRange kann ein Tenant einen Pod ohne Resource Requests starten — dann greift die Quota nicht und der Pod kann unbegrenzt Ressourcen fressen. LimitRange ist die Absicherung der ResourceQuota.
+
+**Zusammenspiel ResourceQuota + LimitRange:**
+- **ResourceQuota** → Gesamtbudget des Namespace (z.B. max 4 CPU total)
+- **LimitRange** → Standardwerte pro Container (z.B. default 100m CPU)
+
+```yaml
+# ~/limitrange.yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: tenant-limits
+  namespace: phoenix-dev
+spec:
+  limits:
+    - type: Container
+      default:            # Standard Limits wenn nichts angegeben
+        cpu: 200m
+        memory: 256Mi
+      defaultRequest:     # Standard Requests wenn nichts angegeben
+        cpu: 100m
+        memory: 128Mi
+      max:                # Maximale Werte pro Container
+        cpu: "2"
+        memory: 2Gi
+      min:                # Minimale Werte pro Container
+        cpu: 50m
+        memory: 64Mi
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: tenant-limits
+  namespace: atlas-dev
+spec:
+  limits:
+    - type: Container
+      default:
+        cpu: 200m
+        memory: 256Mi
+      defaultRequest:
+        cpu: 100m
+        memory: 128Mi
+      max:
+        cpu: "1"
+        memory: 1Gi
+      min:
+        cpu: 50m
+        memory: 64Mi
+```
+
+```bash
+kubectl apply -f ~/limitrange.yaml
+kubectl get limitrange -A
+```
+
+### 1.5 RBAC (Role Based Access Control)
+
+RBAC steuert wer was im Cluster darf.
 
 **Konzept:**
 - **Role** → definiert Berechtigungen (get, list, create, delete etc.)
@@ -195,16 +250,10 @@ kubectl apply -f ~/rbac.yaml
 kubectl get roles,rolebindings -A
 ```
 
-### 1.5 NetworkPolicies (Tenant Isolation)
+### 1.6 NetworkPolicies (Tenant Isolation)
 
 Standardmäßig kann jeder Pod mit jedem Pod im Cluster kommunizieren.  
 NetworkPolicies sind Firewalls zwischen Namespaces — Tenant A kann nicht auf Tenant B zugreifen.
-
-**Konzept:**
-- **podSelector** → für welche Pods gilt die Policy
-- **Ingress** → eingehender Traffic
-- **Egress** → ausgehender Traffic
-- **namespaceSelector** → welche Namespaces dürfen kommunizieren
 
 ```yaml
 # ~/networkpolicy.yaml — Phoenix Isolation
@@ -222,7 +271,7 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              tenant: phoenix   # nur Traffic von phoenix Namespaces erlaubt
+              tenant: phoenix
   egress:
     - to:
         - namespaceSelector:
@@ -289,9 +338,7 @@ kubectl get pods -n monitoring
 ### Grafana öffnen
 
 ```bash
-# Passwort holen
-grafana-password
-
+grafana-password   # Passwort holen
 # Browser: http://grafana.local
 # Login: admin / <passwort>
 ```
@@ -303,8 +350,7 @@ grafana-password
 ## Phase 3 — Chargeback (OpenCost)
 
 OpenCost misst die Kosten pro Namespace/Tenant.  
-Lokal: simulierte Preise (AWS us-east-1 Standard).  
-Auf ROSA: echte AWS Kosten.
+Lokal: simulierte Preise. Auf ROSA: echte AWS Kosten.
 
 **Verbindung zum PSF Modell:**
 - ResourceQuota = gebuchte Kapazität (Nenner im PSF)
@@ -330,8 +376,7 @@ kubectl get pods -l app.kubernetes.io/instance=opencost -n monitoring
 
 ## Phase 4 — Ingress (NGINX)
 
-Statt Port-Forwards sind alle Services über lokale URLs erreichbar.  
-Der Ingress Controller empfängt HTTP Traffic und leitet ihn zum richtigen Service weiter.
+Statt Port-Forwards sind alle Services über lokale URLs erreichbar.
 
 **Traffic Kette:**
 ```
@@ -342,78 +387,15 @@ Browser → grafana.local
         → Pod 10.244.0.8:3000
 ```
 
-### NGINX Ingress Controller installieren
-
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
-```
 
-### /etc/hosts anpassen
-
-```bash
+# /etc/hosts anpassen
 sudo sh -c 'echo "127.0.0.1 grafana.local opencost.local ollama.local" >> /etc/hosts'
-```
 
-### Ingress Ressourcen erstellen
-
-```yaml
-# ~/ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: monitoring-ingress
-  namespace: monitoring
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: grafana.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: monitoring-grafana
-                port:
-                  number: 80
-    - host: opencost.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: opencost
-                port:
-                  number: 9090
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ollama-ingress
-  namespace: ollama
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: ollama.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: ollama-open-webui
-                port:
-                  number: 8080
-```
-
-```bash
+# Ingress Ressourcen anwenden
 kubectl apply -f ~/ingress.yaml
 kubectl get ingress -A
 ```
@@ -456,6 +438,9 @@ kubectl get pods -A
 
 # Quota Verbrauch
 kubectl get resourcequota -A
+
+# LimitRange
+kubectl get limitrange -A
 
 # Roles und Bindings
 kubectl get roles,rolebindings -A
@@ -506,6 +491,7 @@ helm list -A
 | docker-desktop Cluster | ROSA Cluster auf AWS |
 | Namespace phoenix-dev | Namespace kunde-a-dev |
 | ResourceQuota | ResourceQuota |
+| LimitRange | LimitRange |
 | RBAC | RBAC + OpenShift Groups |
 | NetworkPolicy | NetworkPolicy |
 | Prometheus | Eigene Prometheus Instanz |

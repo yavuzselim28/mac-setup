@@ -138,7 +138,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
 
-# /etc/hosts anpassen
+# /etc/hosts einmalig anpassen
 sudo sh -c 'echo "127.0.0.1 grafana.local opencost.local ollama.local" >> /etc/hosts'
 
 # Ingress Ressourcen anwenden
@@ -149,7 +149,7 @@ kubectl get ingress -A
 ### ⚠️ Bekanntes Problem: Ingress IP nach Docker Desktop Neustart
 
 Nach jedem Docker Desktop Neustart kann sich die External-IP des Ingress Controllers ändern.  
-Das `ollama-start` Script erkennt die neue IP automatisch und aktualisiert `/etc/hosts`.
+Das `ollama-start` Script erkennt die neue IP automatisch und aktualisiert `/etc/hosts` — aber **nur wenn sich die IP wirklich geändert hat**. Das Passwort wird also nur bei Bedarf abgefragt.
 
 Manuell prüfen:
 ```bash
@@ -162,7 +162,7 @@ kubectl get svc ingress-nginx-controller -n ingress-nginx
 ## Ollama + Open WebUI (Helm Chart)
 
 ```bash
-ollama-start   # Pods starten + /etc/hosts automatisch updaten
+ollama-start   # Pods starten + /etc/hosts automatisch updaten wenn nötig
 ollama-stop    # Pods stoppen + RAM freigeben
 ```
 
@@ -198,16 +198,16 @@ kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=
 kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
 sleep 10
 
-# Ingress IP automatisch erkennen und /etc/hosts updaten
+# Ingress IP automatisch erkennen — nur updaten wenn IP sich geändert hat
 INGRESS_IP=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo "🌐 Ingress IP: $INGRESS_IP"
+CURRENT_IP=$(grep "grafana.local" /etc/hosts | awk '{print $1}')
 
-if [ -n "$INGRESS_IP" ]; then
+if [ -n "$INGRESS_IP" ] && [ "$INGRESS_IP" != "$CURRENT_IP" ]; then
+  echo "🌐 IP hat sich geändert: $CURRENT_IP → $INGRESS_IP"
   sudo sed -i '' "s/.*grafana.local.*/$INGRESS_IP        grafana.local opencost.local ollama.local/" /etc/hosts
   echo "✅ /etc/hosts aktualisiert"
 else
-  echo "⚠️ Keine Ingress IP — Port-Forward wird genutzt"
-  kubectl port-forward svc/ingress-nginx-controller 8080:80 -n ingress-nginx &
+  echo "🌐 IP unverändert: $CURRENT_IP"
 fi
 
 echo "✅ Done!"
@@ -275,7 +275,7 @@ kubectl logs <pod-name> -n <namespace>
 kubectl describe pod <pod-name> -n <namespace>
 
 # Deployment neu starten
-kubectl rollout restart deployment/<name> -n <namespace>
+kubectl rollout restart deployment/<n> -n <namespace>
 
 # Interaktive Cluster UI
 k9s

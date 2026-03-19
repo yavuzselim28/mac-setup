@@ -121,7 +121,7 @@ spec:
 
 ```bash
 kubectl apply -f ~/quotas.yaml
-kubectl get resourcequota -A   # Verbrauch vs. Limit anzeigen
+kubectl get resourcequota -A
 ```
 
 **Logik:**
@@ -195,6 +195,85 @@ kubectl apply -f ~/rbac.yaml
 kubectl get roles,rolebindings -A
 ```
 
+### 1.5 NetworkPolicies (Tenant Isolation)
+
+Standardmäßig kann jeder Pod mit jedem Pod im Cluster kommunizieren.  
+NetworkPolicies sind Firewalls zwischen Namespaces — Tenant A kann nicht auf Tenant B zugreifen.
+
+**Konzept:**
+- **podSelector** → für welche Pods gilt die Policy
+- **Ingress** → eingehender Traffic
+- **Egress** → ausgehender Traffic
+- **namespaceSelector** → welche Namespaces dürfen kommunizieren
+
+```yaml
+# ~/networkpolicy.yaml — Phoenix Isolation
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tenant-isolation
+  namespace: phoenix-dev
+spec:
+  podSelector: {}         # gilt für alle Pods in diesem Namespace
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              tenant: phoenix   # nur Traffic von phoenix Namespaces erlaubt
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              tenant: phoenix
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system   # DNS muss funktionieren
+```
+
+```yaml
+# ~/networkpolicy-atlas.yaml — Atlas Isolation
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tenant-isolation
+  namespace: atlas-dev
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              tenant: atlas
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              tenant: atlas
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+```
+
+```bash
+kubectl apply -f ~/networkpolicy.yaml
+kubectl apply -f ~/networkpolicy-atlas.yaml
+kubectl get networkpolicy -A
+```
+
+**Ergebnis:**
+- Phoenix Pods können nur mit Phoenix Pods reden
+- Atlas Pods können nur mit Atlas Pods reden
+- Kein Tenant kann den anderen sehen
+- DNS funktioniert weiterhin für beide
+
 ---
 
 ## Phase 2 — Monitoring (Prometheus + Grafana)
@@ -211,7 +290,7 @@ kubectl get pods -n monitoring
 
 ```bash
 # Passwort holen
-grafana-password   # (Alias, siehe unten)
+grafana-password
 
 # Browser: http://grafana.local
 # Login: admin / <passwort>
@@ -235,7 +314,6 @@ Auf ROSA: echte AWS Kosten.
 helm repo add opencost https://opencost.github.io/opencost-helm-chart
 helm repo update
 
-# OpenCost auf unseren Prometheus zeigen
 helm install opencost opencost/opencost -n monitoring \
   --set opencost.exporter.defaultClusterId=local \
   --set opencost.prometheus.internal.enabled=true \
@@ -253,8 +331,16 @@ kubectl get pods -l app.kubernetes.io/instance=opencost -n monitoring
 ## Phase 4 — Ingress (NGINX)
 
 Statt Port-Forwards sind alle Services über lokale URLs erreichbar.  
-Der Ingress Controller empfängt HTTP Traffic und leitet ihn zum richtigen Service weiter.  
-Auf ROSA übernimmt diese Rolle der OpenShift Router (HAProxy).
+Der Ingress Controller empfängt HTTP Traffic und leitet ihn zum richtigen Service weiter.
+
+**Traffic Kette:**
+```
+Browser → grafana.local
+  → /etc/hosts → 127.0.0.1
+    → NGINX Ingress (172.18.0.5)
+      → Service monitoring-grafana
+        → Pod 10.244.0.8:3000
+```
 
 ### NGINX Ingress Controller installieren
 
@@ -265,8 +351,6 @@ helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create
 ```
 
 ### /etc/hosts anpassen
-
-Damit dein Mac die lokalen URLs auflösen kann:
 
 ```bash
 sudo sh -c 'echo "127.0.0.1 grafana.local opencost.local ollama.local" >> /etc/hosts'
@@ -338,17 +422,9 @@ kubectl get ingress -A
 
 ## Ollama + Open WebUI (Helm Chart)
 
-Ollama läuft als eigenes Helm Chart im `ollama` Namespace.  
-Modelle werden auf einem PersistentVolume gespeichert — überleben Pod-Neustarts.
-
 ```bash
-# Starten (Pods hochfahren)
-ollama-start
-
-# Stoppen (Pods herunterfahren + RAM freigeben)
-ollama-stop
-
-# Browser: http://ollama.local
+ollama-start   # Pods starten → http://ollama.local
+ollama-stop    # Pods stoppen + RAM freigeben
 ```
 
 ### Modell pullen
@@ -370,38 +446,6 @@ alias grafana-password="kubectl --namespace monitoring get secrets monitoring-gr
 
 ---
 
-## Start/Stop Scripts
-
-### ~/ollama-k8s/start.sh
-
-```bash
-#!/bin/bash
-echo "🚀 Starting Ollama + Open WebUI..."
-kubectl scale deployment ollama-ollama -n ollama --replicas=1
-kubectl scale deployment ollama-open-webui -n ollama --replicas=1
-echo "⏳ Warte bis Pods ready sind..."
-kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=120s
-kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
-sleep 10
-echo "✅ Done!"
-echo "🤖 Open WebUI: http://ollama.local"
-echo "🔗 Ollama API: http://localhost:11434"
-```
-
-### ~/ollama-k8s/stop.sh
-
-```bash
-#!/bin/bash
-echo "🛑 Stopping Ollama + Open WebUI..."
-pkill -f "port-forward svc/ollama-ollama" 2>/dev/null
-pkill -f "port-forward svc/ollama-open-webui" 2>/dev/null
-kubectl scale deployment ollama-ollama -n ollama --replicas=0
-kubectl scale deployment ollama-open-webui -n ollama --replicas=0
-echo "✅ Done! RAM freigegeben."
-```
-
----
-
 ## Nützliche Befehle
 
 ```bash
@@ -410,19 +454,19 @@ kubectl get nodes
 kubectl get namespaces --show-labels
 kubectl get pods -A
 
-# Quota Verbrauch anzeigen
+# Quota Verbrauch
 kubectl get resourcequota -A
 
-# Alle Roles und Bindings
+# Roles und Bindings
 kubectl get roles,rolebindings -A
 
-# Ingress anzeigen
+# NetworkPolicies
+kubectl get networkpolicy -A
+
+# Ingress
 kubectl get ingress -A
 
-# Services anzeigen
-kubectl get svc -n monitoring
-
-# Logs eines Pods
+# Logs
 kubectl logs <pod-name> -n <namespace>
 
 # Pod Details
@@ -463,6 +507,7 @@ helm list -A
 | Namespace phoenix-dev | Namespace kunde-a-dev |
 | ResourceQuota | ResourceQuota |
 | RBAC | RBAC + OpenShift Groups |
+| NetworkPolicy | NetworkPolicy |
 | Prometheus | Eigene Prometheus Instanz |
 | OpenCost lokal | OpenCost auf ROSA |
 | Simulierte Kosten | Echte AWS Kosten |

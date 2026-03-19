@@ -18,7 +18,7 @@ Cluster (docker-desktop)
 └── ollama           → Lokales LLM (Ollama + Open WebUI)
 ```
 
-**Erreichbare Services:**
+**Erreichbare Services (keine Port-Angabe nötig):**
 - http://grafana.local → Grafana Dashboard
 - http://opencost.local → OpenCost Chargeback
 - http://ollama.local → Open WebUI (Ollama)
@@ -166,24 +166,26 @@ kubectl apply -f ~/ingress.yaml
 kubectl get ingress -A
 ```
 
-### ⚠️ Bekanntes Problem: Ingress IP nach Docker Desktop Neustart
+### ⚠️ Bekanntes Problem: Ingress nach Docker Desktop Neustart
 
-Nach jedem Docker Desktop Neustart kann sich die External-IP des Ingress Controllers ändern.  
-Das `ollama-start` Script erkennt die neue IP automatisch — Passwort wird nur abgefragt wenn sich die IP wirklich geändert hat.
+Nach jedem Docker Desktop Neustart:
+- Die External-IP des Ingress Controllers kann sich ändern (intern, nicht erreichbar)
+- Das `ollama-start` Script löst das automatisch mit `sudo kubectl port-forward` auf Port 80
+- Beim ersten Start wird einmalig das sudo Passwort abgefragt
 
 ---
 
 ## Ollama + Open WebUI (Helm Chart)
 
 ```bash
-ollama-start   # Pods starten + /etc/hosts automatisch updaten wenn nötig
+ollama-start   # Pods starten + Port-Forward auf Port 80
 ollama-stop    # Pods stoppen + RAM freigeben
 ```
 
 ### Modell pullen
 
 ```bash
-# Im zweiten Terminal während ollama-start läuft
+# Im zweiten Terminal
 kubectl port-forward svc/ollama-ollama 11434:11434 -n ollama &
 curl http://localhost:11434/api/pull -d '{"model": "llama3.1:8b"}'
 ```
@@ -220,17 +222,15 @@ kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=
 kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
 sleep 10
 
-# Ingress IP automatisch erkennen — nur updaten wenn IP sich geändert hat
-INGRESS_IP=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+# /etc/hosts auf 127.0.0.1 setzen falls nötig
 CURRENT_IP=$(grep "grafana.local" /etc/hosts | awk '{print $1}')
-
-if [ -n "$INGRESS_IP" ] && [ "$INGRESS_IP" != "$CURRENT_IP" ]; then
-  echo "🌐 IP hat sich geändert: $CURRENT_IP → $INGRESS_IP"
-  sudo sed -i '' "s/.*grafana.local.*/$INGRESS_IP        grafana.local opencost.local ollama.local/" /etc/hosts
-  echo "✅ /etc/hosts aktualisiert"
-else
-  echo "🌐 IP unverändert: $CURRENT_IP"
+if [ "$CURRENT_IP" != "127.0.0.1" ]; then
+  echo "🌐 /etc/hosts wird auf 127.0.0.1 gesetzt..."
+  sudo sed -i '' "s/.*grafana.local.*/127.0.0.1        grafana.local opencost.local ollama.local/" /etc/hosts
 fi
+
+# Port-Forward auf Port 80 (sudo nötig für privilegierten Port)
+sudo kubectl port-forward svc/ingress-nginx-controller 80:80 -n ingress-nginx &
 
 echo "✅ Done!"
 echo "🤖 Open WebUI: http://ollama.local"
@@ -290,7 +290,7 @@ kubectl get networkpolicy -A
 
 # Ingress
 kubectl get ingress -A
-kubectl get svc -n ingress-nginx   # Ingress IP prüfen
+kubectl get svc -n ingress-nginx
 
 # Logs
 kubectl logs <pod-name> -n <namespace>
@@ -299,7 +299,7 @@ kubectl logs <pod-name> -n <namespace>
 kubectl describe pod <pod-name> -n <namespace>
 
 # Deployment neu starten
-kubectl rollout restart deployment/<n> -n <namespace>
+kubectl rollout restart deployment/<name> -n <namespace>
 
 # Interaktive Cluster UI
 k9s

@@ -7,16 +7,16 @@ kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=
 kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
 sleep 10
 
-# Ingress IP automatisch erkennen und /etc/hosts updaten
+# Ingress IP automatisch erkennen
 INGRESS_IP=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo "🌐 Ingress IP: $INGRESS_IP"
+CURRENT_IP=$(grep "grafana.local" /etc/hosts | awk '{print $1}')
 
-if [ -n "$INGRESS_IP" ]; then
+if [ -n "$INGRESS_IP" ] && [ "$INGRESS_IP" != "$CURRENT_IP" ]; then
+  echo "🌐 IP hat sich geändert: $CURRENT_IP → $INGRESS_IP"
   sudo sed -i '' "s/.*grafana.local.*/$INGRESS_IP        grafana.local opencost.local ollama.local/" /etc/hosts
   echo "✅ /etc/hosts aktualisiert"
 else
-  echo "⚠️ Keine Ingress IP gefunden — Port-Forward wird genutzt"
-  kubectl port-forward svc/ingress-nginx-controller 8080:80 -n ingress-nginx &
+  echo "🌐 IP unverändert: $CURRENT_IP"
 fi
 
 echo "✅ Done!"

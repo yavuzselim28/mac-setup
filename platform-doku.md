@@ -58,9 +58,6 @@ kubectl create namespace atlas-prod
 
 ### 1.2 Labels setzen
 
-Labels verbinden alle Namespaces eines Tenants.  
-OpenCost nutzt diese Labels um Kosten pro Tenant zu aggregieren.
-
 ```bash
 kubectl label namespace phoenix-dev tenant=phoenix
 kubectl label namespace phoenix-prod tenant=phoenix
@@ -72,18 +69,12 @@ kubectl get namespaces --show-labels
 
 ### 1.3 ResourceQuotas
 
-Begrenzen wie viel CPU, RAM und Pods ein Tenant verbrauchen darf.  
-Quota = gebuchte Kapazität im PSF Modell.
-
 ```bash
 kubectl apply -f ~/quotas.yaml
 kubectl get resourcequota -A
 ```
 
 ### 1.4 LimitRange
-
-Setzt Standardwerte für CPU/RAM wenn ein Pod keine Requests/Limits definiert.  
-Ohne LimitRange kann ein Pod die Quota umgehen!
 
 ```bash
 kubectl apply -f ~/limitrange.yaml
@@ -92,16 +83,12 @@ kubectl get limitrange -A
 
 ### 1.5 RBAC
 
-Steuert wer was im Cluster darf.
-
 ```bash
 kubectl apply -f ~/rbac.yaml
 kubectl get roles,rolebindings -A
 ```
 
 ### 1.6 NetworkPolicies
-
-Firewall zwischen Namespaces — Tenant A kann nicht auf Tenant B zugreifen.
 
 ```bash
 kubectl apply -f ~/networkpolicy.yaml
@@ -118,7 +105,19 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 kubectl create namespace monitoring
 helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring
-kubectl get pods -n monitoring
+```
+
+### Persistenter Speicher für Prometheus
+
+Prometheus speichert Daten standardmäßig nur im RAM — nach Pod-Neustart sind sie weg.  
+Mit diesem Upgrade werden Monitoring-Daten dauerhaft auf einem PVC gespeichert:
+
+```bash
+helm upgrade monitoring prometheus-community/kube-prometheus-stack -n monitoring \
+  --set "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]=ReadWriteOnce" \
+  --set "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage=10Gi"
+
+kubectl get pvc -n monitoring   # PVC sollte "Bound" sein
 ```
 
 ### Grafana öffnen
@@ -169,9 +168,10 @@ kubectl get ingress -A
 ### ⚠️ Bekanntes Problem: Ingress nach Docker Desktop Neustart
 
 Nach jedem Docker Desktop Neustart:
-- Die External-IP des Ingress Controllers kann sich ändern (intern, nicht erreichbar)
+- Die External-IP des Ingress Controllers ändert sich (interne IP, nicht erreichbar von außen)
 - Das `ollama-start` Script löst das automatisch mit `sudo kubectl port-forward` auf Port 80
 - Beim ersten Start wird einmalig das sudo Passwort abgefragt
+- Falls Port 80 bereits belegt: `sudo pkill -f "port-forward svc/ingress-nginx"` dann neu starten
 
 ---
 
@@ -292,6 +292,9 @@ kubectl get networkpolicy -A
 kubectl get ingress -A
 kubectl get svc -n ingress-nginx
 
+# PVCs anzeigen
+kubectl get pvc -A
+
 # Logs
 kubectl logs <pod-name> -n <namespace>
 
@@ -299,7 +302,7 @@ kubectl logs <pod-name> -n <namespace>
 kubectl describe pod <pod-name> -n <namespace>
 
 # Deployment neu starten
-kubectl rollout restart deployment/<name> -n <namespace>
+kubectl rollout restart deployment/<n> -n <namespace>
 
 # Interaktive Cluster UI
 k9s
@@ -310,6 +313,9 @@ grafana-password
 # Monitoring starten/stoppen
 monitoring-start
 monitoring-stop
+
+# Port 80 freigeben wenn belegt
+sudo pkill -f "port-forward svc/ingress-nginx"
 ```
 
 ---
@@ -323,7 +329,7 @@ helm list -A
 | Name | Namespace | Chart | Beschreibung |
 |------|-----------|-------|--------------|
 | ollama | ollama | ollama-chart | Ollama + Open WebUI |
-| monitoring | monitoring | kube-prometheus-stack | Prometheus + Grafana |
+| monitoring | monitoring | kube-prometheus-stack | Prometheus + Grafana + Persistent Storage |
 | opencost | monitoring | opencost | Chargeback Tool |
 | ingress-nginx | ingress-nginx | ingress-nginx | NGINX Ingress Controller |
 
@@ -339,7 +345,7 @@ helm list -A
 | LimitRange | LimitRange |
 | RBAC | RBAC + OpenShift Groups |
 | NetworkPolicy | NetworkPolicy |
-| Prometheus | Eigene Prometheus Instanz |
+| Prometheus + PVC | Eigene Prometheus Instanz |
 | OpenCost lokal | OpenCost auf ROSA |
 | Simulierte Kosten | Echte AWS Kosten |
 | NGINX Ingress | HAProxy / OpenShift Router |

@@ -104,20 +104,30 @@ kubectl get networkpolicy -A
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 kubectl create namespace monitoring
-helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring
 ```
 
-### Persistenter Speicher für Prometheus
+### Installation mit persistentem Speicher
 
-Prometheus speichert Daten standardmäßig nur im RAM — nach Pod-Neustart sind sie weg.  
-Mit diesem Upgrade werden Monitoring-Daten dauerhaft auf einem PVC gespeichert:
+Prometheus und Grafana bekommen beide PVCs — Daten und Dashboard-Konfigurationen  
+bleiben dauerhaft erhalten, auch nach Pod-Neustarts oder Docker Desktop Neustart.
 
+```bash
+helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring \
+  --set "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]=ReadWriteOnce" \
+  --set "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage=10Gi" \
+  --set "grafana.persistence.enabled=true" \
+  --set "grafana.persistence.size=2Gi"
+```
+
+Falls bereits installiert (Upgrade):
 ```bash
 helm upgrade monitoring prometheus-community/kube-prometheus-stack -n monitoring \
   --set "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]=ReadWriteOnce" \
-  --set "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage=10Gi"
+  --set "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage=10Gi" \
+  --set "grafana.persistence.enabled=true" \
+  --set "grafana.persistence.size=2Gi"
 
-kubectl get pvc -n monitoring   # PVC sollte "Bound" sein
+kubectl get pvc -n monitoring   # PVCs sollten "Bound" sein
 ```
 
 ### Grafana öffnen
@@ -127,6 +137,8 @@ grafana-password   # Passwort holen
 # Browser: http://grafana.local
 # Login: admin / <passwort>
 ```
+
+**Dashboard:** Dashboards → Kubernetes / Compute Resources / Namespace
 
 ---
 
@@ -168,8 +180,6 @@ kubectl get ingress -A
 Docker Desktop's LoadBalancer IP ist instabil und ändert sich nach Neustarts.  
 Die Lösung: `/etc/hosts` dauerhaft auf `127.0.0.1` — der `ollama-start` Script startet  
 immer einen `sudo kubectl port-forward` auf Port 80 als stabilen Tunnel.
-
-So ändert sich nie etwas an den URLs — egal wie oft Docker Desktop neugestartet wird.
 
 ---
 
@@ -264,6 +274,16 @@ alias monitoring-stop="kubectl scale deployment monitoring-grafana monitoring-ku
 
 ---
 
+## Persistenter Speicher Übersicht
+
+| Komponente | PVC | Größe | Inhalt |
+|------------|-----|-------|--------|
+| Ollama | ollama-pvc | 10Gi | LLM Modelle |
+| Prometheus | auto-generiert | 10Gi | Metriken Historie |
+| Grafana | auto-generiert | 2Gi | Dashboard Konfigurationen |
+
+---
+
 ## Nützliche Befehle
 
 ```bash
@@ -272,30 +292,18 @@ kubectl get nodes
 kubectl get namespaces --show-labels
 kubectl get pods -A
 
+# PVCs anzeigen
+kubectl get pvc -A
+
 # Quota Verbrauch
 kubectl get resourcequota -A
-
-# LimitRange
-kubectl get limitrange -A
-
-# Roles und Bindings
-kubectl get roles,rolebindings -A
-
-# NetworkPolicies
-kubectl get networkpolicy -A
 
 # Ingress
 kubectl get ingress -A
 kubectl get svc -n ingress-nginx
 
-# PVCs anzeigen
-kubectl get pvc -A
-
 # Logs
 kubectl logs <pod-name> -n <namespace>
-
-# Pod Details
-kubectl describe pod <pod-name> -n <namespace>
 
 # Deployment neu starten
 kubectl rollout restart deployment/<n> -n <namespace>
@@ -325,7 +333,7 @@ helm list -A
 | Name | Namespace | Chart | Beschreibung |
 |------|-----------|-------|--------------|
 | ollama | ollama | ollama-chart | Ollama + Open WebUI |
-| monitoring | monitoring | kube-prometheus-stack | Prometheus + Grafana + Persistent Storage |
+| monitoring | monitoring | kube-prometheus-stack | Prometheus + Grafana (beide mit PVC) |
 | opencost | monitoring | opencost | Chargeback Tool |
 | ingress-nginx | ingress-nginx | ingress-nginx | NGINX Ingress Controller |
 
@@ -342,6 +350,7 @@ helm list -A
 | RBAC | RBAC + OpenShift Groups |
 | NetworkPolicy | NetworkPolicy |
 | Prometheus + PVC | Eigene Prometheus Instanz |
+| Grafana + PVC | Grafana mit persistentem Storage |
 | OpenCost lokal | OpenCost auf ROSA |
 | Simulierte Kosten | Echte AWS Kosten |
 | NGINX Ingress | HAProxy / OpenShift Router |

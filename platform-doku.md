@@ -18,7 +18,7 @@ Cluster (docker-desktop)
 └── ollama           → Lokales LLM (Ollama + Open WebUI)
 ```
 
-**Erreichbare Services (keine Port-Forwards nötig!):**
+**Erreichbare Services:**
 - http://grafana.local → Grafana Dashboard
 - http://opencost.local → OpenCost Chargeback
 - http://ollama.local → Open WebUI (Ollama)
@@ -28,9 +28,6 @@ Cluster (docker-desktop)
 ## Phase 1 — Fundament (Namespaces, Quotas, RBAC, LimitRange, NetworkPolicy)
 
 ### 1.1 Namespaces erstellen
-
-Ein Namespace ist eine logische Isolationsschicht im Cluster.  
-Jeder Tenant bekommt eigene Namespaces — dev und prod getrennt.
 
 ```bash
 kubectl create namespace phoenix-dev
@@ -42,82 +39,21 @@ kubectl create namespace atlas-prod
 ### 1.2 Labels setzen
 
 Labels verbinden alle Namespaces eines Tenants.  
-OpenCost nutzt diese Labels später um Kosten pro Tenant zu aggregieren.
+OpenCost nutzt diese Labels um Kosten pro Tenant zu aggregieren.
 
 ```bash
 kubectl label namespace phoenix-dev tenant=phoenix
 kubectl label namespace phoenix-prod tenant=phoenix
 kubectl label namespace atlas-dev tenant=atlas
 kubectl label namespace atlas-prod tenant=atlas
-```
 
-Verifizieren:
-```bash
 kubectl get namespaces --show-labels
 ```
 
 ### 1.3 ResourceQuotas
 
-ResourceQuotas begrenzen wie viel CPU, RAM und Pods ein Tenant verbrauchen darf.  
-Das ist der technische Unterbau des Chargeback Modells — Quota = gebuchte Kapazität.
-
-**Wichtig:** Pods müssen `resources.requests` und `resources.limits` gesetzt haben,  
-sonst werden sie von der Quota abgelehnt — deshalb gibt es LimitRange (siehe 1.4)!
-
-```yaml
-# ~/quotas.yaml
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: phoenix-quota
-  namespace: phoenix-dev
-spec:
-  hard:
-    requests.cpu: "2"       # Minimum reserviert
-    requests.memory: 4Gi   # Minimum reserviert
-    limits.cpu: "4"         # Maximum erlaubt
-    limits.memory: 8Gi     # Maximum erlaubt
-    pods: "10"              # Maximale Pod-Anzahl
----
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: phoenix-quota
-  namespace: phoenix-prod
-spec:
-  hard:
-    requests.cpu: "4"
-    requests.memory: 8Gi
-    limits.cpu: "8"
-    limits.memory: 16Gi
-    pods: "20"
----
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: atlas-quota
-  namespace: atlas-dev
-spec:
-  hard:
-    requests.cpu: "1"
-    requests.memory: 2Gi
-    limits.cpu: "2"
-    limits.memory: 4Gi
-    pods: "5"
----
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: atlas-quota
-  namespace: atlas-prod
-spec:
-  hard:
-    requests.cpu: "2"
-    requests.memory: 4Gi
-    limits.cpu: "4"
-    limits.memory: 8Gi
-    pods: "10"
-```
+Begrenzen wie viel CPU, RAM und Pods ein Tenant verbrauchen darf.  
+Quota = gebuchte Kapazität im PSF Modell.
 
 ```bash
 kubectl apply -f ~/quotas.yaml
@@ -126,202 +62,32 @@ kubectl get resourcequota -A
 
 ### 1.4 LimitRange
 
-LimitRange setzt Standardwerte für CPU/RAM wenn ein Pod keine Requests/Limits definiert.
-
-**Warum wichtig?**  
-Ohne LimitRange kann ein Tenant einen Pod ohne Resource Requests starten — dann greift die Quota nicht und der Pod kann unbegrenzt Ressourcen fressen. LimitRange ist die Absicherung der ResourceQuota.
-
-**Zusammenspiel ResourceQuota + LimitRange:**
-- **ResourceQuota** → Gesamtbudget des Namespace (z.B. max 4 CPU total)
-- **LimitRange** → Standardwerte pro Container (z.B. default 100m CPU)
-
-```yaml
-# ~/limitrange.yaml
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: tenant-limits
-  namespace: phoenix-dev
-spec:
-  limits:
-    - type: Container
-      default:            # Standard Limits wenn nichts angegeben
-        cpu: 200m
-        memory: 256Mi
-      defaultRequest:     # Standard Requests wenn nichts angegeben
-        cpu: 100m
-        memory: 128Mi
-      max:                # Maximale Werte pro Container
-        cpu: "2"
-        memory: 2Gi
-      min:                # Minimale Werte pro Container
-        cpu: 50m
-        memory: 64Mi
----
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: tenant-limits
-  namespace: atlas-dev
-spec:
-  limits:
-    - type: Container
-      default:
-        cpu: 200m
-        memory: 256Mi
-      defaultRequest:
-        cpu: 100m
-        memory: 128Mi
-      max:
-        cpu: "1"
-        memory: 1Gi
-      min:
-        cpu: 50m
-        memory: 64Mi
-```
+Setzt Standardwerte für CPU/RAM wenn ein Pod keine Requests/Limits definiert.  
+Ohne LimitRange kann ein Pod die Quota umgehen!
 
 ```bash
 kubectl apply -f ~/limitrange.yaml
 kubectl get limitrange -A
 ```
 
-### 1.5 RBAC (Role Based Access Control)
+### 1.5 RBAC
 
-RBAC steuert wer was im Cluster darf.
-
-**Konzept:**
-- **Role** → definiert Berechtigungen (get, list, create, delete etc.)
-- **RoleBinding** → verbindet einen User mit einer Role
-- **Scope** → Roles gelten nur im jeweiligen Namespace
-
-```yaml
-# ~/rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: tenant-role
-  namespace: phoenix-dev
-rules:
-  - apiGroups: ["", "apps"]
-    resources: ["pods", "deployments", "services", "configmaps"]
-    verbs: ["get", "list", "watch", "create", "update", "delete"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: phoenix-binding
-  namespace: phoenix-dev
-subjects:
-  - kind: User
-    name: phoenix-user
-    apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: Role
-  name: tenant-role
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: tenant-role
-  namespace: atlas-dev
-rules:
-  - apiGroups: ["", "apps"]
-    resources: ["pods", "deployments", "services", "configmaps"]
-    verbs: ["get", "list", "watch", "create", "update", "delete"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: atlas-binding
-  namespace: atlas-dev
-subjects:
-  - kind: User
-    name: atlas-user
-    apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: Role
-  name: tenant-role
-  apiGroup: rbac.authorization.k8s.io
-```
+Steuert wer was im Cluster darf.
 
 ```bash
 kubectl apply -f ~/rbac.yaml
 kubectl get roles,rolebindings -A
 ```
 
-### 1.6 NetworkPolicies (Tenant Isolation)
+### 1.6 NetworkPolicies
 
-Standardmäßig kann jeder Pod mit jedem Pod im Cluster kommunizieren.  
-NetworkPolicies sind Firewalls zwischen Namespaces — Tenant A kann nicht auf Tenant B zugreifen.
-
-```yaml
-# ~/networkpolicy.yaml — Phoenix Isolation
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: tenant-isolation
-  namespace: phoenix-dev
-spec:
-  podSelector: {}         # gilt für alle Pods in diesem Namespace
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              tenant: phoenix
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              tenant: phoenix
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system   # DNS muss funktionieren
-```
-
-```yaml
-# ~/networkpolicy-atlas.yaml — Atlas Isolation
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: tenant-isolation
-  namespace: atlas-dev
-spec:
-  podSelector: {}
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              tenant: atlas
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              tenant: atlas
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-```
+Firewall zwischen Namespaces — Tenant A kann nicht auf Tenant B zugreifen.
 
 ```bash
 kubectl apply -f ~/networkpolicy.yaml
 kubectl apply -f ~/networkpolicy-atlas.yaml
 kubectl get networkpolicy -A
 ```
-
-**Ergebnis:**
-- Phoenix Pods können nur mit Phoenix Pods reden
-- Atlas Pods können nur mit Atlas Pods reden
-- Kein Tenant kann den anderen sehen
-- DNS funktioniert weiterhin für beide
 
 ---
 
@@ -349,13 +115,6 @@ grafana-password   # Passwort holen
 
 ## Phase 3 — Chargeback (OpenCost)
 
-OpenCost misst die Kosten pro Namespace/Tenant.  
-Lokal: simulierte Preise. Auf ROSA: echte AWS Kosten.
-
-**Verbindung zum PSF Modell:**
-- ResourceQuota = gebuchte Kapazität (Nenner im PSF)
-- OpenCost = tatsächlicher Verbrauch (Zähler im PSF)
-
 ```bash
 helm repo add opencost https://opencost.github.io/opencost-helm-chart
 helm repo update
@@ -366,8 +125,6 @@ helm install opencost opencost/opencost -n monitoring \
   --set opencost.prometheus.internal.serviceName=monitoring-kube-prometheus-prometheus \
   --set opencost.prometheus.internal.namespaceName=monitoring \
   --set opencost.prometheus.internal.port=9090
-
-kubectl get pods -l app.kubernetes.io/instance=opencost -n monitoring
 ```
 
 **Browser:** http://opencost.local
@@ -375,17 +132,6 @@ kubectl get pods -l app.kubernetes.io/instance=opencost -n monitoring
 ---
 
 ## Phase 4 — Ingress (NGINX)
-
-Statt Port-Forwards sind alle Services über lokale URLs erreichbar.
-
-**Traffic Kette:**
-```
-Browser → grafana.local
-  → /etc/hosts → 127.0.0.1
-    → NGINX Ingress (172.18.0.5)
-      → Service monitoring-grafana
-        → Pod 10.244.0.8:3000
-```
 
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -400,19 +146,89 @@ kubectl apply -f ~/ingress.yaml
 kubectl get ingress -A
 ```
 
+### ⚠️ Bekanntes Problem: Ingress IP nach Docker Desktop Neustart
+
+Nach jedem Docker Desktop Neustart kann sich die External-IP des Ingress Controllers ändern.  
+Das `ollama-start` Script erkennt die neue IP automatisch und aktualisiert `/etc/hosts`.
+
+Manuell prüfen:
+```bash
+kubectl get svc ingress-nginx-controller -n ingress-nginx
+# EXTERNAL-IP anschauen
+```
+
 ---
 
 ## Ollama + Open WebUI (Helm Chart)
 
 ```bash
-ollama-start   # Pods starten → http://ollama.local
+ollama-start   # Pods starten + /etc/hosts automatisch updaten
 ollama-stop    # Pods stoppen + RAM freigeben
 ```
 
 ### Modell pullen
 
 ```bash
+# Im zweiten Terminal während ollama-start läuft
 curl http://localhost:11434/api/pull -d '{"model": "llama3.1:8b"}'
+```
+
+### Empfohlene Modelle für M5 Pro 64GB
+
+| Modell | Größe | Empfehlung |
+|--------|-------|------------|
+| llama3.2:3b | ~2GB | Schnell, gut für Tests |
+| llama3.1:8b | ~5GB | Beste Balance ✅ |
+| mistral:7b | ~4GB | Sehr gut für Code |
+| llama3.3:70b | ~43GB | Braucht fast gesamten RAM |
+
+---
+
+## Start/Stop Scripts
+
+### ~/ollama-k8s/start.sh
+
+```bash
+#!/bin/bash
+echo "🚀 Starting Ollama + Open WebUI..."
+kubectl scale deployment ollama-ollama -n ollama --replicas=1
+kubectl scale deployment ollama-open-webui -n ollama --replicas=1
+echo "⏳ Warte bis Pods ready sind..."
+kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=120s
+kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
+sleep 10
+
+# Ingress IP automatisch erkennen und /etc/hosts updaten
+INGRESS_IP=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "🌐 Ingress IP: $INGRESS_IP"
+
+if [ -n "$INGRESS_IP" ]; then
+  sudo sed -i '' "s/.*grafana.local.*/$INGRESS_IP        grafana.local opencost.local ollama.local/" /etc/hosts
+  echo "✅ /etc/hosts aktualisiert"
+else
+  echo "⚠️ Keine Ingress IP — Port-Forward wird genutzt"
+  kubectl port-forward svc/ingress-nginx-controller 8080:80 -n ingress-nginx &
+fi
+
+echo "✅ Done!"
+echo "🤖 Open WebUI: http://ollama.local"
+echo "🔗 Grafana: http://grafana.local"
+echo "🔗 OpenCost: http://opencost.local"
+echo ""
+echo "Press Ctrl+C to stop"
+wait
+```
+
+### ~/ollama-k8s/stop.sh
+
+```bash
+#!/bin/bash
+echo "🛑 Stopping Ollama + Open WebUI..."
+pkill -f "port-forward svc/ollama-ollama" 2>/dev/null
+pkill -f "port-forward svc/ollama-open-webui" 2>/dev/null
+kubectl scale deployment ollama-ollama -n ollama --replicas=0
+kubectl scale deployment ollama-open-webui -n ollama --replicas=0
+echo "✅ Done! RAM freigegeben."
 ```
 
 ---
@@ -450,6 +266,7 @@ kubectl get networkpolicy -A
 
 # Ingress
 kubectl get ingress -A
+kubectl get svc -n ingress-nginx   # Ingress IP prüfen
 
 # Logs
 kubectl logs <pod-name> -n <namespace>

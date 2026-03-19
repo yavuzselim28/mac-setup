@@ -25,6 +25,26 @@ Cluster (docker-desktop)
 
 ---
 
+## ⚠️ Wichtig: Cluster Kontext
+
+Dieser Stack läuft auf **docker-desktop**. Wenn du auch CRC (OpenShift Local) nutzt, stelle sicher dass der richtige Kontext aktiv ist:
+
+```bash
+kubectl config current-context   # sollte "docker-desktop" zeigen
+
+# Falls CRC aktiv ist, zurück zu docker-desktop:
+export KUBECONFIG=~/.kube/config
+```
+
+**NIEMALS** `export KUBECONFIG=~/.crc/machines/crc/kubeconfig` in `~/.zshrc` eintragen — das bricht docker-desktop Befehle!
+
+Für CRC nur temporär setzen:
+```bash
+export KUBECONFIG=~/.crc/machines/crc/kubeconfig   # nur für diese Terminal Session
+```
+
+---
+
 ## Phase 1 — Fundament (Namespaces, Quotas, RBAC, LimitRange, NetworkPolicy)
 
 ### 1.1 Namespaces erstellen
@@ -149,13 +169,7 @@ kubectl get ingress -A
 ### ⚠️ Bekanntes Problem: Ingress IP nach Docker Desktop Neustart
 
 Nach jedem Docker Desktop Neustart kann sich die External-IP des Ingress Controllers ändern.  
-Das `ollama-start` Script erkennt die neue IP automatisch und aktualisiert `/etc/hosts` — aber **nur wenn sich die IP wirklich geändert hat**. Das Passwort wird also nur bei Bedarf abgefragt.
-
-Manuell prüfen:
-```bash
-kubectl get svc ingress-nginx-controller -n ingress-nginx
-# EXTERNAL-IP anschauen
-```
+Das `ollama-start` Script erkennt die neue IP automatisch — Passwort wird nur abgefragt wenn sich die IP wirklich geändert hat.
 
 ---
 
@@ -170,7 +184,14 @@ ollama-stop    # Pods stoppen + RAM freigeben
 
 ```bash
 # Im zweiten Terminal während ollama-start läuft
+kubectl port-forward svc/ollama-ollama 11434:11434 -n ollama &
 curl http://localhost:11434/api/pull -d '{"model": "llama3.1:8b"}'
+```
+
+### Modell löschen
+
+```bash
+curl -X DELETE http://localhost:11434/api/delete -d '{"model": "modellname"}'
 ```
 
 ### Empfohlene Modelle für M5 Pro 64GB
@@ -180,7 +201,8 @@ curl http://localhost:11434/api/pull -d '{"model": "llama3.1:8b"}'
 | llama3.2:3b | ~2GB | Schnell, gut für Tests |
 | llama3.1:8b | ~5GB | Beste Balance ✅ |
 | mistral:7b | ~4GB | Sehr gut für Code |
-| llama3.3:70b | ~43GB | Braucht fast gesamten RAM |
+| mixtral:8x7b | ~26GB | Stärkstes was komfortabel läuft |
+| llama3.3:70b | ~43GB | Zu groß mit laufendem Stack |
 
 ---
 
@@ -240,6 +262,8 @@ alias ollama-start="~/ollama-k8s/start.sh"
 alias ollama-stop="~/ollama-k8s/stop.sh"
 alias grafana-pass="kubectl --namespace monitoring get secrets monitoring-grafana -o jsonpath=\"{.data.admin-password}\" | base64 -d ; echo"
 alias grafana-password="kubectl --namespace monitoring get secrets monitoring-grafana -o jsonpath=\"{.data.admin-password}\" | base64 -d ; echo"
+alias monitoring-start="kubectl scale deployment monitoring-grafana monitoring-kube-state-metrics opencost -n monitoring --replicas=1 && kubectl scale statefulset prometheus-monitoring-kube-prometheus-prometheus alertmanager-monitoring-kube-prometheus-alertmanager -n monitoring --replicas=1"
+alias monitoring-stop="kubectl scale deployment monitoring-grafana monitoring-kube-state-metrics opencost -n monitoring --replicas=0 && kubectl scale statefulset prometheus-monitoring-kube-prometheus-prometheus alertmanager-monitoring-kube-prometheus-alertmanager -n monitoring --replicas=0"
 ```
 
 ---
@@ -282,6 +306,10 @@ k9s
 
 # Grafana Passwort
 grafana-password
+
+# Monitoring starten/stoppen
+monitoring-start
+monitoring-stop
 ```
 
 ---

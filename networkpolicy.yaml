@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tenant-isolation
+  namespace: phoenix-dev
+spec:
+  podSelector: {}        # gilt für alle Pods in diesem Namespace
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              tenant: phoenix   # nur Traffic von phoenix Namespaces erlaubt
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              tenant: phoenix   # nur Traffic zu phoenix Namespaces erlaubt
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system   # DNS muss funktionieren

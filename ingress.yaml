@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring-ingress
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: grafana.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-grafana
+                port:
+                  number: 80
+    - host: opencost.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opencost
+                port:
+                  number: 9090
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ollama-ingress
+  namespace: ollama
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ollama.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ollama-open-webui
+                port:
+                  number: 8080

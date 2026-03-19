@@ -7,12 +7,9 @@ kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=
 kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
 sleep 10
 
-# /etc/hosts auf 127.0.0.1 setzen falls nötig
-CURRENT_IP=$(grep "grafana.local" /etc/hosts | awk '{print $1}')
-if [ "$CURRENT_IP" != "127.0.0.1" ]; then
-  echo "🌐 /etc/hosts wird auf 127.0.0.1 gesetzt..."
-  sudo sed -i '' "s/.*grafana.local.*/127.0.0.1        grafana.local opencost.local ollama.local/" /etc/hosts
-fi
+# Alten Port-Forward killen falls noch aktiv
+sudo pkill -f "port-forward svc/ingress-nginx" 2>/dev/null
+sleep 2
 
 # Port-Forward auf Port 80
 sudo kubectl port-forward svc/ingress-nginx-controller 80:80 -n ingress-nginx &

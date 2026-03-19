@@ -14,8 +14,14 @@ Cluster (docker-desktop)
 ├── atlas-dev        → Tenant "Atlas" (Entwicklungsumgebung)
 ├── atlas-prod       → Tenant "Atlas" (Produktionsumgebung)
 ├── monitoring       → Prometheus + Grafana + OpenCost
+├── ingress-nginx    → NGINX Ingress Controller
 └── ollama           → Lokales LLM (Ollama + Open WebUI)
 ```
+
+**Erreichbare Services (keine Port-Forwards nötig!):**
+- http://grafana.local → Grafana Dashboard
+- http://opencost.local → OpenCost Chargeback
+- http://ollama.local → Open WebUI (Ollama)
 
 ---
 
@@ -55,7 +61,8 @@ kubectl get namespaces --show-labels
 ResourceQuotas begrenzen wie viel CPU, RAM und Pods ein Tenant verbrauchen darf.  
 Das ist der technische Unterbau des Chargeback Modells — Quota = gebuchte Kapazität.
 
-**Wichtig:** Quotas werden pro Namespace gesetzt. In der Praxis entspricht das dem SLA mit dem Kunden.
+**Wichtig:** Pods müssen `resources.requests` und `resources.limits` gesetzt haben,  
+sonst werden sie von der Quota abgelehnt!
 
 ```yaml
 # ~/quotas.yaml
@@ -151,7 +158,7 @@ metadata:
   namespace: phoenix-dev
 subjects:
   - kind: User
-    name: phoenix-user           # Dieser User bekommt die Role
+    name: phoenix-user
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
@@ -185,79 +192,50 @@ roleRef:
 
 ```bash
 kubectl apply -f ~/rbac.yaml
-kubectl get roles,rolebindings -A   # Alle Roles und Bindings anzeigen
+kubectl get roles,rolebindings -A
 ```
-
-**Ergebnis:** `phoenix-user` kann nur in `phoenix-dev` arbeiten, `atlas-user` nur in `atlas-dev`. Kein Tenant sieht den anderen.
 
 ---
 
 ## Phase 2 — Monitoring (Prometheus + Grafana)
 
-Prometheus sammelt Metriken aus dem Cluster.  
-Grafana visualisiert diese Metriken in Dashboards.
-
-**Warum kube-prometheus-stack?**  
-Das Chart bringt Prometheus + Grafana + Alertmanager + node-exporter in einem Paket.  
-Das ist der Standard in der Industrie.
-
 ```bash
-# Helm Repo hinzufügen
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-
-# Namespace erstellen
 kubectl create namespace monitoring
-
-# Stack installieren
 helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring
-
-# Status prüfen
 kubectl get pods -n monitoring
 ```
-
-**Was wird deployed:**
-- `prometheus` → sammelt Metriken (CPU, RAM, Netzwerk etc.)
-- `grafana` → Dashboard UI
-- `alertmanager` → sendet Alerts (Email, Slack etc.)
-- `kube-state-metrics` → Kubernetes-spezifische Metriken
-- `node-exporter` → Hardware-Metriken vom Node
 
 ### Grafana öffnen
 
 ```bash
 # Passwort holen
-kubectl --namespace monitoring get secrets monitoring-grafana \
-  -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+grafana-password   # (Alias, siehe unten)
 
-# Port-Forward
-kubectl --namespace monitoring port-forward svc/monitoring-grafana 3000:80
+# Browser: http://grafana.local
+# Login: admin / <passwort>
 ```
 
-Browser: `http://localhost:3000`  
-Login: `admin` / (Passwort aus obigem Befehl)
-
-**Dashboard:** Dashboards → Kubernetes / Compute Resources / Namespace  
-→ Namespace auswählen → CPU/RAM/Netzwerk Verbrauch pro Tenant sehen
+**Dashboard:** Dashboards → Kubernetes / Compute Resources / Namespace
 
 ---
 
 ## Phase 3 — Chargeback (OpenCost)
 
 OpenCost misst die Kosten pro Namespace/Tenant.  
-In der Praxis auf ROSA: echte AWS Kosten. Lokal: simulierte Preise (AWS us-east-1 Standard).
+Lokal: simulierte Preise (AWS us-east-1 Standard).  
+Auf ROSA: echte AWS Kosten.
 
 **Verbindung zum PSF Modell:**
 - ResourceQuota = gebuchte Kapazität (Nenner im PSF)
 - OpenCost = tatsächlicher Verbrauch (Zähler im PSF)
-- PSF = Verbrauch / Kapazität × Gewichtung
 
 ```bash
-# Helm Repo hinzufügen
 helm repo add opencost https://opencost.github.io/opencost-helm-chart
 helm repo update
 
-# OpenCost installieren und auf unseren Prometheus zeigen
+# OpenCost auf unseren Prometheus zeigen
 helm install opencost opencost/opencost -n monitoring \
   --set opencost.exporter.defaultClusterId=local \
   --set opencost.prometheus.internal.enabled=true \
@@ -265,61 +243,161 @@ helm install opencost opencost/opencost -n monitoring \
   --set opencost.prometheus.internal.namespaceName=monitoring \
   --set opencost.prometheus.internal.port=9090
 
-# Status prüfen
 kubectl get pods -l app.kubernetes.io/instance=opencost -n monitoring
 ```
 
-### OpenCost öffnen
-
-```bash
-kubectl port-forward svc/opencost 9090 -n monitoring
-```
-
-Browser: `http://localhost:9090`
-
-**Was du siehst:** Kosten pro Namespace, aufgeteilt nach CPU/RAM/Storage/Netzwerk.
+**Browser:** http://opencost.local
 
 ---
 
-## Test-Deployments für Tenants
+## Phase 4 — Ingress (NGINX)
 
-Damit OpenCost Daten hat, brauchen die Tenant-Namespaces laufende Pods.  
-**Wichtig:** Pods müssen `resources.requests` und `resources.limits` haben,  
-sonst werden sie von der ResourceQuota abgelehnt!
+Statt Port-Forwards sind alle Services über lokale URLs erreichbar.  
+Der Ingress Controller empfängt HTTP Traffic und leitet ihn zum richtigen Service weiter.  
+Auf ROSA übernimmt diese Rolle der OpenShift Router (HAProxy).
+
+### NGINX Ingress Controller installieren
+
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
+```
+
+### /etc/hosts anpassen
+
+Damit dein Mac die lokalen URLs auflösen kann:
+
+```bash
+sudo sh -c 'echo "127.0.0.1 grafana.local opencost.local ollama.local" >> /etc/hosts'
+```
+
+### Ingress Ressourcen erstellen
 
 ```yaml
-# ~/test-deployment.yaml — Phoenix
-apiVersion: apps/v1
-kind: Deployment
+# ~/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: nginx
-  namespace: phoenix-dev
+  name: monitoring-ingress
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-        tenant: phoenix    # Label für OpenCost Aggregation
-    spec:
-      containers:
-        - name: nginx
-          image: nginx
-          resources:
-            requests:
-              cpu: 100m      # 0.1 CPU Core
-              memory: 128Mi
-            limits:
-              cpu: 200m      # 0.2 CPU Core
-              memory: 256Mi
+  ingressClassName: nginx
+  rules:
+    - host: grafana.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-grafana
+                port:
+                  number: 80
+    - host: opencost.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opencost
+                port:
+                  number: 9090
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ollama-ingress
+  namespace: ollama
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ollama.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ollama-open-webui
+                port:
+                  number: 8080
 ```
 
 ```bash
-kubectl apply -f ~/test-deployment.yaml
-kubectl apply -f ~/test-deployment-atlas.yaml
+kubectl apply -f ~/ingress.yaml
+kubectl get ingress -A
+```
+
+---
+
+## Ollama + Open WebUI (Helm Chart)
+
+Ollama läuft als eigenes Helm Chart im `ollama` Namespace.  
+Modelle werden auf einem PersistentVolume gespeichert — überleben Pod-Neustarts.
+
+```bash
+# Starten (Pods hochfahren)
+ollama-start
+
+# Stoppen (Pods herunterfahren + RAM freigeben)
+ollama-stop
+
+# Browser: http://ollama.local
+```
+
+### Modell pullen
+
+```bash
+curl http://localhost:11434/api/pull -d '{"model": "llama3.1:8b"}'
+```
+
+---
+
+## Aliases (~/.zshrc)
+
+```bash
+alias ollama-start="~/ollama-k8s/start.sh"
+alias ollama-stop="~/ollama-k8s/stop.sh"
+alias grafana-pass="kubectl --namespace monitoring get secrets monitoring-grafana -o jsonpath=\"{.data.admin-password}\" | base64 -d ; echo"
+alias grafana-password="kubectl --namespace monitoring get secrets monitoring-grafana -o jsonpath=\"{.data.admin-password}\" | base64 -d ; echo"
+```
+
+---
+
+## Start/Stop Scripts
+
+### ~/ollama-k8s/start.sh
+
+```bash
+#!/bin/bash
+echo "🚀 Starting Ollama + Open WebUI..."
+kubectl scale deployment ollama-ollama -n ollama --replicas=1
+kubectl scale deployment ollama-open-webui -n ollama --replicas=1
+echo "⏳ Warte bis Pods ready sind..."
+kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=120s
+kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
+sleep 10
+echo "✅ Done!"
+echo "🤖 Open WebUI: http://ollama.local"
+echo "🔗 Ollama API: http://localhost:11434"
+```
+
+### ~/ollama-k8s/stop.sh
+
+```bash
+#!/bin/bash
+echo "🛑 Stopping Ollama + Open WebUI..."
+pkill -f "port-forward svc/ollama-ollama" 2>/dev/null
+pkill -f "port-forward svc/ollama-open-webui" 2>/dev/null
+kubectl scale deployment ollama-ollama -n ollama --replicas=0
+kubectl scale deployment ollama-open-webui -n ollama --replicas=0
+echo "✅ Done! RAM freigegeben."
 ```
 
 ---
@@ -338,6 +416,9 @@ kubectl get resourcequota -A
 # Alle Roles und Bindings
 kubectl get roles,rolebindings -A
 
+# Ingress anzeigen
+kubectl get ingress -A
+
 # Services anzeigen
 kubectl get svc -n monitoring
 
@@ -352,25 +433,9 @@ kubectl rollout restart deployment/<name> -n <namespace>
 
 # Interaktive Cluster UI
 k9s
-```
 
----
-
-## Start/Stop Scripts
-
-```bash
-# Ollama + Open WebUI starten
-ollama-start   # http://localhost:8080
-
-# Ollama + Open WebUI stoppen
-ollama-stop
-
-# Monitoring Stack starten
-kubectl port-forward svc/monitoring-grafana 3000:80 -n monitoring &
-kubectl port-forward svc/opencost 9090 -n monitoring &
-
-# Grafana: http://localhost:3000
-# OpenCost: http://localhost:9090
+# Grafana Passwort
+grafana-password
 ```
 
 ---
@@ -378,14 +443,15 @@ kubectl port-forward svc/opencost 9090 -n monitoring &
 ## Helm Charts Übersicht
 
 ```bash
-helm list -A   # Alle installierten Charts anzeigen
+helm list -A
 ```
 
 | Name | Namespace | Chart | Beschreibung |
 |------|-----------|-------|--------------|
-| ollama | ollama | ollama-chart | Ollama + Open WebUI (eigenes Chart) |
+| ollama | ollama | ollama-chart | Ollama + Open WebUI |
 | monitoring | monitoring | kube-prometheus-stack | Prometheus + Grafana |
 | opencost | monitoring | opencost | Chargeback Tool |
+| ingress-nginx | ingress-nginx | ingress-nginx | NGINX Ingress Controller |
 
 ---
 
@@ -397,9 +463,8 @@ helm list -A   # Alle installierten Charts anzeigen
 | Namespace phoenix-dev | Namespace kunde-a-dev |
 | ResourceQuota | ResourceQuota |
 | RBAC | RBAC + OpenShift Groups |
-| Prometheus (eigene Instanz) | Eigene Prometheus Instanz (CMO locked) |
+| Prometheus | Eigene Prometheus Instanz |
 | OpenCost lokal | OpenCost auf ROSA |
 | Simulierte Kosten | Echte AWS Kosten |
-| kind/docker CNI | OVN-Kubernetes |
-
-Das Prinzip ist identisch — nur die Infrastruktur dahinter unterscheidet sich.
+| NGINX Ingress | HAProxy / OpenShift Router |
+| grafana.local | grafana.firma.de |

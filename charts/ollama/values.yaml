@@ -1,0 +1,16 @@
+ollama:
+  image: ollama/ollama:latest
+  port: 11434
+  resources:
+    requests:
+      memory: "6Gi"
+      cpu: "1"
+    limits:
+      memory: "32Gi"
+      cpu: "4"
+  storage: 10Gi
+
+openWebui:
+  image: ghcr.io/open-webui/open-webui:main
+  port: 8080
+  auth: "False"

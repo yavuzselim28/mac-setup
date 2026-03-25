@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ollama
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-ollama
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-ollama
+    spec:
+      containers:
+        - name: ollama
+          image: {{ .Values.ollama.image }}
+          ports:
+            - containerPort: {{ .Values.ollama.port }}
+          resources:
+            requests:
+              memory: {{ .Values.ollama.resources.requests.memory }}
+              cpu: {{ .Values.ollama.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.ollama.resources.limits.memory }}
+              cpu: {{ .Values.ollama.resources.limits.cpu }}
+          volumeMounts:
+            - name: ollama-storage
+              mountPath: /root/.ollama
+      volumes:
+        - name: ollama-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-open-webui
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-open-webui
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-open-webui
+    spec:
+      containers:
+        - name: open-webui
+          image: {{ .Values.openWebui.image }}
+          ports:
+            - containerPort: {{ .Values.openWebui.port }}
+          env:
+            - name: OLLAMA_BASE_URL
+              value: "http://{{ .Release.Name }}-ollama:{{ .Values.ollama.port }}"
+            - name: WEBUI_AUTH
+              value: "{{ .Values.openWebui.auth }}"
+          volumeMounts:
+            - name: webui-storage
+              mountPath: /app/backend/data
+      volumes:
+        - name: webui-storage
+          emptyDir: {}

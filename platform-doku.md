@@ -15,6 +15,7 @@ Cluster (docker-desktop)
 ├── atlas-prod       → Tenant "Atlas" (Produktionsumgebung)
 ├── monitoring       → Prometheus + Grafana + OpenCost
 ├── ingress-nginx    → NGINX Ingress Controller
+├── argocd           → GitOps Continuous Deployment
 └── ollama           → Lokales LLM (Ollama + Open WebUI)
 ```
 
@@ -22,6 +23,7 @@ Cluster (docker-desktop)
 - http://grafana.local → Grafana Dashboard
 - http://opencost.local → OpenCost Chargeback
 - http://ollama.local → Open WebUI (Ollama)
+- https://argocd.local → ArgoCD UI
 
 ---
 
@@ -54,18 +56,37 @@ kubectl create namespace phoenix-dev
 kubectl create namespace phoenix-prod
 kubectl create namespace atlas-dev
 kubectl create namespace atlas-prod
+kubectl create namespace ollama
 ```
 
 ### 1.2 Labels setzen
 
+Tenant-Labels sind wichtig für OpenCost — nur so kann nach Kostenstelle abgerechnet werden.
+
 ```bash
+# Tenant Namespaces
 kubectl label namespace phoenix-dev tenant=phoenix
 kubectl label namespace phoenix-prod tenant=phoenix
 kubectl label namespace atlas-dev tenant=atlas
 kubectl label namespace atlas-prod tenant=atlas
 
+# Platform Namespaces
+kubectl label namespace ollama tenant=platform
+kubectl label namespace monitoring tenant=platform
+kubectl label namespace argocd tenant=platform
+kubectl label namespace ingress-nginx tenant=platform
+
 kubectl get namespaces --show-labels
 ```
+
+**Erwartetes Ergebnis:**
+
+| Namespace | Label |
+|-----------|-------|
+| phoenix-dev, phoenix-prod | tenant=phoenix |
+| atlas-dev, atlas-prod | tenant=atlas |
+| ollama, monitoring, argocd, ingress-nginx | tenant=platform |
+| default, kube-* | kein Label (nie benutzen) |
 
 ### 1.3 ResourceQuotas
 
@@ -158,6 +179,9 @@ helm install opencost opencost/opencost -n monitoring \
 
 **Browser:** http://opencost.local
 
+OpenCost rechnet automatisch nach Namespace ab. Durch die Tenant-Labels aus Phase 1  
+können Kosten sauber nach `phoenix`, `atlas` und `platform` gruppiert werden.
+
 ---
 
 ## Phase 4 — Ingress (NGINX)
@@ -165,10 +189,13 @@ helm install opencost opencost/opencost -n monitoring \
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
+
+# SSL Passthrough aktivieren — benötigt für argocd.local
+helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace \
+  --set controller.extraArgs.enable-ssl-passthrough=""
 
 # /etc/hosts einmalig anpassen — dauerhaft auf 127.0.0.1
-sudo sh -c 'echo "127.0.0.1 grafana.local opencost.local ollama.local" >> /etc/hosts'
+sudo sh -c 'echo "127.0.0.1 grafana.local opencost.local ollama.local argocd.local" >> /etc/hosts'
 
 # Ingress Ressourcen anwenden
 kubectl apply -f ~/ingress.yaml
@@ -180,6 +207,80 @@ kubectl get ingress -A
 Docker Desktop's LoadBalancer IP ist instabil und ändert sich nach Neustarts.  
 Die Lösung: `/etc/hosts` dauerhaft auf `127.0.0.1` — der `ollama-start` Script startet  
 immer einen `sudo kubectl port-forward` auf Port 80 als stabilen Tunnel.
+
+### Falls NGINX bereits installiert ist (Upgrade für SSL Passthrough):
+
+```bash
+helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
+  -n ingress-nginx \
+  --set controller.extraArgs.enable-ssl-passthrough=""
+```
+
+---
+
+## Phase 5 — GitOps (ArgoCD)
+
+ArgoCD übernimmt das automatische Deployment — dieses Git Repository ist die **einzige Source of Truth**.  
+Kein manuelles `kubectl apply` mehr: jeder `git push` triggert automatisch einen Sync auf den Cluster.
+
+### Installation
+
+```bash
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# Warten bis alle Pods laufen
+kubectl get pods -n argocd -w
+```
+
+### ArgoCD UI öffnen
+
+```bash
+# ollama-start muss laufen (Port-Forward auf Port 80)
+# Browser: https://argocd.local
+# SSL-Warnung wegklicken — selbstsigniertes Zertifikat, normal
+```
+
+### Initial-Passwort holen & ändern
+
+```bash
+# Passwort holen
+kubectl -n argocd get secret argocd-initial-admin-secret \
+  -o jsonpath="{.data.password}" | base64 -d && echo
+
+# Login via CLI (über argocd.local)
+argocd login argocd.local --username admin --insecure
+
+# Passwort ändern
+argocd account update-password
+```
+
+### Ollama App deployen
+
+```bash
+argocd app create ollama-app \
+  --repo https://github.com/yavuzselim28/mac-setup \
+  --path charts/ollama \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace ollama \
+  --sync-policy automated
+```
+
+### Status prüfen
+
+```bash
+argocd app get ollama-app
+# Alle Ressourcen sollten "Synced" und "Healthy" zeigen
+```
+
+### GitOps Workflow
+
+```
+Änderung in charts/ollama/ → git push → ArgoCD erkennt Änderung → Auto-Sync auf Cluster
+```
+
+Ab sofort gilt: **Git ist die einzige Source of Truth.** Änderungen am Cluster werden von ArgoCD  
+automatisch wieder auf den Stand im Repo zurückgesetzt (Self-Healing).
 
 ---
 
@@ -194,7 +295,7 @@ ollama-stop    # Pods stoppen + RAM freigeben
 
 ```bash
 # Im zweiten Terminal
-kubectl port-forward svc/ollama-ollama 11434:11434 -n ollama &
+kubectl port-forward svc/ollama-app-ollama 11434:11434 -n ollama &
 curl http://localhost:11434/api/pull -d '{"model": "llama3.1:8b"}'
 ```
 
@@ -223,11 +324,11 @@ curl -X DELETE http://localhost:11434/api/delete -d '{"model": "modellname"}'
 ```bash
 #!/bin/bash
 echo "🚀 Starting Ollama + Open WebUI..."
-kubectl scale deployment ollama-ollama -n ollama --replicas=1
-kubectl scale deployment ollama-open-webui -n ollama --replicas=1
+kubectl scale deployment ollama-app-ollama -n ollama --replicas=1
+kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1
 echo "⏳ Warte bis Pods ready sind..."
-kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=120s
-kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
+kubectl wait --for=condition=ready pod -l app=ollama-app-ollama -n ollama --timeout=120s
+kubectl wait --for=condition=ready pod -l app=ollama-app-open-webui -n ollama --timeout=120s
 sleep 10
 
 # Alten Port-Forward killen falls noch aktiv
@@ -241,6 +342,7 @@ echo "✅ Done!"
 echo "🤖 Open WebUI: http://ollama.local"
 echo "🔗 Grafana: http://grafana.local"
 echo "🔗 OpenCost: http://opencost.local"
+echo "🔗 ArgoCD: https://argocd.local"
 echo ""
 echo "Press Ctrl+C to stop"
 wait
@@ -251,11 +353,9 @@ wait
 ```bash
 #!/bin/bash
 echo "🛑 Stopping Ollama + Open WebUI..."
-pkill -f "port-forward svc/ollama-ollama" 2>/dev/null
-pkill -f "port-forward svc/ollama-open-webui" 2>/dev/null
 sudo pkill -f "port-forward svc/ingress-nginx" 2>/dev/null
-kubectl scale deployment ollama-ollama -n ollama --replicas=0
-kubectl scale deployment ollama-open-webui -n ollama --replicas=0
+kubectl scale deployment ollama-app-ollama -n ollama --replicas=0
+kubectl scale deployment ollama-app-open-webui -n ollama --replicas=0
 echo "✅ Done! RAM freigegeben."
 ```
 
@@ -270,6 +370,8 @@ alias grafana-pass="kubectl --namespace monitoring get secrets monitoring-grafan
 alias grafana-password="kubectl --namespace monitoring get secrets monitoring-grafana -o jsonpath=\"{.data.admin-password}\" | base64 -d ; echo"
 alias monitoring-start="kubectl scale deployment monitoring-grafana monitoring-kube-state-metrics opencost -n monitoring --replicas=1 && kubectl scale statefulset prometheus-monitoring-kube-prometheus-prometheus alertmanager-monitoring-kube-prometheus-alertmanager -n monitoring --replicas=1"
 alias monitoring-stop="kubectl scale deployment monitoring-grafana monitoring-kube-state-metrics opencost -n monitoring --replicas=0 && kubectl scale statefulset prometheus-monitoring-kube-prometheus-prometheus alertmanager-monitoring-kube-prometheus-alertmanager -n monitoring --replicas=0"
+alias argocd-apps="argocd app list"
+alias argocd-sync="argocd app sync ollama-app"
 ```
 
 ---
@@ -278,7 +380,7 @@ alias monitoring-stop="kubectl scale deployment monitoring-grafana monitoring-ku
 
 | Komponente | PVC | Größe | Inhalt |
 |------------|-----|-------|--------|
-| Ollama | ollama-pvc | 10Gi | LLM Modelle |
+| Ollama | ollama-app-pvc | 10Gi | LLM Modelle |
 | Prometheus | auto-generiert | 10Gi | Metriken Historie |
 | Grafana | auto-generiert | 2Gi | Dashboard Konfigurationen |
 
@@ -306,7 +408,7 @@ kubectl get svc -n ingress-nginx
 kubectl logs <pod-name> -n <namespace>
 
 # Deployment neu starten
-kubectl rollout restart deployment/<n> -n <namespace>
+kubectl rollout restart deployment/<name> -n <namespace>
 
 # Interaktive Cluster UI
 k9s
@@ -320,6 +422,11 @@ monitoring-stop
 
 # Port-Forward manuell killen
 sudo pkill -f "port-forward svc/ingress-nginx"
+
+# ArgoCD
+argocd app list
+argocd app get ollama-app
+argocd app sync ollama-app
 ```
 
 ---
@@ -332,10 +439,11 @@ helm list -A
 
 | Name | Namespace | Chart | Beschreibung |
 |------|-----------|-------|--------------|
-| ollama | ollama | ollama-chart | Ollama + Open WebUI |
+| ollama-app | ollama | ollama-chart | Ollama + Open WebUI (via ArgoCD) |
 | monitoring | monitoring | kube-prometheus-stack | Prometheus + Grafana (beide mit PVC) |
 | opencost | monitoring | opencost | Chargeback Tool |
-| ingress-nginx | ingress-nginx | ingress-nginx | NGINX Ingress Controller |
+| ingress-nginx | ingress-nginx | ingress-nginx | NGINX Ingress Controller (SSL Passthrough aktiv) |
+| argocd | argocd | argocd (plain manifest) | GitOps Controller |
 
 ---
 
@@ -355,3 +463,5 @@ helm list -A
 | Simulierte Kosten | Echte AWS Kosten |
 | NGINX Ingress | HAProxy / OpenShift Router |
 | grafana.local | grafana.firma.de |
+| ArgoCD | OpenShift GitOps (ArgoCD) |
+| tenant=phoenix/atlas/platform Labels | Tenant Labels für Chargeback |

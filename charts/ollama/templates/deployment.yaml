@@ -58,6 +58,13 @@ spec:
               value: "http://{{ .Release.Name }}-ollama:{{ .Values.ollama.port }}"
             - name: WEBUI_AUTH
               value: "{{ .Values.openWebui.auth }}"
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.openWebui.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 6	
           volumeMounts:
             - name: webui-storage
               mountPath: /app/backend/data

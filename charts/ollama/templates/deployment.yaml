@@ -65,6 +65,13 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 5
             failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.openWebui.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            failureThreshold: 3
           volumeMounts:
             - name: webui-storage
               mountPath: /app/backend/data

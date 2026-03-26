@@ -58,6 +58,13 @@ spec:
               value: "http://{{ .Release.Name }}-ollama:{{ .Values.ollama.port }}"
             - name: WEBUI_AUTH
               value: "{{ .Values.openWebui.auth }}"
+          resources:
+            requests:
+              memory: {{ .Values.openWebui.resources.requests.memory }}
+              cpu: {{ .Values.openWebui.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.openWebui.resources.limits.memory }}
+              cpu: {{ .Values.openWebui.resources.limits.cpu }}
           readinessProbe:
             httpGet:
               path: /ready

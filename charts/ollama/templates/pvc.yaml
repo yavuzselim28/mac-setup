@@ -9,3 +9,15 @@ spec:
   resources:
     requests:
       storage: {{ .Values.ollama.storage }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-webui-pvc
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.openWebui.storage }}

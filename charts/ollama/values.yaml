@@ -14,3 +14,4 @@ openWebui:
   image: ghcr.io/open-webui/open-webui:v0.8.11
   port: 8080
   auth: "False"
+  storage: 2Gi

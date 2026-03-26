@@ -64,10 +64,11 @@ spec:
               port: {{ .Values.openWebui.port }}
             initialDelaySeconds: 15
             periodSeconds: 5
-            failureThreshold: 6	
+            failureThreshold: 6
           volumeMounts:
             - name: webui-storage
               mountPath: /app/backend/data
       volumes:
         - name: webui-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-webui-pvc

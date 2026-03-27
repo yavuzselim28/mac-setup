@@ -76,8 +76,8 @@ spec:
             httpGet:
               path: /ready
               port: {{ .Values.openWebui.port }}
-            initialDelaySeconds: 30
-            periodSeconds: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
             failureThreshold: 3
           volumeMounts:
             - name: webui-storage

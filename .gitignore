@@ -1,0 +1,13 @@
+# TLS Zertifikate und private Schlüssel - niemals in Git!
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# macOS
+.DS_Store
+
+# Temporäre Dateien
+*.tmp
+/tmp/

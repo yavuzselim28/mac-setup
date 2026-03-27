@@ -6,12 +6,13 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "mkcert-issuer"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
         - ollama.local
-      secretName: ollama-tls
+      secretName: ollama-cert-tls
   rules:
     - host: ollama.local
       http:

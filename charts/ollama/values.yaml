@@ -11,7 +11,7 @@ ollama:
   storage: 10Gi
 
 openWebui:
-  image: ghcr.io/open-webui/open-webui:v0.8.11
+  image: ghcr.io/open-webui/open-webui:v0.8.12
   port: 8080
   auth: "False"
   storage: 2Gi

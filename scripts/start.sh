@@ -15,24 +15,12 @@ sleep 2
 # Port-Forward auf Port 80
 sudo kubectl port-forward svc/ingress-nginx-controller 80:80 -n ingress-nginx &
 
-# TurboQuant llama-server starten
-echo "🧠 Starting TurboQuant llama-server (Llama 3.3 70B)..."
-lsof -ti:8080 | xargs kill -9 2>/dev/null
-sleep 1
-cd ~/llama-cpp-turboquant && ./build/bin/llama-server \
-  -m ~/models/llama33-70b-q4km.gguf \
-  --cache-type-k turbo4 \
-  --cache-type-v turbo4 \
-  -ngl 99 \
-  -c 32768 \
-  -fa on \
-  --host 0.0.0.0 --port 8080 &
-
 echo "✅ Done!"
 echo "🤖 Open WebUI: http://ollama.local"
 echo "🔗 Grafana: http://grafana.local"
 echo "🔗 OpenCost: http://opencost.local"
-echo "🧠 TurboQuant: http://localhost:8080"
+echo ""
+echo "Starte jetzt in einem neuen Terminal: ai-llama / ai-qwen / ai-mistral"
 echo ""
 echo "Press Ctrl+C to stop"
 wait

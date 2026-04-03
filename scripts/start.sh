@@ -21,8 +21,8 @@ lsof -ti:8080 | xargs kill -9 2>/dev/null
 sleep 1
 cd ~/llama-cpp-turboquant && ./build/bin/llama-server \
   -m ~/models/llama33-70b-q4km.gguf \
-  --cache-type-k turbo3 \
-  --cache-type-v turbo3 \
+  --cache-type-k turbo4 \
+  --cache-type-v turbo4 \
   -ngl 99 \
   -c 32768 \
   -fa on \

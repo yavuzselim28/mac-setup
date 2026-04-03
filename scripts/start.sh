@@ -1,11 +1,11 @@
 #!/bin/bash
 sudo sysctl iogpu.wired_limit_mb=52429 2>/dev/null
 echo "🚀 Starting Ollama + Open WebUI..."
-kubectl scale deployment ollama-ollama -n ollama --replicas=1
-kubectl scale deployment ollama-open-webui -n ollama --replicas=1
+kubectl scale deployment ollama-app-ollama -n ollama --replicas=1
+kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1
 echo "⏳ Warte bis Pods ready sind..."
-kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=120s
-kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
+kubectl wait --for=condition=ready pod -l app=ollama-app-ollama -n ollama --timeout=120s
+kubectl wait --for=condition=ready pod -l app=ollama-app-open-webui -n ollama --timeout=120s
 sleep 10
 
 # Alten Port-Forward killen falls noch aktiv

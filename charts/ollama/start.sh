@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "🚀 Starting Ollama + Open WebUI..."
-kubectl scale deployment ollama-ollama -n ollama --replicas=1
-kubectl scale deployment ollama-open-webui -n ollama --replicas=1
+kubectl scale deployment ollama-app-ollama -n ollama --replicas=1
+kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1
 echo "⏳ Warte bis Pods ready sind..."
 kubectl wait --for=condition=ready pod -l app=ollama-ollama -n ollama --timeout=120s
 kubectl wait --for=condition=ready pod -l app=ollama-open-webui -n ollama --timeout=120s
@@ -20,8 +20,8 @@ lsof -ti:8080 | xargs kill -9 2>/dev/null
 sleep 1
 cd ~/llama-cpp-turboquant && ./build/bin/llama-server \
   -m ~/models/llama33-70b-q4km.gguf \
-  --cache-type-k turbo3 \
-  --cache-type-v turbo3 \
+  --cache-type-k turbo4 \
+  --cache-type-v turbo4 \
   -ngl 99 \
   -c 32768 \
   -fa on \

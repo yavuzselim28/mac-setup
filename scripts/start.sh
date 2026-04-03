@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo sysctl iogpu.wired_limit_mb=52429 2>/dev/null
 echo "🚀 Starting Ollama + Open WebUI..."
 kubectl scale deployment ollama-ollama -n ollama --replicas=1
 kubectl scale deployment ollama-open-webui -n ollama --replicas=1

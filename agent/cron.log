@@ -1,0 +1,11 @@
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+[2026-04-05 13:00:01] ============================================================
+[2026-04-05 13:00:01] 🤖 Platform Agent gestartet
+[2026-04-05 13:00:01] 🔍 Starte Update-Check...
+[2026-04-05 13:00:01]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 13:00:01] ✅ Keine operationalen Updates gefunden.
+[2026-04-05 13:00:01] 📋 Zusammenfassung:
+[2026-04-05 13:00:01]   Alles aktuell, keine Änderungen.
+[2026-04-05 13:00:01] ────────────────────────────────────────────────────────────
+[2026-04-05 13:00:01] 🤖 Platform Agent beendet

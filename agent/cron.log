@@ -9,3 +9,59 @@
 [2026-04-05 13:00:01]   Alles aktuell, keine Änderungen.
 [2026-04-05 13:00:01] ────────────────────────────────────────────────────────────
 [2026-04-05 13:00:01] 🤖 Platform Agent beendet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+bash: lsof: command not found
+[2026-04-05 14:00:02] ============================================================
+[2026-04-05 14:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-05 14:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 14:00:02]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 14:00:02]   ✅ Keine operationalen Updates.
+[2026-04-05 14:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-05 14:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-05 14:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 14:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 14:00:02] 📊 Sammle System-Kontext...
+[2026-04-05 14:00:02]   RAM frei: 0.7 GB
+[2026-04-05 14:00:02]   Aktive Slots: 0/4
+[2026-04-05 14:00:02]   Cached Tokens: 0
+[2026-04-05 14:00:02]   Crashes letzte Stunde: 0
+[2026-04-05 14:00:02] 🤔 LLM analysiert Incident...
+[2026-04-05 14:00:28]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, wahrscheinlich aufgrund eines Speicherlecks oder einer anderen internen Fehlerquelle, da die genaue Ursache noch unklar ist.
+AKTION: C
+BEGRÜNDUNG: Eine Neu-Start des llama-servers ohne Änderungen kann Speicherlecks beheben und die Funktionalität wiederherstellen, ohne dass aktive Nutzer beeinträchtigt werden, da derzeit keine aktiven Nutzer-Slots vorhanden sind.
+RISIKO: niedrig
+[2026-04-05 14:00:28] 🛡️ Sicherheitscheck...
+[2026-04-05 14:00:28]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 14:00:28] 🚀 Führe Aktion C aus...
+[2026-04-05 14:00:30]   ✅ llama-server neu gestartet
+[2026-04-05 14:00:30] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 14:00:35]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-05 14:00:35] 📋 Incident Report:
+[2026-04-05 14:00:35]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 14:00:35]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, wahrscheinlich aufgrund eines Speicherlecks oder einer anderen internen Fehlerquelle, da die genaue Ursache noch unklar ist.
+[2026-04-05 14:00:35]   Aktion:    llama-server neu gestartet (PID 1538)
+[2026-04-05 14:00:35]   Eskaliert: False
+[2026-04-05 14:00:35]   Gelöst:    False
+[2026-04-05 14:00:35]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-05 14:00:35] ────────────────────────────────────────────────────────────
+[2026-04-05 14:00:35]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-05 14:00:35] 💻 [4/6] System Health...
+[2026-04-05 14:00:35]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 14:00:35]   ✅ Speicher OK
+[2026-04-05 14:00:35]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-05 14:00:35]   ✅ Port-Forward neu gestartet
+[2026-04-05 14:00:35] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 14:00:35]   ✅ llama33-70b: keine Änderung
+[2026-04-05 14:00:35]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 14:00:36] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 14:00:36]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-05 14:00:36]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 14:00:36] 📋 Zusammenfassung:
+[2026-04-05 14:00:36]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-05 14:00:36]   ⏳ llama-server wird wiederhergestellt
+[2026-04-05 14:00:36]   Aktionen durchgeführt:
+[2026-04-05 14:00:36]     → Port-Forward Port 80 neu gestartet
+[2026-04-05 14:00:36] ────────────────────────────────────────────────────────────
+[2026-04-05 14:00:36] 🤖 Platform Agent v3 beendet

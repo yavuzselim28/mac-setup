@@ -168,3 +168,380 @@ Begründung: Das Neustarten des Llama-Servers ohne Änderungen kann zu einer kur
 [2026-04-05 13:26:39]   ✅ Alles gesund — keine Änderungen.
 [2026-04-05 13:26:39] ────────────────────────────────────────────────────────────
 [2026-04-05 13:26:39] 🤖 Platform Agent v3 beendet
+[2026-04-05 13:29:41] ============================================================
+[2026-04-05 13:29:41] 🤖 Platform Agent v3 gestartet
+[2026-04-05 13:29:41] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 13:29:41]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 13:29:41]   ✅ Keine operationalen Updates.
+[2026-04-05 13:29:41] 🏥 [2/6] K8s Health Check...
+[2026-04-05 13:29:41]   ✅ ollama-app-ollama-7f8d675d4d-q5w5d: Running (restarts: 0)
+[2026-04-05 13:29:41]   ✅ ollama-app-open-webui-857868cb4f-xwmlr: Running (restarts: 0)
+[2026-04-05 13:29:41] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 13:29:41]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 13:29:41] 📊 Sammle System-Kontext...
+[2026-04-05 13:29:42]   RAM frei: 0.1 GB
+[2026-04-05 13:29:42]   Aktive Slots: 0/1
+[2026-04-05 13:29:42]   Cached Tokens: 0
+[2026-04-05 13:29:42]   Crashes letzte Stunde: 0
+[2026-04-05 13:29:42] 🤔 LLM analysiert Incident...
+[2026-04-05 13:30:03]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, weil das System unter hohem Speicherdruck steht, insbesondere durch den geringen verfügbaren RAM von nur 0,1 GB.
+AKTION: C
+BEGRÜNDUNG: Eine Neu-Start des llama-servers ohne Änderungen könnte Speicherlecks beheben und die Situation kurzfristig verbessern, ohne die aktiven Nutzer oder den Kontext zu beeinträchtigen.
+RISIKO: niedrig
+[2026-04-05 13:30:03] 🛡️ Sicherheitscheck...
+[2026-04-05 13:30:03]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 13:30:03] 🚀 Führe Aktion C aus...
+[2026-04-05 13:30:05]   ✅ llama-server neu gestartet
+[2026-04-05 13:30:05] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 13:30:10]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-05 13:30:10] 📋 Incident Report:
+[2026-04-05 13:30:10]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 13:30:10]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, weil das System unter hohem Speicherdruck steht, insbesondere durch den geringen verfügbaren RAM von nur 0,1 GB.
+[2026-04-05 13:30:10]   Aktion:    llama-server neu gestartet (PID 5832)
+[2026-04-05 13:30:10]   Eskaliert: False
+[2026-04-05 13:30:10]   Gelöst:    False
+[2026-04-05 13:30:10]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-05 13:30:10] ────────────────────────────────────────────────────────────
+[2026-04-05 13:30:10]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-05 13:30:10] 💻 [4/6] System Health...
+[2026-04-05 13:30:10]   💾 Frei: 596 GB | Modelle: 106 GB
+[2026-04-05 13:30:10]   ✅ Speicher OK
+[2026-04-05 13:30:10]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-05 13:30:10]   ✅ Port-Forward neu gestartet
+[2026-04-05 13:30:10] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 13:30:11]   ✅ llama33-70b: keine Änderung
+[2026-04-05 13:30:11]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 13:30:11] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 13:30:12]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 13:30:12] 📋 Zusammenfassung:
+[2026-04-05 13:30:12]   ⏳ llama-server wird wiederhergestellt
+[2026-04-05 13:30:12]   Aktionen durchgeführt:
+[2026-04-05 13:30:12]     → Port-Forward Port 80 neu gestartet
+[2026-04-05 13:30:12] ────────────────────────────────────────────────────────────
+[2026-04-05 13:30:12] 🤖 Platform Agent v3 beendet
+[2026-04-05 13:35:19] ============================================================
+[2026-04-05 13:35:19] 🤖 Platform Agent v3 gestartet
+[2026-04-05 13:35:19] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 13:35:19]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 13:35:19]   ✅ Keine operationalen Updates.
+[2026-04-05 13:35:19] 🏥 [2/6] K8s Health Check...
+[2026-04-05 13:35:19]   ✅ ollama-app-ollama-7f8d675d4d-q5w5d: Running (restarts: 1)
+[2026-04-05 13:35:19]   ✅ ollama-app-open-webui-857868cb4f-xwmlr: Running (restarts: 1)
+[2026-04-05 13:35:19] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 13:35:19]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 13:35:19] 📊 Sammle System-Kontext...
+[2026-04-05 13:35:19]   RAM frei: 30.2 GB
+[2026-04-05 13:35:19]   Aktive Slots: 0/0
+[2026-04-05 13:35:19]   Cached Tokens: 0
+[2026-04-05 13:35:19]   Crashes letzte Stunde: 1
+[2026-04-05 13:35:19] 🤔 LLM analysiert Incident...
+[2026-04-05 13:35:19]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 13:35:19]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 13:35:19]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 13:35:40]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 13:35:45]   LLM Antwort:
+URSACHE: Der Llama-Server ist nicht erreichbar, da wahrscheinlich ein RAM-Problem vorliegt, da die verfügbare RAM größer als 8 GB ist.
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Da die verfügbare RAM größer als 8 GB ist, ist es unwahrscheinlich, dass ein RAM-Problem vorliegt. Ein Neustart des Llama-Servers ohne Änderungen behebt mögliche Speicherlecks und bringt die Plattform wieder online.
+RISIKO: mittel
+
+Begründung: Ein Neustart des Llama-Servers ohne Änderungen ist eine gängige Lösung für solche Probleme und sollte in der Regel keine großen Risiken bergen. Es ist jedoch wichtig, die Plattform nach dem Neustart wieder zu überwachen, um sicherzustellen, dass das Problem nicht wieder auftritt.
+[2026-04-05 13:35:45] 🛡️ Sicherheitscheck...
+[2026-04-05 13:35:45]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 13:35:45] 🚀 Führe Aktion C aus...
+[2026-04-05 13:35:47]   ✅ llama-server neu gestartet
+[2026-04-05 13:35:47] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 13:35:52]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-05 13:35:52] 📋 Incident Report:
+[2026-04-05 13:35:52]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 13:35:52]   Analyse:   URSACHE: Der Llama-Server ist nicht erreichbar, da wahrscheinlich ein RAM-Problem vorliegt, da die verfügbare RAM größer als 8 GB ist.
+[2026-04-05 13:35:52]   Aktion:    llama-server neu gestartet (PID 1450)
+[2026-04-05 13:35:52]   Eskaliert: False
+[2026-04-05 13:35:52]   Gelöst:    False
+[2026-04-05 13:35:52]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-05 13:35:52] ────────────────────────────────────────────────────────────
+[2026-04-05 13:35:52]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-05 13:35:52] 💻 [4/6] System Health...
+[2026-04-05 13:35:52]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 13:35:52]   ✅ Speicher OK
+[2026-04-05 13:35:52]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-05 13:35:52]   ✅ Port-Forward neu gestartet
+[2026-04-05 13:35:52] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 13:35:53]   ✅ llama33-70b: keine Änderung
+[2026-04-05 13:35:53]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 13:35:53] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 13:35:53]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 13:35:53] 📋 Zusammenfassung:
+[2026-04-05 13:35:53]   ⏳ llama-server wird wiederhergestellt
+[2026-04-05 13:35:53]   Aktionen durchgeführt:
+[2026-04-05 13:35:53]     → Port-Forward Port 80 neu gestartet
+[2026-04-05 13:35:53] ────────────────────────────────────────────────────────────
+[2026-04-05 13:35:53] 🤖 Platform Agent v3 beendet
+[2026-04-05 13:37:43] ============================================================
+[2026-04-05 13:37:43] 🤖 Platform Agent v3 gestartet
+[2026-04-05 13:37:43] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 13:37:43]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 13:37:44]   ✅ Keine operationalen Updates.
+[2026-04-05 13:37:44] 🏥 [2/6] K8s Health Check...
+[2026-04-05 13:37:44]   ✅ ollama-app-ollama-7f8d675d4d-q5w5d: Running (restarts: 1)
+[2026-04-05 13:37:44]   ✅ ollama-app-open-webui-857868cb4f-xwmlr: Running (restarts: 1)
+[2026-04-05 13:37:44] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 13:37:44]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 13:37:44] 📊 Sammle System-Kontext...
+[2026-04-05 13:37:44]   RAM frei: 0.3 GB
+[2026-04-05 13:37:44]   Aktive Slots: 0/0
+[2026-04-05 13:37:44]   Cached Tokens: 0
+[2026-04-05 13:37:44]   Crashes letzte Stunde: 2
+[2026-04-05 13:37:44] 🤔 LLM analysiert Incident...
+[2026-04-05 13:37:44]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 13:37:44]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 13:37:44]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 13:38:04]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 13:38:08]   LLM Antwort:
+URSACHE: Die Kombination aus niedrigem freien RAM und hohen Crashes in der letzten Stunde deutet darauf hin, dass das Problem wahrscheinlich durch ein RAM-Problem verursacht wird.
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Da aktive Nutzer-Slots 0 sind und keine aktiven Tokens vorhanden sind, kann das System ohne Unterbrechung der WebUI neu gestartet werden. Dies behebt mögliche Speicherlecks und ermöglicht eine weitere Analyse der Ursache.
+RISIKO: mittel
+[2026-04-05 13:38:08] 🛡️ Sicherheitscheck...
+[2026-04-05 13:38:08]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 13:38:08] 🚀 Führe Aktion C aus...
+[2026-04-05 13:38:10]   ✅ llama-server neu gestartet
+[2026-04-05 13:38:10] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 13:38:15]   ✅ llama-server läuft wieder
+[2026-04-05 13:38:15] 📋 Incident Report:
+[2026-04-05 13:38:15]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 13:38:15]   Analyse:   URSACHE: Die Kombination aus niedrigem freien RAM und hohen Crashes in der letzten Stunde deutet darauf hin, dass das Problem wahrscheinlich durch ein RAM-Problem verursacht wird.
+[2026-04-05 13:38:15]   Aktion:    llama-server neu gestartet (PID 1600)
+[2026-04-05 13:38:15]   Eskaliert: False
+[2026-04-05 13:38:15]   Gelöst:    True
+[2026-04-05 13:38:15]   ✅ Incident automatisch gelöst
+[2026-04-05 13:38:15] ────────────────────────────────────────────────────────────
+[2026-04-05 13:38:15]   ✅ Incident Agent hat Problem gelöst
+[2026-04-05 13:38:15] 💻 [4/6] System Health...
+[2026-04-05 13:38:15]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 13:38:15]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 13:38:15]   ✅ Speicher OK
+[2026-04-05 13:38:15]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 13:38:15] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 13:38:15]   ✅ llama33-70b: keine Änderung
+[2026-04-05 13:38:15]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 13:38:15] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 13:38:16]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 13:38:16] 📋 Zusammenfassung:
+[2026-04-05 13:38:16]   🔄 llama-server war down — Incident Agent hat ihn repariert
+[2026-04-05 13:38:16]   Aktionen durchgeführt:
+[2026-04-05 13:38:16]     → llama-server durch Incident Agent wiederhergestellt
+[2026-04-05 13:38:16] ────────────────────────────────────────────────────────────
+[2026-04-05 13:38:16] 🤖 Platform Agent v3 beendet
+[2026-04-05 13:39:01] ============================================================
+[2026-04-05 13:39:01] 🤖 Platform Agent v3 gestartet
+[2026-04-05 13:39:01] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 13:39:01]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 13:39:02]   ✅ Keine operationalen Updates.
+[2026-04-05 13:39:02] 🏥 [2/6] K8s Health Check...
+[2026-04-05 13:39:02]   ✅ ollama-app-ollama-7f8d675d4d-q5w5d: Running (restarts: 1)
+[2026-04-05 13:39:02]   ✅ ollama-app-open-webui-857868cb4f-xwmlr: Running (restarts: 1)
+[2026-04-05 13:39:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 13:39:02]   ✅ llama-server läuft auf Port 8080
+[2026-04-05 13:39:02] 💻 [4/6] System Health...
+[2026-04-05 13:39:02]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 13:39:02]   💾 Frei: 601 GB | Modelle: 106 GB
+[2026-04-05 13:39:02]   ✅ Speicher OK
+[2026-04-05 13:39:02]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 13:39:02] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 13:39:02]   ✅ llama33-70b: keine Änderung
+[2026-04-05 13:39:02]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 13:39:02] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 13:39:03]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 13:39:03] 📋 Zusammenfassung:
+[2026-04-05 13:39:03]   ✅ Alles gesund — keine Änderungen.
+[2026-04-05 13:39:03] ────────────────────────────────────────────────────────────
+[2026-04-05 13:39:03] 🤖 Platform Agent v3 beendet
+[2026-04-05 13:46:35] ============================================================
+[2026-04-05 13:46:35] 🤖 Platform Agent v3 gestartet
+[2026-04-05 13:46:35] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 13:46:35]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 13:46:35]   ✅ Keine operationalen Updates.
+[2026-04-05 13:46:35] 🏥 [2/6] K8s Health Check...
+[2026-04-05 13:46:35]   ✅ ollama-app-ollama-7f8d675d4d-q5w5d: Running (restarts: 2)
+[2026-04-05 13:46:35]   ✅ ollama-app-open-webui-857868cb4f-xwmlr: Running (restarts: 2)
+[2026-04-05 13:46:35] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 13:46:35]   ❌ 🚨 llama-server crasht wiederholt (3x in 1h) — manuelle Prüfung nötig
+[2026-04-05 13:46:35] 💻 [4/6] System Health...
+[2026-04-05 13:46:35]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 13:46:35]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 13:46:35]   ✅ Speicher OK
+[2026-04-05 13:46:35]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 13:46:35] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 13:46:36]   ✅ llama33-70b: keine Änderung
+[2026-04-05 13:46:36]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 13:46:36] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 13:46:37]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 13:46:37] 📋 Zusammenfassung:
+[2026-04-05 13:46:37]   🚨 llama-server crasht wiederholt (3x in 1h) — manuelle Prüfung nötig
+[2026-04-05 13:46:37] ────────────────────────────────────────────────────────────
+[2026-04-05 13:46:37] 🤖 Platform Agent v3 beendet
+[2026-04-05 14:00:02] ============================================================
+[2026-04-05 14:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-05 14:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 14:00:02]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 14:00:02]   ✅ Keine operationalen Updates.
+[2026-04-05 14:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-05 14:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-05 14:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 14:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 14:00:02] 📊 Sammle System-Kontext...
+[2026-04-05 14:00:02]   RAM frei: 0.7 GB
+[2026-04-05 14:00:02]   Aktive Slots: 0/4
+[2026-04-05 14:00:02]   Cached Tokens: 0
+[2026-04-05 14:00:02]   Crashes letzte Stunde: 0
+[2026-04-05 14:00:02] 🤔 LLM analysiert Incident...
+[2026-04-05 14:00:28]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, wahrscheinlich aufgrund eines Speicherlecks oder einer anderen internen Fehlerquelle, da die genaue Ursache noch unklar ist.
+AKTION: C
+BEGRÜNDUNG: Eine Neu-Start des llama-servers ohne Änderungen kann Speicherlecks beheben und die Funktionalität wiederherstellen, ohne dass aktive Nutzer beeinträchtigt werden, da derzeit keine aktiven Nutzer-Slots vorhanden sind.
+RISIKO: niedrig
+[2026-04-05 14:00:28] 🛡️ Sicherheitscheck...
+[2026-04-05 14:00:28]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 14:00:28] 🚀 Führe Aktion C aus...
+[2026-04-05 14:00:30]   ✅ llama-server neu gestartet
+[2026-04-05 14:00:30] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 14:00:35]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-05 14:00:35] 📋 Incident Report:
+[2026-04-05 14:00:35]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 14:00:35]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, wahrscheinlich aufgrund eines Speicherlecks oder einer anderen internen Fehlerquelle, da die genaue Ursache noch unklar ist.
+[2026-04-05 14:00:35]   Aktion:    llama-server neu gestartet (PID 1538)
+[2026-04-05 14:00:35]   Eskaliert: False
+[2026-04-05 14:00:35]   Gelöst:    False
+[2026-04-05 14:00:35]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-05 14:00:35] ────────────────────────────────────────────────────────────
+[2026-04-05 14:00:35]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-05 14:00:35] 💻 [4/6] System Health...
+[2026-04-05 14:00:35]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 14:00:35]   ✅ Speicher OK
+[2026-04-05 14:00:35]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-05 14:00:35]   ✅ Port-Forward neu gestartet
+[2026-04-05 14:00:35] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 14:00:35]   ✅ llama33-70b: keine Änderung
+[2026-04-05 14:00:35]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 14:00:36] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 14:00:36]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-05 14:00:36]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 14:00:36] 📋 Zusammenfassung:
+[2026-04-05 14:00:36]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-05 14:00:36]   ⏳ llama-server wird wiederhergestellt
+[2026-04-05 14:00:36]   Aktionen durchgeführt:
+[2026-04-05 14:00:36]     → Port-Forward Port 80 neu gestartet
+[2026-04-05 14:00:36] ────────────────────────────────────────────────────────────
+[2026-04-05 14:00:36] 🤖 Platform Agent v3 beendet
+[2026-04-05 14:12:54] ============================================================
+[2026-04-05 14:12:55] 🤖 Platform Agent v3 gestartet
+[2026-04-05 14:12:55] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 14:12:55]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 14:12:55]   ✅ Keine operationalen Updates.
+[2026-04-05 14:12:55] 🏥 [2/6] K8s Health Check...
+[2026-04-05 14:12:55]   ✅ ollama-app-ollama-7f8d675d4d-q5w5d: Running (restarts: 3)
+[2026-04-05 14:12:55]   ✅ ollama-app-open-webui-857868cb4f-xwmlr: Running (restarts: 3)
+[2026-04-05 14:12:55] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 14:12:55]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 14:12:55] 📊 Sammle System-Kontext...
+[2026-04-05 14:12:55]   RAM frei: 31.6 GB
+[2026-04-05 14:12:55]   Aktive Slots: 0/0
+[2026-04-05 14:12:55]   Cached Tokens: 0
+[2026-04-05 14:12:55]   Crashes letzte Stunde: 1
+[2026-04-05 14:12:55] 🤔 LLM analysiert Incident...
+[2026-04-05 14:12:55]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 14:12:55]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 14:12:55]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 14:13:15]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 14:13:19]   LLM Antwort:
+URSACHE: Der Llama-Server ist nicht erreichbar, da die aktiven Nutzer-Slots 0 sind und der RAM frei ist, was darauf hindeutet, dass kein RAM-Problem vorliegt.
+AKTION: A
+BEGRÜNDUNG: Da keine aktiven Nutzer-Slots vorhanden sind und der RAM frei ist, kann die Skalierung der K8s Pods auf 0 ohne Risiko durchgeführt werden, um 6 GB RAM zu sparen.
+RISIKO: niedrig
+[2026-04-05 14:13:19] 🛡️ Sicherheitscheck...
+[2026-04-05 14:13:19]   ✅ Sicherheitscheck bestanden — Aktion A ist sicher
+[2026-04-05 14:13:19] 🚀 Führe Aktion A aus...
+[2026-04-05 14:13:19]   ✅ K8s Pods gestoppt — 6 GB RAM freigegeben
+[2026-04-05 14:13:19] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 14:13:24]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-05 14:13:24] 📋 Incident Report:
+[2026-04-05 14:13:24]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 14:13:24]   Analyse:   URSACHE: Der Llama-Server ist nicht erreichbar, da die aktiven Nutzer-Slots 0 sind und der RAM frei ist, was darauf hindeutet, dass kein RAM-Problem vorliegt.
+[2026-04-05 14:13:24]   Aktion:    K8s Pods auf 0 skaliert
+[2026-04-05 14:13:24]   Eskaliert: False
+[2026-04-05 14:13:24]   Gelöst:    False
+[2026-04-05 14:13:24]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-05 14:13:24] ────────────────────────────────────────────────────────────
+[2026-04-05 14:13:24]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-05 14:13:24] 💻 [4/6] System Health...
+[2026-04-05 14:13:24]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 14:13:24]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 14:13:24]   ✅ Speicher OK
+[2026-04-05 14:13:24]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 14:13:24] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 14:13:24]   ✅ llama33-70b: keine Änderung
+[2026-04-05 14:13:24]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 14:13:25] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 14:13:25]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 14:13:25] 📋 Zusammenfassung:
+[2026-04-05 14:13:25]   ⏳ llama-server wird wiederhergestellt
+[2026-04-05 14:13:25] ────────────────────────────────────────────────────────────
+[2026-04-05 14:13:25] 🤖 Platform Agent v3 beendet
+[2026-04-05 14:21:50] ============================================================
+[2026-04-05 14:21:50] 🤖 Platform Agent v3 gestartet
+[2026-04-05 14:21:50] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 14:21:50]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 14:21:51]   ✅ Keine operationalen Updates.
+[2026-04-05 14:21:51] 🏥 [2/6] K8s Health Check...
+[2026-04-05 14:21:51]   ✅ ollama-app-ollama-7f8d675d4d-b4v6f: Running (restarts: 1)
+[2026-04-05 14:21:51]   ✅ ollama-app-open-webui-857868cb4f-4n24z: Running (restarts: 1)
+[2026-04-05 14:21:51] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 14:21:51]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 14:21:51] 📊 Sammle System-Kontext...
+[2026-04-05 14:21:51]   RAM frei: 33.6 GB
+[2026-04-05 14:21:51]   Aktive Slots: 0/0
+[2026-04-05 14:21:51]   Cached Tokens: 0
+[2026-04-05 14:21:51]   Crashes letzte Stunde: 2
+[2026-04-05 14:21:51] 🤔 LLM analysiert Incident...
+[2026-04-05 14:21:51]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 14:21:51]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 14:21:51]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 14:22:11]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 14:22:14]   LLM Antwort:
+URSACHE: Die Kombination aus Crashes und geringem freien RAM deutet darauf hin, dass das Problem wahrscheinlich mit der RAM-Verfügbarkeit zusammenhängt.
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Da aktive Nutzer-Slots 0 sind und keine aktiven Tokens vorhanden sind, kann das System ohne Unterbrechung der WebUI neu gestartet werden, um Speicherlecks zu beheben.
+RISIKO: mittel
+[2026-04-05 14:22:14] 🛡️ Sicherheitscheck...
+[2026-04-05 14:22:14]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 14:22:14] 🚀 Führe Aktion C aus...
+[2026-04-05 14:22:16]   ✅ llama-server neu gestartet
+[2026-04-05 14:22:16] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 14:22:21]   ✅ llama-server läuft wieder
+[2026-04-05 14:22:21] 📋 Incident Report:
+[2026-04-05 14:22:21]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 14:22:21]   Analyse:   URSACHE: Die Kombination aus Crashes und geringem freien RAM deutet darauf hin, dass das Problem wahrscheinlich mit der RAM-Verfügbarkeit zusammenhängt.
+[2026-04-05 14:22:21]   Aktion:    llama-server neu gestartet (PID 1266)
+[2026-04-05 14:22:21]   Eskaliert: False
+[2026-04-05 14:22:21]   Gelöst:    True
+[2026-04-05 14:22:21]   ✅ Incident automatisch gelöst
+[2026-04-05 14:22:21] ────────────────────────────────────────────────────────────
+[2026-04-05 14:22:21]   ✅ Incident Agent hat Problem gelöst
+[2026-04-05 14:22:21] 💻 [4/6] System Health...
+[2026-04-05 14:22:22]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 14:22:22]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 14:22:22]   ✅ Speicher OK
+[2026-04-05 14:22:22]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 14:22:22] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 14:22:22]   ✅ llama33-70b: keine Änderung
+[2026-04-05 14:22:22]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 14:22:22] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 14:22:23]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 14:22:23] 📋 Zusammenfassung:
+[2026-04-05 14:22:23]   🔄 llama-server war down — Incident Agent hat ihn repariert
+[2026-04-05 14:22:23]   Aktionen durchgeführt:
+[2026-04-05 14:22:23]     → llama-server durch Incident Agent wiederhergestellt
+[2026-04-05 14:22:23] ────────────────────────────────────────────────────────────
+[2026-04-05 14:22:23] 🤖 Platform Agent v3 beendet

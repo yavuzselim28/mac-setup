@@ -57,6 +57,11 @@ echo "[$(date)] ✅ Platform Agent initial run fertig" >> $LOG
 echo "[$(date)] ⏳ Warte 60s vor llama-server Start..." >> $LOG
 sleep 60
 
+# 8B Fallback auf Port 8082 beenden falls noch läuft
+lsof -ti:8082 | xargs kill -9 2>/dev/null
+sleep 2
+echo "[$(date)] ✅ 8B Fallback gestoppt" >> $LOG
+
 # llama-server nur starten wenn noch nicht läuft
 if lsof -ti:8080 > /dev/null 2>&1; then
     echo "[$(date)] ✅ llama-server läuft bereits — kein Neustart nötig" >> $LOG

@@ -83,3 +83,64 @@
 [2026-04-05 13:09:11]   🔬 TurboQuant neuer Commit: [bc05a68] Merge remote-tracking branch 'origin/master' into feature/tu
 [2026-04-05 13:09:11] ────────────────────────────────────────────────────────────
 [2026-04-05 13:09:11] 🤖 Platform Agent v3 beendet
+[2026-04-05 13:17:11] ============================================================
+[2026-04-05 13:17:11] 🚨 Incident Response Agent gestartet: llama-server nicht erreichbar nach OOM Crash
+[2026-04-05 13:17:11] 📊 Sammle System-Kontext...
+[2026-04-05 13:17:11]   RAM frei: 0.1 GB
+[2026-04-05 13:17:11]   Aktive Slots: 0/1
+[2026-04-05 13:17:11]   Cached Tokens: 0
+[2026-04-05 13:17:11]   Crashes letzte Stunde: 0
+[2026-04-05 13:17:11] 🤔 LLM analysiert Incident...
+[2026-04-05 13:17:34]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar nach einem OOM-Crash, vermutlich aufgrund von Speicherproblemen, da der freie RAM sehr niedrig ist (0,1 GB von 64 GB total).
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Da es keine aktiven Nutzer gibt und die Anzahl der Crashes in der letzten Stunde bei 0 liegt, ist es sicher, den llama-server neu zu starten, um mögliche Speicherlecks zu beheben, ohne die Kontext-Reduzierung vorzunehmen, die die Nutzererfahrung beeinträchtigen könnte.
+RISIKO: niedrig
+[2026-04-05 13:17:34] 🛡️ Sicherheitscheck...
+[2026-04-05 13:17:34]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 13:17:34] 🚀 Führe Aktion C aus...
+[2026-04-05 13:18:57] ============================================================
+[2026-04-05 13:18:57] 🚨 Incident Response Agent gestartet: llama-server nicht erreichbar nach OOM Crash
+[2026-04-05 13:18:57] 📊 Sammle System-Kontext...
+[2026-04-05 13:18:57]   RAM frei: 1.9 GB
+[2026-04-05 13:18:57]   Aktive Slots: 0/0
+[2026-04-05 13:18:57]   Cached Tokens: 0
+[2026-04-05 13:18:57]   Crashes letzte Stunde: 0
+[2026-04-05 13:18:57] 🤔 LLM analysiert Incident...
+[2026-04-05 13:22:30] ============================================================
+[2026-04-05 13:22:30] 🚨 Incident Response Agent gestartet: llama-server nicht erreichbar nach OOM Crash
+[2026-04-05 13:22:30] 📊 Sammle System-Kontext...
+[2026-04-05 13:22:30]   RAM frei: 0.4 GB
+[2026-04-05 13:22:30]   Aktive Slots: 0/0
+[2026-04-05 13:22:30]   Cached Tokens: 0
+[2026-04-05 13:22:30]   Crashes letzte Stunde: 0
+[2026-04-05 13:22:30] 🤔 LLM analysiert Incident...
+[2026-04-05 13:22:30]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 13:22:30]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 13:22:30]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 13:22:50]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 13:22:56]   LLM Antwort:
+URSACHE: Der Llama-Server ist aufgrund eines OOM-Crashes (Out-of-Memory) nicht erreichbar, da der freie RAM unter 8 GB liegt und das Hauptmodell (~40 GB GPU-RAM) nicht ausreichend RAM zur Verfügung stellt.
+
+AKTION: C) Llama-Server neu starten ohne Änderungen
+
+BEGRÜNDUNG: Da der freie RAM unter 8 GB liegt, ist es wahrscheinlich, dass das RAM-Problem die Hauptursache ist. Durch das Neustarten des Llama-Servers ohne Änderungen wird das System in die ursprüngliche Zustand zurückgesetzt, was möglicherweise die Speicherlecks behebt.
+
+RISIKO: mittel
+
+Begründung: Das Neustarten des Llama-Servers ohne Änderungen kann zu einer kurzen Unterbrechung führen, aber es ist eine gängige Lösung für OOM-Crashes. Wenn die Unterbrechung nicht zu weiteren Problemen führt, kann dies eine mögliche Lösung sein.
+[2026-04-05 13:22:56] 🛡️ Sicherheitscheck...
+[2026-04-05 13:22:56]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 13:22:56] 🚀 Führe Aktion C aus...
+[2026-04-05 13:22:58]   ✅ llama-server neu gestartet
+[2026-04-05 13:22:58] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 13:23:03]   ✅ llama-server läuft wieder
+[2026-04-05 13:23:03] 📋 Incident Report:
+[2026-04-05 13:23:03]   Incident:  llama-server nicht erreichbar nach OOM Crash
+[2026-04-05 13:23:03]   Analyse:   URSACHE: Der Llama-Server ist aufgrund eines OOM-Crashes (Out-of-Memory) nicht erreichbar, da der freie RAM unter 8 GB liegt und das Hauptmodell (~40 GB GPU-RAM) nicht ausreichend RAM zur Verfügung stellt.
+[2026-04-05 13:23:03]   Aktion:    llama-server neu gestartet (PID 5712)
+[2026-04-05 13:23:03]   Eskaliert: False
+[2026-04-05 13:23:03]   Gelöst:    True
+[2026-04-05 13:23:03]   ✅ Incident automatisch gelöst
+[2026-04-05 13:23:03] ────────────────────────────────────────────────────────────
+[2026-04-05 13:23:03] 🚨 Incident Response Agent beendet

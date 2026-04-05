@@ -1,9 +1,10 @@
 #!/bin/bash
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 LOG="$HOME/mac-setup/agent/startup.log"
 echo "[$(date)] 🚀 Startup Script gestartet" >> $LOG
 
-# Warten bis Docker hochgefahren ist
+# Warten bis Docker bereit
 echo "[$(date)] ⏳ Warte auf Docker..." >> $LOG
 for i in $(seq 1 30); do
     if docker ps &>/dev/null; then
@@ -23,7 +24,7 @@ for i in $(seq 1 20); do
     sleep 5
 done
 
-# GPU Memory Limit setzen
+# GPU Memory Limit
 sudo sysctl iogpu.wired_limit_mb=52429 >> $LOG 2>&1
 echo "[$(date)] ✅ GPU Limit gesetzt" >> $LOG
 
@@ -32,16 +33,15 @@ kubectl scale deployment ollama-app-ollama -n ollama --replicas=1 >> $LOG 2>&1
 kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1 >> $LOG 2>&1
 echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 
-# Port-Forward starten
-sudo kubectl port-forward svc/ingress-nginx-controller 80:80 -n ingress-nginx >> $LOG 2>&1 &
-echo "[$(date)] ✅ Port-Forward gestartet" >> $LOG
+# Port-Forward auf 8888 (kein sudo nötig)
+kubectl port-forward svc/ingress-nginx-controller 8888:80 -n ingress-nginx >> $LOG 2>&1 &
+echo "[$(date)] ✅ Port-Forward auf 8888 gestartet" >> $LOG
 
-# Platform Agent ausführen
+# Platform Agent
 /opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
 echo "[$(date)] ✅ Platform Agent initial run fertig" >> $LOG
 
-# llama-server mit Speculative Decoding starten
-echo "[$(date)] 🧠 Starte llama-server mit Speculative Decoding..." >> $LOG
+# llama-server mit Speculative Decoding
 lsof -ti:8080 | xargs kill -9 2>/dev/null
 sleep 2
 cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \

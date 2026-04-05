@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import TypedDict
 from langgraph.graph import StateGraph, END
 from langchain_openai import ChatOpenAI
+from incident_agent import handle_incident
 
 # ── Konfiguration ─────────────────────────────────────────────
 LLAMA_SERVER  = "http://localhost:8080/v1"
@@ -331,19 +332,22 @@ def check_llama_server(state: AgentState) -> AgentState:
             log(f"  ❌ {msg}")
             state["notifications"].append(msg)
         else:
-            log(f"  ❌ llama-server down — starte neu (Versuch {restarts_last_hour + 1}/{MAX_RESTARTS_PER_HOUR})...")
-            log_path = Path.home() / "mac-setup/agent/llama-server.log"
-            with open(log_path, "a") as lf:
-                proc = subprocess.Popen(
-                    LLAMA_CMD,
-                    stdout=lf,
-                    stderr=lf,
-                    cwd=str(LLAMA_DIR)
-                )
+            log(f"  ❌ llama-server down — rufe Incident Agent auf...")
+            import sys
+            sys.path.insert(0, str(Path.home() / "mac-setup/agent"))
+            from incident_agent import handle_incident
+            result = handle_incident("llama-server nicht erreichbar — automatisch erkannt durch Watchdog")
             persistent["llama_restarts"].append(now)
-            log(f"  ✅ llama-server gestartet (PID {proc.pid})")
-            state["actions_taken"].append("llama-server neu gestartet")
-            state["notifications"].append("🔄 llama-server war down — automatisch neu gestartet")
+            if result.get("resolved"):
+                log("  ✅ Incident Agent hat Problem gelöst")
+                state["actions_taken"].append("llama-server durch Incident Agent wiederhergestellt")
+                state["notifications"].append("🔄 llama-server war down — Incident Agent hat ihn repariert")
+            elif result.get("escalate"):
+                log("  🚨 Incident Agent eskaliert — manuelle Prüfung nötig")
+                state["notifications"].append("🚨 llama-server Incident eskaliert — manuelle Prüfung erforderlich")
+            else:
+                log("  ⏳ Incident Agent: Lösung in Arbeit")
+                state["notifications"].append("⏳ llama-server wird wiederhergestellt")
 
     save_state(persistent)
     return state
@@ -517,3 +521,4 @@ if __name__ == "__main__":
     })
 
     log("🤖 Platform Agent v3 beendet")
+# Import wird oben eingefügt — separater Patch

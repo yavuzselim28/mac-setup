@@ -39,3 +39,24 @@ echo "[$(date)] ✅ Port-Forward gestartet" >> $LOG
 # Platform Agent ausführen
 /opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
 echo "[$(date)] ✅ Platform Agent initial run fertig" >> $LOG
+
+# llama-server mit Speculative Decoding starten
+echo "[$(date)] 🧠 Starte llama-server mit Speculative Decoding..." >> $LOG
+lsof -ti:8080 | xargs kill -9 2>/dev/null
+sleep 2
+cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \
+  -m $HOME/models/llama33-70b-q4km.gguf \
+  --model-draft $HOME/models/llama31-8b-draft.gguf \
+  --cache-type-k turbo4 \
+  --cache-type-v turbo4 \
+  --cache-type-k-draft turbo4 \
+  --cache-type-v-draft turbo4 \
+  -ngl 99 \
+  -c 16384 \
+  -np 1 \
+  -fa on \
+  --host 0.0.0.0 --port 8080 \
+  --draft-max 8 \
+  --draft-min 2 >> $LOG 2>&1 &
+
+echo "[$(date)] ✅ llama-server gestartet" >> $LOG

@@ -76,3 +76,4 @@ cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \
   --draft-min 2 >> $LOG 2>&1 &
 
 echo "[$(date)] ✅ llama-server gestartet" >> $LOG
+rm -f /tmp/platform-startup.lock

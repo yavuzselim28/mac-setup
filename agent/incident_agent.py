@@ -132,6 +132,13 @@ def collect_context(state: IncidentState) -> IncidentState:
     log("📊 Sammle System-Kontext...")
     ctx = {}
 
+    # Prüfen ob Startup noch läuft
+    import os
+    if os.path.exists("/tmp/platform-startup.lock"):
+        log("  ⚠️ Startup läuft noch — Incident Agent wartet...")
+        import time
+        time.sleep(30)
+
     # RAM gesamt
     total, used, free = shutil.disk_usage(Path.home())
     ctx["disk_free_gb"] = free // (1024**3)

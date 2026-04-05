@@ -57,9 +57,11 @@ echo "[$(date)] ✅ Platform Agent initial run fertig" >> $LOG
 echo "[$(date)] ⏳ Warte 60s vor llama-server Start..." >> $LOG
 sleep 60
 
-# llama-server mit Speculative Decoding
-lsof -ti:8080 | xargs kill -9 2>/dev/null
-sleep 2
+# llama-server nur starten wenn noch nicht läuft
+if lsof -ti:8080 > /dev/null 2>&1; then
+    echo "[$(date)] ✅ llama-server läuft bereits — kein Neustart nötig" >> $LOG
+else
+    echo "[$(date)] 🧠 Starte llama-server..." >> $LOG
 cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \
   -m $HOME/models/llama33-70b-q4km.gguf \
   --model-draft $HOME/models/llama31-8b-draft.gguf \
@@ -75,5 +77,6 @@ cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \
   --draft-max 8 \
   --draft-min 2 >> $LOG 2>&1 &
 
-echo "[$(date)] ✅ llama-server gestartet" >> $LOG
+    echo "[$(date)] ✅ llama-server gestartet" >> $LOG
+fi
 rm -f /tmp/platform-startup.lock

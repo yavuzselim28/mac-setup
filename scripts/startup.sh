@@ -33,13 +33,13 @@ kubectl scale deployment ollama-app-ollama -n ollama --replicas=1 >> $LOG 2>&1
 kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1 >> $LOG 2>&1
 echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 
-# Port-Forward auf 8888 (kein sudo nötig)
-kubectl port-forward svc/ollama-app-open-webui 3000:8080 -n ollama >> $LOG 2>&1 &
-echo "[$(date)] ✅ Port-Forward auf 8888 gestartet" >> $LOG
-
 # Platform Agent
 /opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
 echo "[$(date)] ✅ Platform Agent initial run fertig" >> $LOG
+
+# 60s warten damit K8s sich stabilisiert und RAM frei wird
+echo "[$(date)] ⏳ Warte 60s vor llama-server Start..." >> $LOG
+sleep 60
 
 # llama-server mit Speculative Decoding
 lsof -ti:8080 | xargs kill -9 2>/dev/null

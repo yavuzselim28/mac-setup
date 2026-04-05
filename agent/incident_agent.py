@@ -326,15 +326,16 @@ def execute_action(state: IncidentState) -> IncidentState:
         log(f"  ✅ llama-server neu gestartet mit 8K Kontext")
 
     elif action == "C":
-        # llama-server einfach neu starten
-        subprocess.run(["bash", "-c", "lsof -ti:8080 | xargs kill -9 2>/dev/null"])
+        # llama-server neu starten — aber NICHT während startup.sh noch läuft
+        # Nur neu starten wenn kein anderer Prozess gerade startet
         import time
+        subprocess.run(["bash", "-c", "lsof -ti:8080 | xargs kill -9 2>/dev/null"])
         time.sleep(2)
         log_path = Path.home() / "mac-setup/agent/llama-server.log"
         with open(log_path, "a") as lf:
             proc = subprocess.Popen(LLAMA_CMD_16K, stdout=lf, stderr=lf, cwd=str(LLAMA_DIR))
         state["action_taken"] = f"llama-server neu gestartet (PID {proc.pid})"
-        log(f"  ✅ llama-server neu gestartet")
+        log(f"  ✅ llama-server (70B) neu gestartet")
 
     elif action == "D":
         state["action_taken"] = "Keine Aktion — Eskalation"

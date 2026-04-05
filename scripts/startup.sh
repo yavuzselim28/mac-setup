@@ -34,7 +34,7 @@ kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1 >> $LOG 2>
 echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 
 # Port-Forward auf 8888 (kein sudo nötig)
-kubectl port-forward svc/ingress-nginx-controller 8888:80 -n ingress-nginx >> $LOG 2>&1 &
+kubectl port-forward svc/ollama-app-open-webui 3000:8080 -n ollama >> $LOG 2>&1 &
 echo "[$(date)] ✅ Port-Forward auf 8888 gestartet" >> $LOG
 
 # Platform Agent

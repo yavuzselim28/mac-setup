@@ -268,6 +268,11 @@ def safety_check(state: IncidentState) -> IncidentState:
         must_escalate = True
         reason = f"Zu viele Crashes ({ctx['crashes_last_hour']}x in 1h)"
 
+    # Aktion A niemals beim Startup — K8s Pods nicht stoppen
+    if state["recommended_action"] == "A":
+        must_escalate = True
+        reason = "Aktion A (K8s stoppen) zu destruktiv — eskaliere stattdessen"
+
     if state["action_risk"] == "hoch":
         must_escalate = True
         reason = "LLM bewertet Risiko als hoch"

@@ -373,6 +373,10 @@ def verify_resolution(state: IncidentState) -> IncidentState:
         log("  ❌ llama-server noch nicht bereit (lädt noch...)")
         state["resolved"] = False  # lädt noch, ist OK
 
+    # 8B Fallback beenden
+    import subprocess
+    subprocess.run(["bash", "-c", "lsof -ti:8082 | xargs kill -9 2>/dev/null"])
+
     return state
 
 # ── Node 6: Abschlussbericht ───────────────────────────────────

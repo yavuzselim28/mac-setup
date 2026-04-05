@@ -24,6 +24,22 @@ for i in $(seq 1 20); do
     sleep 5
 done
 
+# Crash-Counter zurücksetzen beim Startup
+python3 -c "
+import json
+from pathlib import Path
+f = Path.home() / 'mac-setup/agent/agent_state.json'
+d = json.loads(f.read_text()) if f.exists() else {}
+d['llama_restarts'] = []
+f.write_text(json.dumps(d))
+print('Crash-Counter zurückgesetzt')
+" >> $LOG 2>&1
+echo "[$(date)] ✅ Crash-Counter zurückgesetzt" >> $LOG
+
+# Loopback Alias für Docker (funktioniert ohne WLAN)
+sudo ifconfig lo0 alias 10.254.254.254 255.255.255.255 >> $LOG 2>&1
+echo "[$(date)] ✅ Loopback Alias gesetzt" >> $LOG
+
 # GPU Memory Limit
 sudo sysctl iogpu.wired_limit_mb=52429 >> $LOG 2>&1
 echo "[$(date)] ✅ GPU Limit gesetzt" >> $LOG
@@ -37,7 +53,7 @@ echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 /opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
 echo "[$(date)] ✅ Platform Agent initial run fertig" >> $LOG
 
-# 60s warten damit K8s sich stabilisiert und RAM frei wird
+# 60s warten damit K8s sich stabilisiert
 echo "[$(date)] ⏳ Warte 60s vor llama-server Start..." >> $LOG
 sleep 60
 

@@ -50,19 +50,3 @@ echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 
 # llama-server starten
 echo "[$(date)] 🧠 Starte llama-server..." >> $LOG
-cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \
-  -m $HOME/models/llama33-70b-q4km.gguf \
-  --model-draft $HOME/models/llama31-8b-draft.gguf \
-  --cache-type-k turbo4 \
-  --cache-type-v turbo4 \
-  --cache-type-k-draft turbo4 \
-  --cache-type-v-draft turbo4 \
-  -ngl 99 \
-  -c 16384 \
-  -np 1 \
-  -fa on \
-  --host 0.0.0.0 --port 8080 \
-  --draft-max 8 \
-  --draft-min 2 >> $LOG 2>&1 &
-
-echo "[$(date)] ✅ llama-server gestartet (PID $!)" >> $LOG

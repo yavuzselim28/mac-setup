@@ -1,4 +1,6 @@
 import requests
+from dotenv import load_dotenv
+load_dotenv(dotenv_path="/Users/yavuztopcu/mac-setup/agent/.env")
 import subprocess
 import yaml
 import re

@@ -48,22 +48,8 @@ kubectl scale deployment ollama-app-ollama -n ollama --replicas=1 >> $LOG 2>&1
 kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1 >> $LOG 2>&1
 echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 
-# Platform Agent — OHNE llama-server Watchdog beim Startup
-/opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
-echo "[$(date)] ✅ Platform Agent initial run fertig" >> $LOG
-
-# 60s warten
-echo "[$(date)] ⏳ Warte 60s vor llama-server Start..." >> $LOG
-sleep 60
-
-# ALLE alten llama Prozesse killen
-echo "[$(date)] 🔄 Beende alle alten llama Prozesse..." >> $LOG
-lsof -ti:8080 | xargs kill -9 2>/dev/null
-lsof -ti:8082 | xargs kill -9 2>/dev/null
-sleep 3
-
-# Frisch starten
-echo "[$(date)] 🧠 Starte llama-server neu..." >> $LOG
+# llama-server starten
+echo "[$(date)] 🧠 Starte llama-server..." >> $LOG
 cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \
   -m $HOME/models/llama33-70b-q4km.gguf \
   --model-draft $HOME/models/llama31-8b-draft.gguf \

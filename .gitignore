@@ -12,3 +12,4 @@
 *.tmp
 /tmp/
 agent/.env
+agent/.env

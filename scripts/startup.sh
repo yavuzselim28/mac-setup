@@ -24,7 +24,7 @@ for i in $(seq 1 20); do
     sleep 5
 done
 
-# Crash-Counter zurücksetzen beim Startup
+# Crash-Counter zurücksetzen
 python3 -c "
 import json
 from pathlib import Path
@@ -32,11 +32,10 @@ f = Path.home() / 'mac-setup/agent/agent_state.json'
 d = json.loads(f.read_text()) if f.exists() else {}
 d['llama_restarts'] = []
 f.write_text(json.dumps(d))
-print('Crash-Counter zurückgesetzt')
 " >> $LOG 2>&1
 echo "[$(date)] ✅ Crash-Counter zurückgesetzt" >> $LOG
 
-# Loopback Alias für Docker (funktioniert ohne WLAN)
+# Loopback Alias
 sudo ifconfig lo0 alias 10.254.254.254 255.255.255.255 >> $LOG 2>&1
 echo "[$(date)] ✅ Loopback Alias gesetzt" >> $LOG
 
@@ -49,24 +48,22 @@ kubectl scale deployment ollama-app-ollama -n ollama --replicas=1 >> $LOG 2>&1
 kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1 >> $LOG 2>&1
 echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 
-# Platform Agent
+# Platform Agent — OHNE llama-server Watchdog beim Startup
 /opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
 echo "[$(date)] ✅ Platform Agent initial run fertig" >> $LOG
 
-# 60s warten damit K8s sich stabilisiert
+# 60s warten
 echo "[$(date)] ⏳ Warte 60s vor llama-server Start..." >> $LOG
 sleep 60
 
-# 8B Fallback auf Port 8082 beenden falls noch läuft
+# ALLE alten llama Prozesse killen
+echo "[$(date)] 🔄 Beende alle alten llama Prozesse..." >> $LOG
+lsof -ti:8080 | xargs kill -9 2>/dev/null
 lsof -ti:8082 | xargs kill -9 2>/dev/null
-sleep 2
-echo "[$(date)] ✅ 8B Fallback gestoppt" >> $LOG
+sleep 3
 
-# llama-server nur starten wenn noch nicht läuft
-if lsof -ti:8080 > /dev/null 2>&1; then
-    echo "[$(date)] ✅ llama-server läuft bereits — kein Neustart nötig" >> $LOG
-else
-    echo "[$(date)] 🧠 Starte llama-server..." >> $LOG
+# Frisch starten
+echo "[$(date)] 🧠 Starte llama-server neu..." >> $LOG
 cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \
   -m $HOME/models/llama33-70b-q4km.gguf \
   --model-draft $HOME/models/llama31-8b-draft.gguf \
@@ -82,6 +79,4 @@ cd $HOME/llama-cpp-turboquant && ./build/bin/llama-server \
   --draft-max 8 \
   --draft-min 2 >> $LOG 2>&1 &
 
-    echo "[$(date)] ✅ llama-server gestartet" >> $LOG
-fi
-rm -f /tmp/platform-startup.lock
+echo "[$(date)] ✅ llama-server gestartet (PID $!)" >> $LOG

@@ -11,3 +11,4 @@
 # Temporäre Dateien
 *.tmp
 /tmp/
+agent/.env

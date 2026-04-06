@@ -48,5 +48,26 @@ kubectl scale deployment ollama-app-ollama -n ollama --replicas=1 >> $LOG 2>&1
 kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1 >> $LOG 2>&1
 echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 
-# llama-server starten
+# llama-server starten mit nohup — überlebt LaunchAgent Ende
 echo "[$(date)] 🧠 Starte llama-server..." >> $LOG
+lsof -ti:8080 | xargs kill -9 2>/dev/null
+lsof -ti:8082 | xargs kill -9 2>/dev/null
+sleep 2
+
+nohup /Users/yavuztopcu/llama-cpp-turboquant/build/bin/llama-server \
+  -m /Users/yavuztopcu/models/llama33-70b-q4km.gguf \
+  --model-draft /Users/yavuztopcu/models/llama31-8b-draft.gguf \
+  --cache-type-k turbo4 \
+  --cache-type-v turbo4 \
+  --cache-type-k-draft turbo4 \
+  --cache-type-v-draft turbo4 \
+  -ngl 99 \
+  -c 16384 \
+  -np 1 \
+  -fa on \
+  --host 0.0.0.0 --port 8080 \
+  --draft-max 8 \
+  --draft-min 2 >> $LOG 2>&1 &
+
+disown $!
+echo "[$(date)] ✅ llama-server gestartet (PID $!)" >> $LOG

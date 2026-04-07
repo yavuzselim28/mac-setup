@@ -1,6 +1,45 @@
 {
   "analyses": [
     {
+      "sha": "852fa86",
+      "short_sha": "852fa86",
+      "repo": "TheTom/llama-cpp-turboquant",
+      "message": "fix: bust github actions SPM cache to clear stale upstream C++ files",
+      "date": "2026-04-07T07:01:57Z",
+      "category": "Bugfix",
+      "relevant": false,
+      "auswirkung": "Der Commit behebt ein Problem mit dem GitHub Actions SPM-Cache, der veraltete C++-Dateien speichert, aber er \u00e4ndert nichts an der Funktionalit\u00e4t oder Leistung von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro.",
+      "empfehlung": "Kein Handlungsbedarf",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T19:01:24.760057"
+    },
+    {
+      "sha": "0f59dad",
+      "short_sha": "0f59dad",
+      "repo": "TheTom/llama-cpp-turboquant",
+      "message": "fix: explicit Tokenizers dependency for MLXInferenceCore to prevent module build races",
+      "date": "2026-04-07T15:26:18Z",
+      "category": "Bugfix",
+      "relevant": false,
+      "auswirkung": "Der Commit behebt ein Problem mit der Abh\u00e4ngigkeit von Tokenizers f\u00fcr MLXInferenceCore, was jedoch nicht direkt mit der Konfiguration von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro zusammenh\u00e4ngt.",
+      "empfehlung": "Beim n\u00e4chsten Update",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T19:01:10.388705"
+    },
+    {
+      "sha": "0665bd0",
+      "short_sha": "0665bd0",
+      "repo": "TheTom/llama-cpp-turboquant",
+      "message": "Merge pull request #15 from SharpAI/feature/use-upstream-mlx-swift",
+      "date": "2026-04-07T16:12:43Z",
+      "category": "Feature",
+      "relevant": false,
+      "auswirkung": "Der Commit f\u00fcgt eine CUDA-Backend-Unterst\u00fctzung f\u00fcr TurboQuant 3-Bit-KV-Cache-Kompression auf NVIDIA-GPUs hinzu, was f\u00fcr die Apple Silicon M5 Pro Plattform nicht relevant ist, da diese eine Metal-GPU verwendet.",
+      "empfehlung": "Kein Handlungsbedarf",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T19:00:58.227160"
+    },
+    {
       "sha": "0d816e2",
       "short_sha": "0d816e2",
       "repo": "TheTom/llama-cpp-turboquant",
@@ -20,9 +59,9 @@
       "message": "v0.2.0: standalone custom kernel package",
       "date": "2026-03-31T08:10:04Z",
       "category": "Feature",
-      "relevant": true,
+      "relevant": false,
       "auswirkung": "Der Commit f\u00fcgt ein standalone custom kernel package hinzu, was m\u00f6glicherweise die Leistung und Effizienz von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro verbessern k\u00f6nnte, indem es die Integration von TurboQuant mit custom Metal Kernels erm\u00f6glicht.",
-      "empfehlung": "Sofort neu kompilieren",
+      "empfehlung": "Warten auf TheToms MLX Port \u2014 Stack-Wechsel nicht empfohlen",
       "risiko": "mittel",
       "analyzed_at": "2026-04-07T18:04:42.607901"
     },

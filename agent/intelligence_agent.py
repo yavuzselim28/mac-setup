@@ -1,5 +1,20 @@
 import requests
 import json
+import subprocess
+
+def mempalace_search(query: str) -> str:
+    """Suche in der Platform-Wissensbasis"""
+    try:
+        r = subprocess.run(
+            ["mempalace", "search", query, "--limit", "2"],
+            capture_output=True, text=True, timeout=10
+        )
+        lines = [l for l in r.stdout.split('
+') if l.strip() and not l.startswith('=') and not l.startswith('-') and not l.startswith('[') and not l.startswith('Source') and not l.startswith('Match')]
+        return '
+'.join(lines[:5]) if lines else ""
+    except:
+        return ""
 import re
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -185,10 +200,16 @@ def analyze_commits(state: IntelState) -> IntelState:
                 pr_details = f"\nPR Beschreibung: {pr['body'][:500]}"
 
         system_ctx = load_context()
+        # Relevante Entscheidungen aus MemPalace laden
+        mem_context = mempalace_search(commit["message"][:50])
+        
         prompt = f"""Du bist ein Platform Engineer der TurboQuant KV-Cache Änderungen bewertet.
 
 MEIN SYSTEM:
 {system_ctx}
+
+FRÜHERE ENTSCHEIDUNGEN (aus Platform-Wissensbasis):
+{mem_context}
 
 Neuer Commit in TheTom/llama-cpp-turboquant:
 SHA: {commit['sha']}

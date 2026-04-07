@@ -5,206 +5,145 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Platform Dashboard</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Syne:wght@700;800&display=swap');
-  :root {
-    --bg: #0b0c10;
-    --surface: #13151c;
-    --border: #1e2130;
-    --green: #3dd68c;
-    --blue: #4d9cf6;
-    --amber: #f5a623;
-    --red: #f25757;
-    --muted: #4a5068;
-    --text: #c8cfe0;
-    --text2: #8892a4;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'JetBrains Mono',monospace; background:var(--bg); color:var(--text); padding:20px; font-size:13px; line-height:1.5; }
-  
-  /* Header */
-  .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
-  .logo { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; letter-spacing:-0.5px; }
-  .logo em { color:var(--green); font-style:normal; }
-  .header-right { display:flex; align-items:center; gap:12px; }
-  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 2s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  .refresh-btn { background:transparent; border:1px solid var(--border); color:var(--text2); font-family:'JetBrains Mono',monospace; font-size:11px; padding:5px 12px; border-radius:4px; cursor:pointer; }
-  .refresh-btn:hover { border-color:var(--green); color:var(--green); }
-  .countdown { font-size:11px; color:var(--muted); }
-
-  /* Status bar */
-  .status-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
-  .stat { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:14px 16px; }
-  .stat-label { font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
-  .stat-val { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; line-height:1; }
-  .stat-sub { font-size:11px; color:var(--text2); margin-top:4px; }
-  .green { color:var(--green); }
-  .red { color:var(--red); }
-  .amber { color:var(--amber); }
-  .blue { color:var(--blue); }
-
-  /* Report card */
-  .report-card { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:6px; padding:16px; margin-bottom:16px; }
-  .report-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-  .report-title { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--blue); }
-  .report-date { font-size:10px; color:var(--muted); }
-  .report-text { font-size:12px; color:var(--text); line-height:1.7; }
-
-  /* Intelligence */
-  .intel-list { background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:16px; overflow:hidden; }
-  .intel-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); cursor:pointer; }
-  .intel-header:hover { background:rgba(255,255,255,0.02); }
-  .intel-title { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--amber); }
-  .collapse-btn { font-size:11px; color:var(--muted); }
-  .intel-body { padding:0; }
-  .intel-item { padding:12px 16px; border-bottom:1px solid var(--border); }
-  .intel-item:last-child { border-bottom:none; }
-  .intel-item-header { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
-  .intel-sha { font-size:11px; color:var(--blue); }
-  .badge { font-size:10px; padding:2px 7px; border-radius:3px; font-weight:600; }
-  .badge-green { background:rgba(61,214,140,0.1); color:var(--green); }
-  .badge-amber { background:rgba(245,166,35,0.1); color:var(--amber); }
-  .badge-red { background:rgba(242,87,87,0.1); color:var(--red); }
-  .badge-gray { background:rgba(74,80,104,0.2); color:var(--muted); }
-  .intel-msg { font-size:12px; color:var(--text2); }
-  .intel-action { font-size:11px; color:var(--text2); margin-top:3px; }
-  .intel-action span { color:var(--amber); }
-  .explain-btn { margin-top:8px; background:rgba(77,156,246,0.08); border:1px solid rgba(77,156,246,0.2); color:var(--blue); font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 12px; border-radius:3px; cursor:pointer; }
-  .explain-btn:hover { background:rgba(77,156,246,0.15); }
-  .explain-result { margin-top:8px; font-size:12px; color:var(--text); line-height:1.6; padding:8px; background:rgba(0,0,0,0.2); border-radius:4px; display:none; white-space:pre-wrap; }
-
-  /* Collapsible sections */
-  .section { background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:16px; overflow:hidden; }
-  .section-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; cursor:pointer; user-select:none; }
-  .section-header:hover { background:rgba(255,255,255,0.02); }
-  .section-title { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text2); }
-  .section-meta { display:flex; align-items:center; gap:10px; }
-  .chevron { font-size:10px; color:var(--muted); transition:transform 0.2s; }
-  .chevron.open { transform:rotate(180deg); }
-  .section-body { border-top:1px solid var(--border); }
-  .pod-row { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid rgba(30,33,48,0.6); }
-  .pod-row:last-child { border-bottom:none; }
-  .pod-name { font-size:12px; }
-  .pod-badges { display:flex; gap:6px; align-items:center; }
-  .dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:6px; }
-  .dot-green { background:var(--green); }
-  .dot-red { background:var(--red); }
-  .dot-amber { background:var(--amber); }
-  .dot-gray { background:var(--muted); }
-
-  /* Log viewer */
-  .log-section { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
-  .log-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); }
-  .log-filters { display:flex; gap:6px; }
-  .filter { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px; padding:3px 9px; border-radius:3px; cursor:pointer; letter-spacing:0.5px; }
-  .filter.active { border-color:var(--green); color:var(--green); background:rgba(61,214,140,0.06); }
-  .log-body { padding:12px 16px; max-height:320px; overflow-y:auto; }
-  .log-entry { display:flex; gap:12px; padding:3px 0; border-bottom:1px solid rgba(30,33,48,0.4); font-size:11px; }
-  .log-entry:last-child { border-bottom:none; }
-  .log-t { color:var(--muted); flex-shrink:0; }
-  .log-ok { color:var(--green); }
-  .log-err { color:var(--red); }
-  .log-warn { color:var(--amber); }
-  .log-info { color:var(--blue); }
-  .log-dim { color:var(--text2); }
-
-  /* Grid 2-col */
-  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
-  @media(max-width:700px) { .status-bar,.grid2 { grid-template-columns:1fr 1fr; } }
-  @media(max-width:480px) { .status-bar { grid-template-columns:1fr 1fr; } .grid2 { grid-template-columns:1fr; } }
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Syne:wght@700;800&display=swap');
+:root {
+  --bg:#0b0c10;--surface:#13151c;--border:#1e2130;
+  --green:#3dd68c;--blue:#4d9cf6;--amber:#f5a623;--red:#f25757;
+  --muted:#4a5068;--text:#c8cfe0;--text2:#8892a4;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);padding:20px;font-size:13px;line-height:1.5;}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+.logo em{color:var(--green);font-style:normal;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;display:inline-block;margin-right:6px;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.refresh-btn{background:transparent;border:1px solid var(--border);color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer;}
+.refresh-btn:hover{border-color:var(--green);color:var(--green);}
+.status-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px 16px;}
+.stat-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;line-height:1;}
+.stat-sub{font-size:11px;color:var(--text2);margin-top:4px;}
+.green{color:var(--green);}.red{color:var(--red);}.amber{color:var(--amber);}.blue{color:var(--blue);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:16px;overflow:hidden;}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;}
+.card-header:hover{background:rgba(255,255,255,0.02);}
+.card-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;}
+.card-title.blue{color:var(--blue);}
+.card-title.amber{color:var(--amber);}
+.card-title.muted{color:var(--text2);}
+.card-body{border-top:1px solid var(--border);padding:16px;}
+.card-body.hidden{display:none;}
+.chevron{font-size:10px;color:var(--muted);transition:transform 0.2s;}
+.chevron.open{transform:rotate(180deg);}
+.badge{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:600;}
+.badge-green{background:rgba(61,214,140,0.1);color:var(--green);}
+.badge-amber{background:rgba(245,166,35,0.1);color:var(--amber);}
+.badge-red{background:rgba(242,87,87,0.1);color:var(--red);}
+.badge-gray{background:rgba(74,80,104,0.2);color:var(--muted);}
+.badge-blue{background:rgba(77,156,246,0.1);color:var(--blue);}
+.report-text{font-size:12px;color:var(--text);line-height:1.8;white-space:pre-wrap;}
+.intel-item{padding:12px 0;border-bottom:1px solid var(--border);}
+.intel-item:last-child{border-bottom:none;}
+.intel-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.intel-sha{color:var(--blue);font-size:11px;}
+.intel-msg{font-size:12px;color:var(--text);margin-bottom:4px;}
+.intel-detail{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:6px;}
+.intel-emp{font-size:11px;color:var(--blue);}
+.explain-btn{background:rgba(77,156,246,0.08);border:1px solid rgba(77,156,246,0.2);color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 12px;border-radius:3px;cursor:pointer;margin-top:6px;}
+.explain-btn:hover{background:rgba(77,156,246,0.15);}
+.explain-box{margin-top:8px;padding:12px;background:rgba(0,0,0,0.3);border-radius:4px;font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap;}
+.close-btn{float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 4px;}
+.pod-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(30,33,48,0.6);}
+.pod-row:last-child{border-bottom:none;}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px;}
+.dot-g{background:var(--green);}.dot-r{background:var(--red);}.dot-a{background:var(--amber);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.log-filters{display:flex;gap:6px;}
+.filter{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 9px;border-radius:3px;cursor:pointer;}
+.filter.active{border-color:var(--green);color:var(--green);background:rgba(61,214,140,0.06);}
+.log-body{max-height:320px;overflow-y:auto;padding:12px 16px;}
+.log-entry{display:flex;gap:12px;padding:3px 0;border-bottom:1px solid rgba(30,33,48,0.4);font-size:11px;}
+.log-entry:last-child{border-bottom:none;}
+.log-t{color:var(--muted);flex-shrink:0;}
+.log-ok{color:var(--green);}.log-err{color:var(--red);}.log-warn{color:var(--amber);}.log-info{color:var(--blue);}.log-dim{color:var(--text2);}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="logo"><em>⬡</em> Platform<em>.</em>OS</div>
-  <div class="header-right">
-    <div class="live-dot"></div>
-    <span class="countdown">refresh in <span id="cd">30</span>s</span>
-    <button class="refresh-btn" onclick="load()">↻</button>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span class="live-dot"></span>
+    <span style="font-size:11px;color:var(--muted)">refresh in <span id="cd">30</span>s</span>
+    <button class="refresh-btn" onclick="load()">↻ Refresh</button>
   </div>
 </div>
 
-<!-- Status bar -->
 <div class="status-bar">
-  <div class="stat">
-    <div class="stat-label">LLM Server</div>
-    <div class="stat-val" id="s-llama">—</div>
-    <div class="stat-sub" id="s-llama-sub">—</div>
-  </div>
-  <div class="stat">
-    <div class="stat-label">RAM frei</div>
-    <div class="stat-val" id="s-ram">—</div>
-    <div class="stat-sub">von 64 GB</div>
-  </div>
-  <div class="stat">
-    <div class="stat-label">Letzter Run</div>
-    <div class="stat-val" id="s-run" style="font-size:16px;margin-top:4px">—</div>
-    <div class="stat-sub" id="s-run-sub">—</div>
-  </div>
-  <div class="stat">
-    <div class="stat-label">Aktionen</div>
-    <div class="stat-val" id="s-actions">—</div>
-    <div class="stat-sub">heute</div>
-  </div>
+  <div class="stat"><div class="stat-label">LLM Server</div><div class="stat-val" id="s-llama">—</div><div class="stat-sub" id="s-llama-sub">—</div></div>
+  <div class="stat"><div class="stat-label">RAM frei</div><div class="stat-val" id="s-ram">—</div><div class="stat-sub">von 64 GB</div></div>
+  <div class="stat"><div class="stat-label">Letzter Run</div><div class="stat-val" id="s-run" style="font-size:16px;margin-top:4px">—</div><div class="stat-sub" id="s-run-sub">—</div></div>
+  <div class="stat"><div class="stat-label">Aktionen</div><div class="stat-val" id="s-actions">—</div><div class="stat-sub">heute</div></div>
 </div>
 
-<!-- Weekly Report -->
-<div class="report-card" id="report-card" style="display:none">
-  <div class="report-header">
-    <span class="report-title">Wochenbericht</span>
-    <span class="report-date" id="report-date">—</span>
+<!-- Wochenbericht -->
+<div class="card" id="report-card" style="display:none">
+  <div class="card-header" onclick="toggle('report-body','report-chev')">
+    <span class="card-title blue">Wochenbericht</span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="report-date" style="font-size:11px;color:var(--muted)"></span>
+      <span class="chevron open" id="report-chev">▼</span>
+    </div>
   </div>
-  <div class="report-text" id="report-text">—</div>
+  <div class="card-body" id="report-body">
+    <div class="report-text" id="report-text"></div>
+  </div>
 </div>
 
 <!-- TurboQuant Intelligence -->
-<div class="intel-list" id="intel-section" style="display:none">
-  <div class="intel-header" onclick="toggleSection('intel-body','intel-chevron')">
-    <span class="intel-title">TurboQuant Intelligence</span>
-    <div style="display:flex;align-items:center;gap:8px">
-      <span id="intel-count" class="badge badge-amber">—</span>
-      <span class="chevron open" id="intel-chevron">▼</span>
+<div class="card" id="intel-card" style="display:none">
+  <div class="card-header" onclick="toggle('intel-body','intel-chev')">
+    <span class="card-title amber">TurboQuant Intelligence</span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="intel-count" class="badge badge-amber"></span>
+      <span class="chevron open" id="intel-chev">▼</span>
     </div>
   </div>
-  <div class="intel-body" id="intel-body"></div>
+  <div class="card-body" id="intel-body">
+    <div id="intel-list"></div>
+  </div>
 </div>
 
-<!-- K8s + System Grid -->
+<!-- K8s + System -->
 <div class="grid2">
-  <!-- K8s Pods -->
-  <div class="section">
-    <div class="section-header" onclick="toggleSection('pods-body','pods-chevron')">
-      <span class="section-title">Kubernetes Pods</span>
-      <div class="section-meta">
-        <span id="pods-summary" class="badge badge-green">—</span>
-        <span class="chevron" id="pods-chevron">▼</span>
+  <div class="card">
+    <div class="card-header" onclick="toggle('pods-body','pods-chev')">
+      <span class="card-title muted">Kubernetes Pods</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span id="pods-badge" class="badge badge-green"></span>
+        <span class="chevron" id="pods-chev">▼</span>
       </div>
     </div>
-    <div class="section-body" id="pods-body" style="display:none">
-      <div id="pods-list"><div class="pod-row"><span class="log-dim">wird geladen...</span></div></div>
-    </div>
+    <div class="card-body hidden" id="pods-body"><div id="pods-list"></div></div>
   </div>
-
-  <!-- System Health -->
-  <div class="section">
-    <div class="section-header" onclick="toggleSection('sys-body','sys-chevron')">
-      <span class="section-title">System Health</span>
-      <div class="section-meta">
-        <span id="sys-summary" class="badge badge-green">OK</span>
-        <span class="chevron" id="sys-chevron">▼</span>
+  <div class="card">
+    <div class="card-header" onclick="toggle('sys-body','sys-chev')">
+      <span class="card-title muted">System Health</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span id="sys-badge" class="badge badge-green">OK</span>
+        <span class="chevron" id="sys-chev">▼</span>
       </div>
     </div>
-    <div class="section-body" id="sys-body" style="display:none">
-      <div id="sys-list"><div class="pod-row"><span class="log-dim">wird geladen...</span></div></div>
-    </div>
+    <div class="card-body hidden" id="sys-body"><div id="sys-list"></div></div>
   </div>
 </div>
 
 <!-- Log Viewer -->
-<div class="log-section">
-  <div class="log-header">
-    <span class="section-title">Agent Log</span>
+<div class="card">
+  <div class="card-header" style="cursor:default;">
+    <span class="card-title muted">Agent Log</span>
     <div class="log-filters">
       <button class="filter active" onclick="setFilter('all',this)">ALL</button>
       <button class="filter" onclick="setFilter('ok',this)">OK</button>
@@ -213,259 +152,161 @@
       <button class="filter" onclick="setFilter('info',this)">INFO</button>
     </div>
   </div>
-  <div class="log-body" id="log-body">
-    <div class="log-entry"><span class="log-dim">wird geladen...</span></div>
-  </div>
+  <div class="log-body" id="log-body"></div>
 </div>
 
 <script>
-let logs = [], filter = 'all', intel = [], weeklyReport = null;
+let logs=[], filter='all', intelData=[], weeklyReport=null;
 
-function toggleSection(bodyId, chevronId) {
-  const body = document.getElementById(bodyId);
-  const chev = document.getElementById(chevronId);
-  const open = body.style.display !== 'none';
-  body.style.display = open ? 'none' : 'block';
-  chev.classList.toggle('open', !open);
+function toggle(bodyId, chevId) {
+  const b = document.getElementById(bodyId);
+  const c = document.getElementById(chevId);
+  const isHidden = b.classList.contains('hidden') || b.style.display === 'none';
+  if(isHidden) { b.classList.remove('hidden'); b.style.display=''; c.classList.add('open'); }
+  else { b.classList.add('hidden'); c.classList.remove('open'); }
 }
 
-function setFilter(f, btn) {
-  filter = f;
-  document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+function setFilter(f,btn) {
+  filter=f;
+  document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderLogs();
 }
 
 function classify(line) {
-  if (line.includes('✅') || line.includes('läuft') && !line.includes('nicht')) return 'ok';
-  if (line.includes('❌') || line.includes('🚨') || line.includes('Killed') || line.includes('error')) return 'err';
-  if (line.includes('⚠️') || line.includes('down') || line.includes('nicht aktiv') || line.includes('nötig')) return 'warn';
-  if (line.includes('🔬') || line.includes('TurboQuant') || line.includes('Commit') || line.includes('WOCHENBERICHT')) return 'info';
+  if(line.includes('✅')) return 'ok';
+  if(line.includes('❌')||line.includes('🚨')||line.includes('Killed')) return 'err';
+  if(line.includes('⚠️')||line.includes('down')||line.includes('nötig')) return 'warn';
+  if(line.includes('🔬')||line.includes('TurboQuant')||line.includes('WOCHENBERICHT')) return 'info';
   return 'dim';
 }
 
 function parseTime(line) {
-  const m = line.match(/\[(\d{2}:\d{2}:\d{2})\]/) || line.match(/(\d{2}:\d{2}:\d{2}) CEST/);
-  return m ? m[1] : '';
-}
-
-function parseFullTime(line) {
-  const m = line.match(/\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]/);
-  return m ? m[1] : '';
+  const m = line.match(/\[(\d{2}:\d{2}:\d{2})\]/)||line.match(/(\d{2}:\d{2}:\d{2}) CEST/);
+  return m?m[1]:'';
 }
 
 function renderLogs() {
   const body = document.getElementById('log-body');
-  const filtered = filter === 'all' ? logs : logs.filter(l => classify(l) === filter);
-  if (!filtered.length) { body.innerHTML = '<div class="log-entry"><span class="log-dim">Keine Einträge.</span></div>'; return; }
-  body.innerHTML = filtered.slice(-100).reverse().map(line => {
-    const cls = classify(line);
-    const t = parseTime(line);
-    const msg = line.replace(/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]\s*/, '').replace(/\[.+?\d{2}:\d{2}:\d{2} CEST \d{4}\]\s*/, '').trim();
-    return `<div class="log-entry"><span class="log-t">${t}</span><span class="log-${cls === 'dim' ? 'dim' : cls}">${msg}</span></div>`;
+  const filtered = filter==='all' ? logs : logs.filter(l=>classify(l)===filter);
+  if(!filtered.length){body.innerHTML='<div class="log-entry"><span class="log-dim">Keine Einträge.</span></div>';return;}
+  body.innerHTML = filtered.slice(-100).reverse().map(line=>{
+    const cls=classify(line);
+    const t=parseTime(line);
+    const msg=line.replace(/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]\s*/,'').replace(/\[.+?\d{2}:\d{2}:\d{2} CEST \d{4}\]\s*/,'').trim();
+    return `<div class="log-entry"><span class="log-t">${t}</span><span class="log-${cls==='dim'?'dim':cls}">${msg}</span></div>`;
   }).join('');
 }
 
 function renderIntel() {
-  if (!intel.length) return;
-  const section = document.getElementById('intel-section');
-  const body = document.getElementById('intel-body');
-  const count = document.getElementById('intel-count');
-  section.style.display = 'block';
-  count.textContent = intel.length + ' commits';
-
-  body.innerHTML = intel.slice(0, 10).map(a => {
-    const risk = a.risiko || 'unbekannt';
-    const badgeCls = risk === 'hoch' ? 'badge-red' : risk === 'mittel' ? 'badge-amber' : 'badge-green';
-    const relevant = a.relevant ? '' : '<span class="badge badge-gray">nicht relevant</span>';
+  if(!intelData.length) return;
+  document.getElementById('intel-card').style.display='block';
+  document.getElementById('intel-count').textContent = intelData.length+' commits';
+  document.getElementById('intel-list').innerHTML = intelData.map(a=>{
+    const sha = a.short_sha || (a.sha||'').substring(0,7);
+    const risk = a.risiko||'';
+    const badgeCls = risk==='hoch'?'badge-red':risk==='mittel'?'badge-amber':'badge-green';
+    const relBadge = a.relevant ? '' : '<span class="badge badge-gray">nicht relevant</span>';
     return `<div class="intel-item">
-      <div class="intel-item-header">
-        <span class="intel-sha">[${a.short_sha || a.sha?.slice(0,7)}]</span>
-        <span class="badge ${badgeCls}">${a.category || '—'}</span>
-        ${relevant}
+      <div class="intel-row">
+        <span class="intel-sha">[${sha}]</span>
+        <span class="badge ${badgeCls}">${a.category||'—'}</span>
+        ${relBadge}
       </div>
-      <div class="intel-msg">${(a.message || '').slice(0, 150)}</div>
-      ${a.auswirkung ? `<div class="intel-action"><span>→</span> ${a.auswirkung.slice(0,300)}</div>` : ''}
-      ${a.empfehlung ? `<div class="intel-action" style="color:var(--blue)">Empfehlung: ${a.empfehlung.slice(0,200)}</div>` : ''}
-      <button class="explain-btn" onclick="explainCommit('${a.short_sha || a.sha?.slice(0,7)}','${(a.message||'').replace(/'/g,"").slice(0,60)}','${(a.category||'')}','${(a.auswirkung||'').replace(/'/g,"").slice(0,100)}')">→ Wie kompiliere ich das?</button>
-      <div class="explain-result" id="explain-${a.short_sha || a.sha?.slice(0,7)}"></div>
+      <div class="intel-msg">${a.message||''}</div>
+      ${a.auswirkung?`<div class="intel-detail">→ ${a.auswirkung}</div>`:''}
+      ${a.empfehlung?`<div class="intel-emp">Empfehlung: ${a.empfehlung}</div>`:''}
+      <button class="explain-btn" data-sha="${sha}" data-msg="${(a.message||'').replace(/"/g,'')}" data-cat="${a.category||''}" data-awk="${(a.auswirkung||'').replace(/"/g,'')}" onclick="explain(this)">→ Wie kompiliere ich das?</button>
+      <div class="explain-box" id="ex-${sha}" style="display:none"></div>
     </div>`;
   }).join('');
 }
 
+async function explain(btn) {
+  const sha=btn.dataset.sha, msg=btn.dataset.msg, cat=btn.dataset.cat, awk=btn.dataset.awk;
+  const box=document.getElementById('ex-'+sha);
+  if(box.style.display==='block'){box.style.display='none';return;}
+  box.style.display='block';
+  box.innerHTML='<span style="color:var(--muted)">Frage LLM...</span>';
+  try {
+    const r=await fetch('http://localhost:8080/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'local',max_tokens:600,
+        messages:[{role:'user',content:`Ich habe MacBook Pro M5 Pro 64GB. TheTom/llama-cpp-turboquant Fork, turbo4 KV-Cache, Apple Metal/Clang.\n\nCommit [${sha}]: ${msg}\nKategorie: ${cat}\nAuswirkung: ${awk}\n\nErkläre auf Deutsch:\n1. Was ändert sich für mein Setup?\n2. Exakte Befehle zum Neu-Kompilieren\n3. Was testen danach?`}]
+      })
+    });
+    const d=await r.json();
+    const text=d.choices?.[0]?.message?.content||'Keine Antwort';
+    box.innerHTML=`<button class="close-btn" onclick="document.getElementById('ex-${sha}').style.display='none'">✕</button>${text.replace(/\n/g,'<br>')}`;
+  } catch(e) {
+    box.innerHTML=`<button class="close-btn" onclick="document.getElementById('ex-${sha}').style.display='none'">✕</button>LLM nicht erreichbar — starte ai-llama-fast`;
+  }
+}
+
 function updateStats() {
-  // LLM
-  const llamaRunning = logs.some(l => l.includes('llama-server läuft') || l.includes('server is listening'));
-  const llamaDown = logs.some(l => l.includes('llama-server down') || l.includes('nicht erreichbar'));
-  const el = document.getElementById('s-llama');
-  const sub = document.getElementById('s-llama-sub');
-  if (llamaRunning) { el.textContent = 'RUNNING'; el.className = 'stat-val green'; sub.textContent = 'Port 8080'; }
-  else if (llamaDown) { el.textContent = 'DOWN'; el.className = 'stat-val red'; sub.textContent = 'Incident Agent aktiv'; }
-  else { el.textContent = '?'; el.className = 'stat-val amber'; sub.textContent = 'Status unbekannt'; }
+  const llamaOk=logs.some(l=>l.includes('llama-server läuft'));
+  const llamaDown=logs.some(l=>l.includes('llama-server down')||l.includes('nicht erreichbar'));
+  const el=document.getElementById('s-llama');
+  if(llamaOk){el.textContent='RUNNING';el.className='stat-val green';document.getElementById('s-llama-sub').textContent='Port 8080';}
+  else if(llamaDown){el.textContent='DOWN';el.className='stat-val red';document.getElementById('s-llama-sub').textContent='Incident Agent aktiv';}
+  else{el.textContent='?';el.className='stat-val amber';}
 
-  // RAM
-  const ramLine = logs.filter(l => l.includes('RAM frei:')).pop();
-  if (ramLine) {
-    const m = ramLine.match(/RAM frei:\s*([\d.]+)/);
-    if (m) { document.getElementById('s-ram').textContent = m[1] + ' GB'; document.getElementById('s-ram').className = 'stat-val ' + (parseFloat(m[1]) < 5 ? 'red' : 'green'); }
-  }
+  const ramLine=logs.filter(l=>l.includes('RAM frei:')).pop();
+  if(ramLine){const m=ramLine.match(/RAM frei:\s*([\d.]+)/);if(m){const el2=document.getElementById('s-ram');el2.textContent=m[1]+' GB';el2.className='stat-val '+(parseFloat(m[1])<5?'red':'green');}}
 
-  // Last run
-  const lastEnd = logs.filter(l => l.includes('Platform Agent v3 beendet')).pop();
-  if (lastEnd) {
-    const t = parseFullTime(lastEnd);
-    document.getElementById('s-run').textContent = t.split(' ')[1] || t;
-    document.getElementById('s-run').className = 'stat-val blue';
-    document.getElementById('s-run-sub').textContent = t.split(' ')[0] || '';
-  }
+  const lastEnd=logs.filter(l=>l.includes('Platform Agent v3 beendet')).pop();
+  if(lastEnd){const m=lastEnd.match(/\[(\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2}))\]/);if(m){document.getElementById('s-run').textContent=m[2];document.getElementById('s-run').className='stat-val blue';document.getElementById('s-run-sub').textContent=m[1].split(' ')[0];}}
 
-  // Actions
-  const actions = logs.filter(l => l.includes('→ ') && !l.includes('Empfehlung')).length;
-  document.getElementById('s-actions').textContent = actions;
-  document.getElementById('s-actions').className = 'stat-val ' + (actions > 0 ? 'amber' : 'green');
+  const actions=logs.filter(l=>l.includes('→ ')&&!l.includes('Empfehlung')&&!l.includes('Auswirkung')).length;
+  const el3=document.getElementById('s-actions');el3.textContent=actions;el3.className='stat-val '+(actions>0?'amber':'green');
 
-  // Pods
-  const podLines = logs.filter(l => l.includes('ollama-app') && l.includes('Running'));
-  const podList = document.getElementById('pods-list');
-  const podSummary = document.getElementById('pods-summary');
-  if (podLines.length) {
-    podSummary.textContent = podLines.length + ' running';
-    podSummary.className = 'badge badge-green';
-    podList.innerHTML = podLines.map(l => {
-      const name = l.match(/ollama-app[\w-]+/)?.[0] || 'pod';
-      const restarts = l.match(/restarts: (\d+)/)?.[1] || '0';
-      const r = parseInt(restarts);
-      return `<div class="pod-row">
-        <span><span class="dot ${r > 5 ? 'dot-amber' : 'dot-green'}"></span>${name.replace('ollama-app-','')}</span>
-        <span class="badge ${r > 5 ? 'badge-amber' : 'badge-green'}">${restarts} restarts</span>
-      </div>`;
-    }).join('');
-  } else {
-    podSummary.textContent = 'N/A';
-    podSummary.className = 'badge badge-gray';
-    podList.innerHTML = '<div class="pod-row"><span class="log-dim">Keine Pod-Daten</span></div>';
-  }
+  const podLines=logs.filter(l=>l.includes('ollama-app')&&l.includes('Running'));
+  document.getElementById('pods-badge').textContent=podLines.length+' running';
+  document.getElementById('pods-list').innerHTML=podLines.map(l=>{
+    const name=(l.match(/ollama-app[\w-]+/)||['?'])[0].replace('ollama-app-','');
+    const r=parseInt((l.match(/restarts: (\d+)/)||[0,0])[1]);
+    return `<div class="pod-row"><span><span class="dot ${r>5?'dot-a':'dot-g'}"></span>${name}</span><span class="badge ${r>5?'badge-amber':'badge-green'}">${r} restarts</span></div>`;
+  }).join('');
 
-  // System health
-  const diskLine = logs.filter(l => l.includes('Frei:') && l.includes('GB')).pop();
-  const gpuLine = logs.filter(l => l.includes('GPU Memory Limit')).pop();
-  const portLine = logs.filter(l => l.includes('Port-Forward')).pop();
-  let sysHtml = '';
-  if (diskLine) {
-    const m = diskLine.match(/Frei: (\d+) GB \| Modelle: (\d+) GB/);
-    if (m) sysHtml += `<div class="pod-row"><span>Disk frei</span><span class="badge badge-green">${m[1]} GB</span></div><div class="pod-row"><span>Modelle</span><span class="badge badge-gray">${m[2]} GB</span></div>`;
-  }
-  if (gpuLine) {
-    const ok = gpuLine.includes('✅');
-    sysHtml += `<div class="pod-row"><span>GPU Limit</span><span class="badge ${ok ? 'badge-green' : 'badge-red'}">${ok ? '52429 MB' : 'nicht gesetzt'}</span></div>`;
-  }
-  if (portLine) {
-    const ok = portLine.includes('aktiv') || portLine.includes('✅');
-    sysHtml += `<div class="pod-row"><span>Port-Forward</span><span class="badge ${ok ? 'badge-green' : 'badge-amber'}">${ok ? 'aktiv' : 'inaktiv'}</span></div>`;
-  }
-  document.getElementById('sys-list').innerHTML = sysHtml || '<div class="pod-row"><span class="log-dim">Keine Daten</span></div>';
-  document.getElementById('sys-summary').textContent = 'OK';
+  const disk=logs.filter(l=>l.includes('Frei:')&&l.includes('Modelle:')).pop();
+  const gpu=logs.filter(l=>l.includes('GPU Memory Limit')).pop();
+  let sysHtml='';
+  if(disk){const m=disk.match(/Frei: (\d+) GB \| Modelle: (\d+) GB/);if(m)sysHtml+=`<div class="pod-row"><span>Disk frei</span><span class="badge badge-green">${m[1]} GB</span></div><div class="pod-row"><span>Modelle</span><span class="badge badge-gray">${m[2]} GB</span></div>`;}
+  if(gpu){const ok=gpu.includes('✅');sysHtml+=`<div class="pod-row"><span>GPU Limit</span><span class="badge ${ok?'badge-green':'badge-red'}">${ok?'52429 MB':'nicht gesetzt'}</span></div>`;}
+  document.getElementById('sys-list').innerHTML=sysHtml||'<div class="pod-row"><span class="log-dim">Keine Daten</span></div>';
 }
 
 function renderWeekly() {
-  if (!weeklyReport) return;
-  const card = document.getElementById('report-card');
-  card.style.display = 'block';
-  document.getElementById('report-text').textContent = weeklyReport.report || weeklyReport;
-  document.getElementById('report-date').textContent = (weeklyReport.date || '').slice(0,10);
+  if(!weeklyReport) return;
+  document.getElementById('report-card').style.display='block';
+  document.getElementById('report-text').textContent=weeklyReport.report||weeklyReport;
+  document.getElementById('report-date').textContent=(weeklyReport.date||'').substring(0,10);
 }
 
 async function load() {
   try {
-    const r = await fetch('/logs/agent.log');
-    if (r.ok) {
-      const text = await r.text();
-      logs = text.split('\n').filter(l => l.trim());
-      updateStats();
-      renderLogs();
-    }
-  } catch(e) { showDemo(); }
-
+    const r=await fetch('/logs/agent.log');
+    if(r.ok){logs=(await r.text()).split('\n').filter(l=>l.trim());updateStats();renderLogs();}
+  } catch(e){showDemo();}
   try {
-    const r2 = await fetch('/intelligence.json');
-    if (r2.ok) {
-      const data = await r2.json();
-      intel = data.analyses || [];
-      weeklyReport = (data.weekly_reports || [])[0] || null;
-      renderIntel();
-      renderWeekly();
-    }
-  } catch(e) {}
+    const r2=await fetch('/intelligence.json');
+    if(r2.ok){const d=await r2.json();intelData=d.analyses||[];weeklyReport=(d.weekly_reports||[])[0]||null;renderIntel();renderWeekly();}
+  } catch(e){}
 }
 
-function showDemo() {
-  const now = new Date().toISOString().slice(0,19).replace('T',' ');
-  logs = [
-    `[${now}] 🤖 Platform Agent v3 gestartet`,
-    `[${now}]   ✅ open-webui: aktuell=v0.8.12`,
-    `[${now}]   ✅ ollama-app-ollama: Running (restarts: 0)`,
-    `[${now}]   ✅ ollama-app-open-webui: Running (restarts: 2)`,
-    `[${now}]   ✅ llama-server läuft auf Port 8080`,
-    `[${now}]   ✅ GPU Memory Limit: 52429 MB`,
-    `[${now}]   💾 Frei: 28 GB | Modelle: 106 GB`,
-    `[${now}]   RAM frei: 28.0 GB`,
-    `[${now}]   🔬 TurboQuant neuer Commit: [883bf4a]`,
-    `[${now}] 🤖 Platform Agent v3 beendet`,
-  ];
-  intel = [{short_sha:'883bf4a',message:'Update GGMLQuantizationType and LlamaFileType enums',category:'Feature',relevant:true,auswirkung:'Neue Quantisierungstypen TQ3_1S und TQ4_1S für Weight Compression',empfehlung:'Beim nächsten Update',risiko:'niedrig'}];
-  weeklyReport = {date:now,report:'Demo-Modus: Starte mit python3 -m http.server 8999 im agent/ Ordner um echte Daten zu sehen.'};
-  updateStats();
-  renderLogs();
-  renderIntel();
-  renderWeekly();
-  document.getElementById('countdown').parentElement.textContent = '⚠ Demo — starte: cd ~/mac-setup/agent && python3 -m http.server 8999';
+function showDemo(){
+  const n=new Date().toISOString().slice(0,19).replace('T',' ');
+  logs=[`[${n}] 🤖 Platform Agent v3 gestartet`,`[${n}]   ✅ llama-server läuft auf Port 8080`,`[${n}]   ✅ ollama-app-ollama: Running (restarts: 0)`,`[${n}]   ✅ ollama-app-open-webui: Running (restarts: 2)`,`[${n}]   RAM frei: 28.0 GB`,`[${n}]   💾 Frei: 595 GB | Modelle: 106 GB`,`[${n}]   🔬 TurboQuant neuer Commit: [883bf4a]`,`[${n}] 🤖 Platform Agent v3 beendet`];
+  intelData=[{short_sha:'883bf4a',message:'Update GGMLQuantizationType and LlamaFileType enums to include TQ3_1S and TQ4_1S quantization types',category:'Feature',relevant:true,auswirkung:'Neue Quantisierungstypen TQ3_1S und TQ4_1S werden unterstützt. Dies ermöglicht Weight Compression für Modelle wie Llama 3.3 70B direkt im Fork.',empfehlung:'Beim nächsten Update neu kompilieren und testen',risiko:'niedrig'}];
+  weeklyReport={date:n,report:'Demo-Modus aktiv.\n\nStarte den Log-Server mit:\ncd ~/mac-setup/agent && python3 -m http.server 8999\n\nDann http://localhost:8999/dashboard.html öffnen.'};
+  updateStats();renderLogs();renderIntel();renderWeekly();
 }
 
-let cd = 30;
-function tick() {
-  cd--;
-  const el = document.getElementById('cd');
-  if (el) el.textContent = cd;
-  if (cd <= 0) { cd = 30; load(); }
-}
-
-async function explainCommit(sha, msg, category, auswirkung) {
-  const resultEl = document.getElementById('explain-' + sha);
-  if (resultEl.style.display === 'block') { resultEl.style.display = 'none'; return; }
-  resultEl.style.display = 'block';
-  resultEl.textContent = 'Frage lokales LLM...';
-  
-  try {
-    const response = await fetch('http://localhost:8080/v1/chat/completions', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model: 'local',
-        max_tokens: 500,
-        messages: [{
-          role: 'user',
-          content: `Ich habe einen MacBook Pro M5 Pro mit 64GB RAM. Ich nutze TheTom/llama-cpp-turboquant Fork mit turbo4 KV-Cache Kompression und Apple Metal.
-
-Neuer Commit [${sha}]: ${msg}
-Kategorie: ${category}
-Auswirkung: ${auswirkung}
-
-Erkläre mir in 5-6 Sätzen auf Deutsch:
-1. Was ändert sich konkret für mein Setup?
-2. Wie kompiliere ich das Update (exakte Befehle)?
-3. Was soll ich danach testen?`
-        }]
-      })
-    });
-    const data = await response.json();
-    resultEl.textContent = data.choices?.[0]?.message?.content || 'Keine Antwort';
-  } catch(e) {
-    resultEl.textContent = 'LLM nicht erreichbar. Starte ai-llama-fast und versuche es erneut.';
-  }
-}
-
+let cd=30;
+setInterval(()=>{cd--;const e=document.getElementById('cd');if(e)e.textContent=cd;if(cd<=0){cd=30;load();}},1000);
 load();
-setInterval(tick, 1000);
 </script>
 </body>
 </html>

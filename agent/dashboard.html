@@ -69,6 +69,9 @@
   .intel-msg { font-size:12px; color:var(--text2); }
   .intel-action { font-size:11px; color:var(--text2); margin-top:3px; }
   .intel-action span { color:var(--amber); }
+  .explain-btn { margin-top:8px; background:rgba(77,156,246,0.08); border:1px solid rgba(77,156,246,0.2); color:var(--blue); font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 12px; border-radius:3px; cursor:pointer; }
+  .explain-btn:hover { background:rgba(77,156,246,0.15); }
+  .explain-result { margin-top:8px; font-size:12px; color:var(--text); line-height:1.6; padding:8px; background:rgba(0,0,0,0.2); border-radius:4px; display:none; white-space:pre-wrap; }
 
   /* Collapsible sections */
   .section { background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:16px; overflow:hidden; }
@@ -281,9 +284,11 @@ function renderIntel() {
         <span class="badge ${badgeCls}">${a.category || '—'}</span>
         ${relevant}
       </div>
-      <div class="intel-msg">${(a.message || '').slice(0, 70)}</div>
-      ${a.auswirkung ? `<div class="intel-action"><span>→</span> ${a.auswirkung.slice(0,100)}</div>` : ''}
-      ${a.empfehlung ? `<div class="intel-action" style="color:var(--blue)">Empfehlung: ${a.empfehlung.slice(0,80)}</div>` : ''}
+      <div class="intel-msg">${(a.message || '').slice(0, 150)}</div>
+      ${a.auswirkung ? `<div class="intel-action"><span>→</span> ${a.auswirkung.slice(0,300)}</div>` : ''}
+      ${a.empfehlung ? `<div class="intel-action" style="color:var(--blue)">Empfehlung: ${a.empfehlung.slice(0,200)}</div>` : ''}
+      <button class="explain-btn" onclick="explainCommit('${a.short_sha || a.sha?.slice(0,7)}','${(a.message||'').replace(/'/g,"").slice(0,60)}','${(a.category||'')}','${(a.auswirkung||'').replace(/'/g,"").slice(0,100)}')">→ Wie kompiliere ich das?</button>
+      <div class="explain-result" id="explain-${a.short_sha || a.sha?.slice(0,7)}"></div>
     </div>`;
   }).join('');
 }
@@ -422,6 +427,41 @@ function tick() {
   const el = document.getElementById('cd');
   if (el) el.textContent = cd;
   if (cd <= 0) { cd = 30; load(); }
+}
+
+async function explainCommit(sha, msg, category, auswirkung) {
+  const resultEl = document.getElementById('explain-' + sha);
+  if (resultEl.style.display === 'block') { resultEl.style.display = 'none'; return; }
+  resultEl.style.display = 'block';
+  resultEl.textContent = 'Frage lokales LLM...';
+  
+  try {
+    const response = await fetch('http://localhost:8080/v1/chat/completions', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'local',
+        max_tokens: 500,
+        messages: [{
+          role: 'user',
+          content: `Ich habe einen MacBook Pro M5 Pro mit 64GB RAM. Ich nutze TheTom/llama-cpp-turboquant Fork mit turbo4 KV-Cache Kompression und Apple Metal.
+
+Neuer Commit [${sha}]: ${msg}
+Kategorie: ${category}
+Auswirkung: ${auswirkung}
+
+Erkläre mir in 5-6 Sätzen auf Deutsch:
+1. Was ändert sich konkret für mein Setup?
+2. Wie kompiliere ich das Update (exakte Befehle)?
+3. Was soll ich danach testen?`
+        }]
+      })
+    });
+    const data = await response.json();
+    resultEl.textContent = data.choices?.[0]?.message?.content || 'Keine Antwort';
+  } catch(e) {
+    resultEl.textContent = 'LLM nicht erreichbar. Starte ai-llama-fast und versuche es erneut.';
+  }
 }
 
 load();

@@ -1,5 +1,66 @@
 {
-  "analyses": [],
+  "analyses": [
+    {
+      "sha": "ab9990d",
+      "short_sha": "ab9990d",
+      "message": "Enhance Metal operations for TQ weights and concurrency handling for Gemma 4",
+      "date": "2026-04-04T15:37:22Z",
+      "category": "Feature",
+      "relevant": true,
+      "auswirkung": "Der Commit verbessert die Metal-Operationen f\u00fcr TQ-Gewichte und die Konkurrenzverwaltung f\u00fcr Gemma 4, was zu einer besseren Leistung und Skalierbarkeit des Systems f\u00fchren kann. Dies kann insbesondere auf Apple-Silicon-Systemen wie dem M5 Pro eine Rolle spielen.",
+      "empfehlung": "Sofort neu kompilieren",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T02:20:45.598975"
+    },
+    {
+      "sha": "883bf4a",
+      "short_sha": "883bf4a",
+      "message": "Update GGMLQuantizationType and LlamaFileType enums to include TQ3_1S and TQ4_1S quantization types with corresponding sizes in GGML_QUANT_SIZES.",
+      "date": "2026-04-04T17:08:38Z",
+      "category": "Feature",
+      "relevant": true,
+      "auswirkung": "Die \u00c4nderung aktualisiert die Enums GGMLQuantizationType und LlamaFileType, um die Quantisierungstypen TQ3_1S und TQ4_1S mit entsprechenden Gr\u00f6\u00dfen in GGML_QUANT_SIZES zu unterst\u00fctzen, was die Kompatibilit\u00e4t und Funktionalit\u00e4t des Systems verbessert.",
+      "empfehlung": "Sofort neu kompilieren",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T02:20:30.298692"
+    },
+    {
+      "sha": "7433ad9",
+      "short_sha": "7433ad9",
+      "message": "Merge pull request #52 from iamwavecut/feature/turboquant-kv-cache",
+      "date": "2026-04-06T22:47:58Z",
+      "category": "Feature",
+      "relevant": true,
+      "auswirkung": "Der Commit behebt Qualit\u00e4tseinbu\u00dfen nach der Quantisierung von Modellen, insbesondere bei der Verwendung von Apple Metal, und verbessert die Stabilit\u00e4t des TurboQuant-KV-Caches. Dies f\u00fchrt zu einer besseren Leistung und Zuverl\u00e4ssigkeit bei der Verarbeitung von Modellen wie dem Gemma 4-Checkpoint.",
+      "empfehlung": "Sofort neu kompilieren",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T02:20:16.726888"
+    },
+    {
+      "sha": "dcf8430",
+      "short_sha": "dcf8430",
+      "message": "fix: GCC double extern in ops.cpp turbo3_cpu_wht_group_size",
+      "date": "2026-04-05T18:42:48Z",
+      "category": "Bugfix",
+      "relevant": true,
+      "auswirkung": "Der Commit behebt ein Problem mit doppelten externen Deklarationen in der Datei ops.cpp, was zu Fehlern bei der Kompilierung mit GCC f\u00fchren kann. Dies kann die Stabilit\u00e4t und Zuverl\u00e4ssigkeit des Systems verbessern.",
+      "empfehlung": "Sofort neu kompilieren",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T02:19:58.004815"
+    },
+    {
+      "sha": "acad28d",
+      "short_sha": "acad28d",
+      "message": "feat: add MoE expert count kernel instantiations + TQ4_1S backend tests",
+      "date": "2026-04-06T23:11:07Z",
+      "category": "Feature",
+      "relevant": true,
+      "auswirkung": "Der Commit f\u00fcgt neue Kernel-Instantierungen f\u00fcr MoE-Experten und Backend-Tests f\u00fcr TQ4_1S hinzu, was die Funktionalit\u00e4t und Leistung des Systems erweitert. Dies k\u00f6nnte zu verbesserten Leistungsmerkmalen und Stabilit\u00e4t f\u00fcr Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro f\u00fchren.",
+      "empfehlung": "Sofort neu kompilieren",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T02:19:46.911841"
+    }
+  ],
   "weekly_reports": [
     {
       "date": "2026-04-07T02:07:15.651364",

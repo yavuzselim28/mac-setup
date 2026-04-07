@@ -12,6 +12,12 @@ LLAMA_SERVER  = "http://localhost:8080/v1"
 LOG_FILE      = Path.home() / "mac-setup/agent/agent.log"
 STATE_FILE    = Path.home() / "mac-setup/agent/agent_state.json"
 INTEL_FILE    = Path.home() / "mac-setup/agent/intelligence.json"
+CONTEXT_FILE  = Path.home() / "mac-setup/agent/SYSTEM_CONTEXT.md"
+
+def load_context() -> str:
+    if CONTEXT_FILE.exists():
+        return CONTEXT_FILE.read_text()
+    return ""
 
 # ── State ──────────────────────────────────────────────────────
 class IntelState(TypedDict):
@@ -163,7 +169,11 @@ def analyze_commits(state: IntelState) -> IntelState:
             if pr and pr.get("body"):
                 pr_details = f"\nPR Beschreibung: {pr['body'][:500]}"
 
+        system_ctx = load_context()
         prompt = f"""Du bist ein Platform Engineer der TurboQuant KV-Cache Änderungen bewertet.
+
+MEIN SYSTEM:
+{system_ctx}
 
 Neuer Commit in TheTom/llama-cpp-turboquant:
 SHA: {commit['sha']}

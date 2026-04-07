@@ -201,7 +201,21 @@ function renderLogs() {
 function renderIntel() {
   if(!intelData.length) return;
   document.getElementById('intel-card').style.display='block';
-  document.getElementById('intel-count').textContent = intelData.length+' commits';
+  const relevantCount = intelData.filter(a=>a.relevant).length;
+  const totalCount = intelData.length;
+  document.getElementById('intel-count').textContent = relevantCount+' relevant';
+  
+  // Nicht-relevante als aufklappbare Sektion
+  const notRelevant = intelData.filter(a=>!a.relevant);
+  if(notRelevant.length) {
+    const extra = document.createElement('div');
+    extra.style = 'border-top:1px solid var(--border);';
+    extra.innerHTML = `<div onclick="this.nextSibling.style.display=this.nextSibling.style.display==='none'?'block':'none'" style="padding:8px 16px;cursor:pointer;font-size:11px;color:var(--muted)">▶ ${notRelevant.length} nicht relevante Commits</div><div style="display:none">${notRelevant.map(a=>{
+      const sha=a.short_sha||(a.sha||'').substring(0,7);
+      return '<div class="intel-item" style="padding:8px 16px;opacity:0.5"><div class="intel-row"><span class="intel-sha">['+sha+']</span><span class="badge badge-gray">'+a.category+'</span></div><div class="intel-msg">'+a.message+'</div></div>';
+    }).join('')}</div>`;
+    document.getElementById('intel-list').after(extra);
+  }
   document.getElementById('intel-list').innerHTML = intelData.filter(a=>a.relevant).map(a=>{
     const sha = a.short_sha || (a.sha||'').substring(0,7);
     const risk = a.risiko||'';

@@ -7,9 +7,9 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Syne:wght@700;800&display=swap');
 :root {
-  --bg:#0b0c10;--surface:#13151c;--border:#1e2130;
+  --bg:#111318;--surface:#1a1d26;--border:#252836;
   --green:#3dd68c;--blue:#4d9cf6;--amber:#f5a623;--red:#f25757;
-  --muted:#4a5068;--text:#c8cfe0;--text2:#8892a4;
+  --muted:#6b7590;--text:#dde3f0;--text2:#a0aab8;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);padding:20px;font-size:13px;line-height:1.5;}
@@ -208,16 +208,29 @@ function renderIntel() {
   // Nicht-relevante als aufklappbare Sektion
   const notRelevant = intelData.filter(a=>!a.relevant);
   if(notRelevant.length) {
-    const extra = document.createElement('div');
-    extra.style = 'border-top:1px solid var(--border);';
-    extra.innerHTML = `<div onclick="this.nextSibling.style.display=this.nextSibling.style.display==='none'?'block':'none'" style="padding:8px 16px;cursor:pointer;font-size:11px;color:var(--muted)">▶ ${notRelevant.length} nicht relevante Commits</div><div style="display:none">${notRelevant.map(a=>{
-      const sha=a.short_sha||(a.sha||'').substring(0,7);
-      return '<div class="intel-item" style="padding:8px 16px;opacity:0.5"><div class="intel-row"><span class="intel-sha">['+sha+']</span><span class="badge badge-gray">'+a.category+'</span></div><div class="intel-msg">'+a.message+'</div></div>';
-    }).join('')}</div>`;
-    const existing = document.getElementById('non-relevant-section');
-    if(existing) existing.remove();
-    extra.id = 'non-relevant-section';
-    document.getElementById('intel-list').after(extra);
+    // Nicht-relevante als separater Kasten nach intel-card
+    let extraCard = document.getElementById('non-relevant-card');
+    if(!extraCard) {
+      extraCard = document.createElement('div');
+      extraCard.id = 'non-relevant-card';
+      extraCard.className = 'card';
+      extraCard.style = 'margin-bottom:16px';
+      document.getElementById('intel-card').after(extraCard);
+    }
+    extraCard.innerHTML = `
+      <div class="card-header" onclick="toggle('non-rel-body','non-rel-chev')">
+        <span class="card-title muted">Weitere Commits</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="badge badge-gray">${notRelevant.length} nicht relevant</span>
+          <span class="chevron" id="non-rel-chev">▼</span>
+        </div>
+      </div>
+      <div class="card-body hidden" id="non-rel-body">
+        ${notRelevant.map(a=>{
+          const sha=a.short_sha||(a.sha||'').substring(0,7);
+          return '<div class="intel-item" style="opacity:0.6"><div class="intel-row"><span class="intel-sha">['+sha+']</span><span class="badge badge-gray">'+a.category+'</span><span style="font-size:10px;color:var(--muted)">'+((a.repo||'').split('/')[1]||'')+'</span></div><div class="intel-msg">'+a.message+'</div></div>';
+        }).join('')}
+      </div>`;
   }
   document.getElementById('intel-list').innerHTML = intelData.filter(a=>a.relevant).map(a=>{
     const sha = a.short_sha || (a.sha||'').substring(0,7);
@@ -234,7 +247,14 @@ function renderIntel() {
     <div class="intel-msg">${a.message||''}</div>
       ${a.auswirkung?`<div class="intel-detail">→ ${a.auswirkung}</div>`:''}
       ${a.empfehlung?`<div class="intel-emp">Empfehlung: ${a.empfehlung}</div>`:''}
-      ${window.compiledSha && (a.short_sha||'').startsWith(window.compiledSha.slice(0,6)) ? '<div style="margin-top:6px"><span class="badge badge-green">✅ kompiliert</span></div>' : a.empfehlung && a.empfehlung.includes('kompilieren') ? '<div style="margin-top:6px"><span class="badge badge-amber">⏳ ausstehend</span></div>' : ''}
+      ${(()=>{
+        const compiled = window.compiledSha||'';
+        const sha = a.short_sha||'';
+        const isCompiled = compiled && sha.startsWith(compiled.slice(0,6));
+        if(isCompiled) return '<div style="margin-top:6px"><span class="badge badge-green">✅ kompiliert · '+compiled+'</span></div>';
+        if(a.relevant) return '<div style="margin-top:6px"><span class="badge badge-amber">⏳ ausstehend</span></div>';
+        return '';
+      })()}
       <button class="explain-btn" data-sha="${sha}" data-msg="${(a.message||'').replace(/"/g,'')}" data-cat="${a.category||''}" data-awk="${(a.auswirkung||'').replace(/"/g,'')}" onclick="explain(this)">→ Wie kompiliere ich das?</button>
       <div class="explain-box" id="ex-${sha}" style="display:none"></div>
     </div>`;
@@ -244,9 +264,9 @@ function renderIntel() {
 async function explain(btn) {
   const sha=btn.dataset.sha, msg=btn.dataset.msg, cat=btn.dataset.cat, awk=btn.dataset.awk;
   const box=document.getElementById('ex-'+sha);
-  if(box.style.display==='block'){box.style.display='none';return;}
+  if(box.dataset.loaded==='1'){box.style.display=box.style.display==='none'?'block':'none';return;}
   box.style.display='block';
-  box.innerHTML='<span style="color:var(--muted)">Frage LLM...</span>';
+  box.innerHTML='<span style="color:var(--text2)">⏳ Frage LLM...</span>';
   try {
     const r=await fetch('/llm',{
       method:'POST',
@@ -258,6 +278,7 @@ async function explain(btn) {
     });
     const d=await r.json();
     const text=d.choices?.[0]?.message?.content||'Keine Antwort';
+    box.dataset.loaded='1';
     box.innerHTML=`<button class="close-btn" onclick="document.getElementById('ex-${sha}').style.display='none'">✕</button>${text.replace(/\n/g,'<br>')}`;
   } catch(e) {
     box.innerHTML=`<button class="close-btn" onclick="document.getElementById('ex-${sha}').style.display='none'">✕</button>LLM nicht erreichbar — starte ai-llama-fast`;

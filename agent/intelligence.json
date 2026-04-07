@@ -1,0 +1,10 @@
+{
+  "analyses": [],
+  "weekly_reports": [
+    {
+      "date": "2026-04-07T02:07:15.651364",
+      "report": "Hier ist der pr\u00e4gnante Wochenbericht:\n\n**Wochenbericht KI-Plattform**\n\nDer Gesamtstatus der Plattform ist derzeit kritisch. Die Performance liegt bei 0,0 tokens/sec, wobei zwei Server-Abst\u00fcrze verzeichnet wurden. Es gab in der letzten Woche keine neuen TurboQuant-Commits oder relevanten \u00c4nderungen. F\u00fcr die n\u00e4chste Woche wird eine dringende Fehleranalyse der Server-Instabilit\u00e4t empfohlen, um den Betrieb wiederherzustellen."
+    }
+  ],
+  "last_weekly": "2026-04-07T02:07:15.651364"
+}

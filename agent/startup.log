@@ -1192,3 +1192,472 @@ RISIKO: mittel
 [Sun Apr  5 14:22:23 CEST 2026] ✅ Platform Agent initial run fertig
 [Sun Apr  5 14:22:23 CEST 2026] ⏳ Warte 60s vor llama-server Start...
 [Sun Apr  5 14:23:25 CEST 2026] ✅ llama-server gestartet
+[Sun Apr  5 15:19:27 CEST 2026] 🚀 Startup Script gestartet
+[Sun Apr  5 15:19:27 CEST 2026] ⏳ Warte auf Docker...
+[Sun Apr  5 15:19:32 CEST 2026] ✅ Docker bereit
+[Sun Apr  5 15:19:32 CEST 2026] ⏳ Warte auf K8s...
+[Sun Apr  5 15:19:40 CEST 2026] ✅ K8s bereit
+iogpu.wired_limit_mb: 0 -> 52429
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+[Sun Apr  5 15:19:40 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Sun Apr  5 15:19:40 CEST 2026] ✅ K8s Pods gestartet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+[2026-04-05 15:19:41] ============================================================
+[2026-04-05 15:19:41] 🤖 Platform Agent v3 gestartet
+[2026-04-05 15:19:41] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 15:19:42]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 15:19:42]   ✅ Keine operationalen Updates.
+[2026-04-05 15:19:42] 🏥 [2/6] K8s Health Check...
+[2026-04-05 15:19:42]   ✅ ollama-app-ollama-7f8d675d4d-b4v6f: Running (restarts: 2)
+[2026-04-05 15:19:42]   ✅ ollama-app-open-webui-699d455996-m99jp: Running (restarts: 1)
+[2026-04-05 15:19:42] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 15:19:42]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 15:19:42] 📊 Sammle System-Kontext...
+[2026-04-05 15:19:42]   RAM frei: 32.2 GB
+[2026-04-05 15:19:42]   Aktive Slots: 0/0
+[2026-04-05 15:19:42]   Cached Tokens: 0
+[2026-04-05 15:19:42]   Crashes letzte Stunde: 3
+[2026-04-05 15:19:42] 🤔 LLM analysiert Incident...
+[2026-04-05 15:19:42]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 15:19:42]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 15:19:42]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 15:20:02]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 15:20:07]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da die aktiven Nutzer-Slots 0 betragen und die RAM-Belegung durch Kernel/GPU nur 3,3 GB beträgt, was nicht ausreicht, um das Hauptmodell (Llama 3.3 70B) zu unterstützen.
+
+AKTION: D
+
+BEGRÜNDUNG: Die Ursache ist unklar, da die RAM-Belegung nicht ausreicht, um das Hauptmodell zu unterstützen, aber die aktiven Nutzer-Slots 0 betragen, was normalerweise ein Zeichen für ein Problem mit dem WebUI oder anderen Komponenten ist. Da die Crashes in der letzten Stunde 3 betragen, ist das Risiko hoch, und daher ist es am besten, das Problem eskalieren zu lassen, um die Ursache zu ermitteln.
+
+RISIKO: Hoch
+[2026-04-05 15:20:07] 🛡️ Sicherheitscheck...
+[2026-04-05 15:20:07]   ⚠️ Eskalation erzwungen: LLM bewertet Risiko als hoch
+[2026-04-05 15:20:07] 📋 Incident Report:
+[2026-04-05 15:20:07]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 15:20:07]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da die aktiven Nutzer-Slots 0 betragen und die RAM-Belegung durch Kernel/GPU nur 3,3 GB beträgt, was nicht ausreicht, um das Hauptmodell (Llama 3.3 70B) zu unterstützen.
+[2026-04-05 15:20:07]   Aktion:    
+[2026-04-05 15:20:07]   Eskaliert: True
+[2026-04-05 15:20:07]   Gelöst:    False
+[2026-04-05 15:20:07]   🚨 MANUELLE PRÜFUNG ERFORDERLICH
+[2026-04-05 15:20:07] ────────────────────────────────────────────────────────────
+[2026-04-05 15:20:07]   🚨 Incident Agent eskaliert — manuelle Prüfung nötig
+[2026-04-05 15:20:07] 💻 [4/6] System Health...
+[2026-04-05 15:20:07]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 15:20:07]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 15:20:07]   ✅ Speicher OK
+[2026-04-05 15:20:07]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 15:20:07] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 15:20:08]   ✅ llama33-70b: keine Änderung
+[2026-04-05 15:20:08]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 15:20:08] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 15:20:09]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 15:20:09] 📋 Zusammenfassung:
+[2026-04-05 15:20:09]   🚨 llama-server Incident eskaliert — manuelle Prüfung erforderlich
+[2026-04-05 15:20:09] ────────────────────────────────────────────────────────────
+[2026-04-05 15:20:09] 🤖 Platform Agent v3 beendet
+[Sun Apr  5 15:20:09 CEST 2026] ✅ Platform Agent initial run fertig
+[Sun Apr  5 15:20:09 CEST 2026] ⏳ Warte 60s vor llama-server Start...
+[Sun Apr  5 15:21:11 CEST 2026] ✅ llama-server gestartet
+[Sun Apr  5 15:38:47 CEST 2026] 🚀 Startup Script gestartet
+[Sun Apr  5 15:38:47 CEST 2026] ⏳ Warte auf Docker...
+[Sun Apr  5 15:38:52 CEST 2026] ✅ Docker bereit
+[Sun Apr  5 15:38:52 CEST 2026] ⏳ Warte auf K8s...
+[Sun Apr  5 15:38:59 CEST 2026] ✅ K8s bereit
+Crash-Counter zurückgesetzt
+[Sun Apr  5 15:38:59 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Sun Apr  5 15:38:59 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Sun Apr  5 15:38:59 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Sun Apr  5 15:38:59 CEST 2026] ✅ K8s Pods gestartet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+[2026-04-05 15:39:00] ============================================================
+[2026-04-05 15:39:00] 🤖 Platform Agent v3 gestartet
+[2026-04-05 15:39:00] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 15:39:01]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 15:39:01]   ✅ Keine operationalen Updates.
+[2026-04-05 15:39:01] 🏥 [2/6] K8s Health Check...
+[2026-04-05 15:39:01]   ✅ ollama-app-ollama-7f8d675d4d-b4v6f: Running (restarts: 4)
+[2026-04-05 15:39:01]   ✅ ollama-app-open-webui-699d455996-m99jp: Running (restarts: 3)
+[2026-04-05 15:39:01] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 15:39:01]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 15:39:01] 📊 Sammle System-Kontext...
+[2026-04-05 15:39:01]   RAM frei: 32.5 GB
+[2026-04-05 15:39:01]   Aktive Slots: 0/0
+[2026-04-05 15:39:01]   Cached Tokens: 0
+[2026-04-05 15:39:01]   Crashes letzte Stunde: 0
+[2026-04-05 15:39:01] 🤔 LLM analysiert Incident...
+[2026-04-05 15:39:01]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 15:39:01]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 15:39:01]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 15:39:21]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 15:39:26]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da wahrscheinlich kein RAM-Problem vorliegt, da 32,5 GB RAM frei sind und die Crashes in der letzten Stunde unter 3x liegen.
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Da kein RAM-Problem vorliegt und die Crashes in der letzten Stunde unter 3x liegen, ist es wahrscheinlich, dass ein Speicherleck oder ein anderer Fehler vorliegt, der durch ein Neustart des Servers behoben werden kann.
+RISIKO: mittel
+
+Begründung: Ein Neustart des Servers kann zu einer kurzen Unterbrechung führen, aber da kein RAM-Problem vorliegt und die Crashes in der letzten Stunde unter 3x liegen, ist das Risiko eines weiteren Ausfalls gering.
+[2026-04-05 15:39:26] 🛡️ Sicherheitscheck...
+[2026-04-05 15:39:26]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 15:39:26] 🚀 Führe Aktion C aus...
+[2026-04-05 15:39:28]   ✅ llama-server neu gestartet
+[2026-04-05 15:39:28] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 15:39:33]   ✅ llama-server läuft wieder
+[2026-04-05 15:39:33] 📋 Incident Report:
+[2026-04-05 15:39:33]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 15:39:33]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da wahrscheinlich kein RAM-Problem vorliegt, da 32,5 GB RAM frei sind und die Crashes in der letzten Stunde unter 3x liegen.
+[2026-04-05 15:39:33]   Aktion:    llama-server neu gestartet (PID 1419)
+[2026-04-05 15:39:33]   Eskaliert: False
+[2026-04-05 15:39:33]   Gelöst:    True
+[2026-04-05 15:39:33]   ✅ Incident automatisch gelöst
+[2026-04-05 15:39:33] ────────────────────────────────────────────────────────────
+[2026-04-05 15:39:33]   ✅ Incident Agent hat Problem gelöst
+[2026-04-05 15:39:33] 💻 [4/6] System Health...
+[2026-04-05 15:39:33]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 15:39:33]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 15:39:33]   ✅ Speicher OK
+[2026-04-05 15:39:33]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 15:39:33] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 15:39:34]   ✅ llama33-70b: keine Änderung
+[2026-04-05 15:39:34]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 15:39:34] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 15:39:34]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 15:39:34] 📋 Zusammenfassung:
+[2026-04-05 15:39:34]   🔄 llama-server war down — Incident Agent hat ihn repariert
+[2026-04-05 15:39:34]   Aktionen durchgeführt:
+[2026-04-05 15:39:34]     → llama-server durch Incident Agent wiederhergestellt
+[2026-04-05 15:39:34] ────────────────────────────────────────────────────────────
+[2026-04-05 15:39:34] 🤖 Platform Agent v3 beendet
+[Sun Apr  5 15:39:35 CEST 2026] ✅ Platform Agent initial run fertig
+[Sun Apr  5 15:39:35 CEST 2026] ⏳ Warte 60s vor llama-server Start...
+[Sun Apr  5 15:40:37 CEST 2026] ✅ llama-server gestartet
+[Sun Apr  5 15:46:28 CEST 2026] 🚀 Startup Script gestartet
+[Sun Apr  5 15:46:28 CEST 2026] ⏳ Warte auf Docker...
+[Sun Apr  5 15:46:34 CEST 2026] ✅ Docker bereit
+[Sun Apr  5 15:46:34 CEST 2026] ⏳ Warte auf K8s...
+[Sun Apr  5 15:46:42 CEST 2026] ✅ K8s bereit
+Crash-Counter zurückgesetzt
+[Sun Apr  5 15:46:42 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Sun Apr  5 15:46:42 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Sun Apr  5 15:46:42 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Sun Apr  5 15:46:42 CEST 2026] ✅ K8s Pods gestartet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+[2026-04-05 15:46:43] ============================================================
+[2026-04-05 15:46:43] 🤖 Platform Agent v3 gestartet
+[2026-04-05 15:46:43] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 15:46:43]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 15:46:43]   ✅ Keine operationalen Updates.
+[2026-04-05 15:46:43] 🏥 [2/6] K8s Health Check...
+[2026-04-05 15:46:44]   ✅ ollama-app-ollama-7f8d675d4d-b4v6f: Running (restarts: 5)
+[2026-04-05 15:46:44]   ✅ ollama-app-open-webui-699d455996-m99jp: Running (restarts: 4)
+[2026-04-05 15:46:44] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 15:46:44]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 15:46:44] 📊 Sammle System-Kontext...
+[2026-04-05 15:46:44]   RAM frei: 31.4 GB
+[2026-04-05 15:46:44]   Aktive Slots: 0/0
+[2026-04-05 15:46:44]   Cached Tokens: 0
+[2026-04-05 15:46:44]   Crashes letzte Stunde: 0
+[2026-04-05 15:46:44] 🤔 LLM analysiert Incident...
+[2026-04-05 15:46:44]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 15:46:44]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 15:46:44]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 15:47:04]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 15:47:07]   LLM Antwort:
+URSACHE: Die RAM-Auslastung ist zu hoch, da das Hauptmodell (Llama 3.3 70B) ~40 GB GPU-RAM benötigt, aber nur 31,4 GB freier RAM verfügbar sind.
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Da keine aktiven Nutzer-Slots vorhanden sind und keine Crashes in der letzten Stunde aufgetreten sind, kann das Problem wahrscheinlich durch ein Speicherleck gelöst werden, indem der llama-server neu gestart wird.
+RISIKO: mittel
+[2026-04-05 15:47:07] 🛡️ Sicherheitscheck...
+[2026-04-05 15:47:07]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 15:47:07] 🚀 Führe Aktion C aus...
+[2026-04-05 15:47:09]   ✅ llama-server (70B) neu gestartet
+[2026-04-05 15:47:09] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 15:47:15]   ✅ llama-server läuft wieder
+[2026-04-05 15:47:15] 📋 Incident Report:
+[2026-04-05 15:47:15]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 15:47:15]   Analyse:   URSACHE: Die RAM-Auslastung ist zu hoch, da das Hauptmodell (Llama 3.3 70B) ~40 GB GPU-RAM benötigt, aber nur 31,4 GB freier RAM verfügbar sind.
+[2026-04-05 15:47:15]   Aktion:    llama-server neu gestartet (PID 1302)
+[2026-04-05 15:47:15]   Eskaliert: False
+[2026-04-05 15:47:15]   Gelöst:    True
+[2026-04-05 15:47:15]   ✅ Incident automatisch gelöst
+[2026-04-05 15:47:15] ────────────────────────────────────────────────────────────
+[2026-04-05 15:47:15]   ✅ Incident Agent hat Problem gelöst
+[2026-04-05 15:47:15] 💻 [4/6] System Health...
+[2026-04-05 15:47:15]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 15:47:15]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 15:47:15]   ✅ Speicher OK
+[2026-04-05 15:47:15]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 15:47:15] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 15:47:15]   ✅ llama33-70b: keine Änderung
+[2026-04-05 15:47:15]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 15:47:15] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 15:47:16]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 15:47:16] 📋 Zusammenfassung:
+[2026-04-05 15:47:16]   🔄 llama-server war down — Incident Agent hat ihn repariert
+[2026-04-05 15:47:16]   Aktionen durchgeführt:
+[2026-04-05 15:47:16]     → llama-server durch Incident Agent wiederhergestellt
+[2026-04-05 15:47:16] ────────────────────────────────────────────────────────────
+[2026-04-05 15:47:16] 🤖 Platform Agent v3 beendet
+[Sun Apr  5 15:47:16 CEST 2026] ✅ Platform Agent initial run fertig
+[Sun Apr  5 15:47:16 CEST 2026] ⏳ Warte 60s vor llama-server Start...
+[Sun Apr  5 15:48:18 CEST 2026] ✅ llama-server gestartet
+[Sun Apr  5 16:00:33 CEST 2026] 🚀 Startup Script gestartet
+[Sun Apr  5 16:00:33 CEST 2026] ⏳ Warte auf Docker...
+[Sun Apr  5 16:00:39 CEST 2026] ✅ Docker bereit
+[Sun Apr  5 16:00:39 CEST 2026] ⏳ Warte auf K8s...
+[Sun Apr  5 16:00:42 CEST 2026] ✅ K8s bereit
+Crash-Counter zurückgesetzt
+[Sun Apr  5 16:00:42 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Sun Apr  5 16:00:42 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Sun Apr  5 16:00:42 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Sun Apr  5 16:00:42 CEST 2026] ✅ K8s Pods gestartet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+[2026-04-05 16:00:46] ============================================================
+[2026-04-05 16:00:46] 🤖 Platform Agent v3 gestartet
+[2026-04-05 16:00:46] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 16:00:46]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 16:00:46]   ✅ Keine operationalen Updates.
+[2026-04-05 16:00:46] 🏥 [2/6] K8s Health Check...
+[2026-04-05 16:00:46]   ✅ ollama-app-ollama-7f8d675d4d-b4v6f: Running (restarts: 6)
+[2026-04-05 16:00:46]   ✅ ollama-app-open-webui-699d455996-m99jp: Running (restarts: 5)
+[2026-04-05 16:00:46] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 16:00:46]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 16:00:46] 📊 Sammle System-Kontext...
+[2026-04-05 16:00:46]   RAM frei: 33.2 GB
+[2026-04-05 16:00:46]   Aktive Slots: 0/0
+[2026-04-05 16:00:46]   Cached Tokens: 0
+[2026-04-05 16:00:46]   Crashes letzte Stunde: 0
+[2026-04-05 16:00:46] 🤔 LLM analysiert Incident...
+[2026-04-05 16:00:46]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 16:00:46]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 16:00:46]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 16:01:06]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 16:01:09]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da wahrscheinlich kein RAM-Problem vorliegt, da 33,2 GB RAM frei sind.
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Da kein RAM-Problem vorliegt und keine aktiven Nutzer vorhanden sind, kann der llama-server ohne Änderungen neu gestart werden, um Speicherlecks zu beheben.
+RISIKO: mittel
+[2026-04-05 16:01:09] 🛡️ Sicherheitscheck...
+[2026-04-05 16:01:09]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 16:01:09] 🚀 Führe Aktion C aus...
+[2026-04-05 16:01:12]   ✅ llama-server (70B) neu gestartet
+[2026-04-05 16:01:12] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 16:01:17]   ✅ llama-server läuft wieder
+[2026-04-05 16:01:17] 📋 Incident Report:
+[2026-04-05 16:01:17]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 16:01:17]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da wahrscheinlich kein RAM-Problem vorliegt, da 33,2 GB RAM frei sind.
+[2026-04-05 16:01:17]   Aktion:    llama-server neu gestartet (PID 1328)
+[2026-04-05 16:01:17]   Eskaliert: False
+[2026-04-05 16:01:17]   Gelöst:    True
+[2026-04-05 16:01:17]   ✅ Incident automatisch gelöst
+[2026-04-05 16:01:17] ────────────────────────────────────────────────────────────
+[2026-04-05 16:01:17]   ✅ Incident Agent hat Problem gelöst
+[2026-04-05 16:01:17] 💻 [4/6] System Health...
+[2026-04-05 16:01:17]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 16:01:17]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 16:01:17]   ✅ Speicher OK
+[2026-04-05 16:01:17]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 16:01:17] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 16:01:17]   ✅ llama33-70b: keine Änderung
+[2026-04-05 16:01:17]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 16:01:17] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 16:01:18]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 16:01:18] 📋 Zusammenfassung:
+[2026-04-05 16:01:18]   🔄 llama-server war down — Incident Agent hat ihn repariert
+[2026-04-05 16:01:18]   Aktionen durchgeführt:
+[2026-04-05 16:01:18]     → llama-server durch Incident Agent wiederhergestellt
+[2026-04-05 16:01:18] ────────────────────────────────────────────────────────────
+[2026-04-05 16:01:18] 🤖 Platform Agent v3 beendet
+[Sun Apr  5 16:01:18 CEST 2026] ✅ Platform Agent initial run fertig
+[Sun Apr  5 16:01:18 CEST 2026] ⏳ Warte 60s vor llama-server Start...
+[Sun Apr  5 16:02:20 CEST 2026] ✅ llama-server gestartet
+[So.  5 Apr. 2026 16:08:24 CEST] 🚀 Startup Script gestartet
+[So.  5 Apr. 2026 16:08:24 CEST] ⏳ Warte auf Docker...
+[Sun Apr  5 16:10:17 CEST 2026] 🚀 Startup Script gestartet
+[Sun Apr  5 16:10:17 CEST 2026] ⏳ Warte auf Docker...
+[Sun Apr  5 16:10:23 CEST 2026] ✅ Docker bereit
+[Sun Apr  5 16:10:23 CEST 2026] ⏳ Warte auf K8s...
+[Sun Apr  5 16:10:29 CEST 2026] ✅ K8s bereit
+Crash-Counter zurückgesetzt
+[Sun Apr  5 16:10:29 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Sun Apr  5 16:10:29 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Sun Apr  5 16:10:29 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Sun Apr  5 16:10:29 CEST 2026] ✅ K8s Pods gestartet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+[2026-04-05 16:10:30] ============================================================
+[2026-04-05 16:10:30] 🤖 Platform Agent v3 gestartet
+[2026-04-05 16:10:30] 🔍 [1/6] GitHub Update-Check...
+[2026-04-05 16:10:30]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-05 16:10:30]   ✅ Keine operationalen Updates.
+[2026-04-05 16:10:30] 🏥 [2/6] K8s Health Check...
+[2026-04-05 16:10:31]   ✅ ollama-app-ollama-7f8d675d4d-b4v6f: Running (restarts: 7)
+[2026-04-05 16:10:31]   ✅ ollama-app-open-webui-699d455996-m99jp: Running (restarts: 6)
+[2026-04-05 16:10:31] 🧠 [3/6] llama-server Watchdog...
+[2026-04-05 16:10:31]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-05 16:10:31] 📊 Sammle System-Kontext...
+[2026-04-05 16:10:31]   RAM frei: 34.0 GB
+[2026-04-05 16:10:31]   Aktive Slots: 0/0
+[2026-04-05 16:10:31]   Cached Tokens: 0
+[2026-04-05 16:10:31]   Crashes letzte Stunde: 0
+[2026-04-05 16:10:31] 🤔 LLM analysiert Incident...
+[2026-04-05 16:10:31]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-05 16:10:31]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-05 16:10:31]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-05 16:10:51]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-05 16:10:55]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, aber die Crashes in der letzten Stunde sind 0 und es gibt keine aktiven Nutzer-Slots.
+
+AKTION: C) llama-server neu starten ohne Änderungen
+
+BEGRÜNDUNG: Da es keine aktiven Nutzer-Slots gibt und die Crashes in der letzten Stunde 0 sind, kann ein Neustart des llama-servers ohne Änderungen durchgeführt werden, um Speicherlecks zu beheben und die Plattform wiederherzustellen.
+
+RISIKO: mittel
+
+Begründung: Ein Neustart des llama-servers kann zu einer kurzen Unterbrechung der Plattform führen, aber da es keine aktiven Nutzer-Slots gibt, ist das Risiko für die Benutzer minimal.
+[2026-04-05 16:10:55] 🛡️ Sicherheitscheck...
+[2026-04-05 16:10:55]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-05 16:10:55] 🚀 Führe Aktion C aus...
+[2026-04-05 16:10:57]   ✅ llama-server (70B) neu gestartet
+[2026-04-05 16:10:57] 🔍 Prüfe ob Problem gelöst...
+[2026-04-05 16:11:03]   ✅ llama-server läuft wieder
+[2026-04-05 16:11:03] 📋 Incident Report:
+[2026-04-05 16:11:03]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-05 16:11:03]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, aber die Crashes in der letzten Stunde sind 0 und es gibt keine aktiven Nutzer-Slots.
+[2026-04-05 16:11:03]   Aktion:    llama-server neu gestartet (PID 1282)
+[2026-04-05 16:11:03]   Eskaliert: False
+[2026-04-05 16:11:03]   Gelöst:    True
+[2026-04-05 16:11:03]   ✅ Incident automatisch gelöst
+[2026-04-05 16:11:03] ────────────────────────────────────────────────────────────
+[2026-04-05 16:11:03]   ✅ Incident Agent hat Problem gelöst
+[2026-04-05 16:11:03] 💻 [4/6] System Health...
+[2026-04-05 16:11:03]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-05 16:11:03]   💾 Frei: 602 GB | Modelle: 106 GB
+[2026-04-05 16:11:03]   ✅ Speicher OK
+[2026-04-05 16:11:03]   ✅ Port-Forward Port 80: aktiv
+[2026-04-05 16:11:03] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-05 16:11:03]   ✅ llama33-70b: keine Änderung
+[2026-04-05 16:11:03]   ✅ gemma4-31b: keine Änderung
+[2026-04-05 16:11:03] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-05 16:11:04]   ✅ TurboQuant: kein neuer Commit (bc05a68)
+[2026-04-05 16:11:04] 📋 Zusammenfassung:
+[2026-04-05 16:11:04]   🔄 llama-server war down — Incident Agent hat ihn repariert
+[2026-04-05 16:11:04]   Aktionen durchgeführt:
+[2026-04-05 16:11:04]     → llama-server durch Incident Agent wiederhergestellt
+[2026-04-05 16:11:04] ────────────────────────────────────────────────────────────
+[2026-04-05 16:11:04] 🤖 Platform Agent v3 beendet
+[Sun Apr  5 16:11:04 CEST 2026] ✅ Platform Agent initial run fertig
+[Sun Apr  5 16:11:04 CEST 2026] ⏳ Warte 60s vor llama-server Start...
+[Sun Apr  5 16:12:04 CEST 2026] ✅ llama-server läuft bereits — kein Neustart nötig
+[Sun Apr  5 16:17:17 CEST 2026] 🚀 Startup Script gestartet
+[Sun Apr  5 16:17:17 CEST 2026] ⏳ Warte auf Docker...
+[Sun Apr  5 16:17:23 CEST 2026] ✅ Docker bereit
+[Sun Apr  5 16:17:23 CEST 2026] ⏳ Warte auf K8s...
+[Sun Apr  5 16:17:30 CEST 2026] ✅ K8s bereit
+Crash-Counter zurückgesetzt
+[Sun Apr  5 16:17:30 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Sun Apr  5 16:17:30 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Sun Apr  5 16:17:30 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Sun Apr  5 16:17:30 CEST 2026] ✅ K8s Pods gestartet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+/Users/yavuztopcu/mac-setup/scripts/startup.sh: line 53:  1261 Killed: 9               /opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
+[Sun Apr  5 16:18:04 CEST 2026] ✅ Platform Agent initial run fertig
+[Sun Apr  5 16:18:04 CEST 2026] ⏳ Warte 60s vor llama-server Start...
+[Sun Apr  5 16:19:07 CEST 2026] ✅ 8B Fallback gestoppt
+[Sun Apr  5 16:19:07 CEST 2026] ✅ llama-server läuft bereits — kein Neustart nötig
+[Mon Apr  6 20:08:14 CEST 2026] 🚀 Startup Script gestartet
+[Mon Apr  6 20:08:14 CEST 2026] ⏳ Warte auf Docker...
+[Mon Apr  6 20:08:19 CEST 2026] ✅ Docker bereit
+[Mon Apr  6 20:08:19 CEST 2026] ⏳ Warte auf K8s...
+[Mon Apr  6 20:08:26 CEST 2026] ✅ K8s bereit
+[Mon Apr  6 20:08:26 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Mon Apr  6 20:08:26 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Mon Apr  6 20:08:26 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Mon Apr  6 20:08:26 CEST 2026] ✅ K8s Pods gestartet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+/Users/yavuztopcu/mac-setup/scripts/startup.sh: line 52:  1281 Killed: 9               /opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
+[Mon Apr  6 20:08:58 CEST 2026] ✅ Platform Agent initial run fertig
+[Mon Apr  6 20:08:58 CEST 2026] ⏳ Warte 60s vor llama-server Start...
+[Mon Apr  6 20:09:58 CEST 2026] 🔄 Beende alle alten llama Prozesse...
+[Mon Apr  6 20:10:02 CEST 2026] 🧠 Starte llama-server neu...
+[Mon Apr  6 20:10:02 CEST 2026] ✅ llama-server gestartet (PID 1388)
+[Mon Apr  6 20:15:15 CEST 2026] 🚀 Startup Script gestartet
+[Mon Apr  6 20:15:15 CEST 2026] ⏳ Warte auf Docker...
+[Mon Apr  6 20:15:21 CEST 2026] ✅ Docker bereit
+[Mon Apr  6 20:15:21 CEST 2026] ⏳ Warte auf K8s...
+[Mon Apr  6 20:15:29 CEST 2026] ✅ K8s bereit
+[Mon Apr  6 20:15:29 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Mon Apr  6 20:15:29 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Mon Apr  6 20:15:29 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Mon Apr  6 20:15:29 CEST 2026] ✅ K8s Pods gestartet
+[Mon Apr  6 20:15:29 CEST 2026] 🧠 Starte llama-server...
+[Mon Apr  6 20:15:29 CEST 2026] ✅ llama-server gestartet (PID 1231)
+[Mon Apr  6 20:23:37 CEST 2026] 🚀 Startup Script gestartet
+[Mon Apr  6 20:23:38 CEST 2026] ⏳ Warte auf Docker...
+[Mon Apr  6 20:23:43 CEST 2026] ✅ Docker bereit
+[Mon Apr  6 20:23:43 CEST 2026] ⏳ Warte auf K8s...
+[Mon Apr  6 20:23:51 CEST 2026] ✅ K8s bereit
+[Mon Apr  6 20:23:52 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Mon Apr  6 20:23:52 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Mon Apr  6 20:23:52 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Mon Apr  6 20:23:52 CEST 2026] ✅ K8s Pods gestartet
+[Mon Apr  6 20:23:52 CEST 2026] 🧠 Starte llama-server...
+[Mon Apr  6 20:29:17 CEST 2026] 🚀 Startup Script gestartet
+[Mon Apr  6 20:29:17 CEST 2026] ⏳ Warte auf Docker...
+[Mon Apr  6 20:29:23 CEST 2026] ✅ Docker bereit
+[Mon Apr  6 20:29:23 CEST 2026] ⏳ Warte auf K8s...
+[Mon Apr  6 20:29:25 CEST 2026] ✅ K8s bereit
+[Mon Apr  6 20:29:26 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Mon Apr  6 20:29:26 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Mon Apr  6 20:29:26 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Mon Apr  6 20:29:26 CEST 2026] ✅ K8s Pods gestartet
+[Mon Apr  6 20:29:26 CEST 2026] 🧠 Starte llama-server...
+[Mon Apr  6 20:29:28 CEST 2026] ✅ llama-server gestartet (PID 1239)
+[Mon Apr  6 20:38:53 CEST 2026] 🚀 Startup Script gestartet
+[Mon Apr  6 20:38:53 CEST 2026] ⏳ Warte auf Docker...
+[Mon Apr  6 20:38:58 CEST 2026] ✅ Docker bereit
+[Mon Apr  6 20:38:58 CEST 2026] ⏳ Warte auf K8s...
+[Mon Apr  6 20:39:02 CEST 2026] ✅ K8s bereit
+[Mon Apr  6 20:39:02 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Mon Apr  6 20:39:02 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Mon Apr  6 20:39:02 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Mon Apr  6 20:39:02 CEST 2026] ✅ K8s Pods gestartet
+[Mon Apr  6 20:39:02 CEST 2026] ✅ Startup fertig — starte manuell: ai-llama-fast

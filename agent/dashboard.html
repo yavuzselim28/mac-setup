@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Syne:wght@700;800&display=swap');
+  :root {
+    --bg: #0b0c10;
+    --surface: #13151c;
+    --border: #1e2130;
+    --green: #3dd68c;
+    --blue: #4d9cf6;
+    --amber: #f5a623;
+    --red: #f25757;
+    --muted: #4a5068;
+    --text: #c8cfe0;
+    --text2: #8892a4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'JetBrains Mono',monospace; background:var(--bg); color:var(--text); padding:20px; font-size:13px; line-height:1.5; }
+  
+  /* Header */
+  .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+  .logo { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; letter-spacing:-0.5px; }
+  .logo em { color:var(--green); font-style:normal; }
+  .header-right { display:flex; align-items:center; gap:12px; }
+  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .refresh-btn { background:transparent; border:1px solid var(--border); color:var(--text2); font-family:'JetBrains Mono',monospace; font-size:11px; padding:5px 12px; border-radius:4px; cursor:pointer; }
+  .refresh-btn:hover { border-color:var(--green); color:var(--green); }
+  .countdown { font-size:11px; color:var(--muted); }
+
+  /* Status bar */
+  .status-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  .stat { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:14px 16px; }
+  .stat-label { font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
+  .stat-val { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; line-height:1; }
+  .stat-sub { font-size:11px; color:var(--text2); margin-top:4px; }
+  .green { color:var(--green); }
+  .red { color:var(--red); }
+  .amber { color:var(--amber); }
+  .blue { color:var(--blue); }
+
+  /* Report card */
+  .report-card { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:6px; padding:16px; margin-bottom:16px; }
+  .report-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .report-title { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--blue); }
+  .report-date { font-size:10px; color:var(--muted); }
+  .report-text { font-size:12px; color:var(--text); line-height:1.7; }
+
+  /* Intelligence */
+  .intel-list { background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:16px; overflow:hidden; }
+  .intel-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); cursor:pointer; }
+  .intel-header:hover { background:rgba(255,255,255,0.02); }
+  .intel-title { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--amber); }
+  .collapse-btn { font-size:11px; color:var(--muted); }
+  .intel-body { padding:0; }
+  .intel-item { padding:12px 16px; border-bottom:1px solid var(--border); }
+  .intel-item:last-child { border-bottom:none; }
+  .intel-item-header { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+  .intel-sha { font-size:11px; color:var(--blue); }
+  .badge { font-size:10px; padding:2px 7px; border-radius:3px; font-weight:600; }
+  .badge-green { background:rgba(61,214,140,0.1); color:var(--green); }
+  .badge-amber { background:rgba(245,166,35,0.1); color:var(--amber); }
+  .badge-red { background:rgba(242,87,87,0.1); color:var(--red); }
+  .badge-gray { background:rgba(74,80,104,0.2); color:var(--muted); }
+  .intel-msg { font-size:12px; color:var(--text2); }
+  .intel-action { font-size:11px; color:var(--text2); margin-top:3px; }
+  .intel-action span { color:var(--amber); }
+
+  /* Collapsible sections */
+  .section { background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:16px; overflow:hidden; }
+  .section-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; cursor:pointer; user-select:none; }
+  .section-header:hover { background:rgba(255,255,255,0.02); }
+  .section-title { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text2); }
+  .section-meta { display:flex; align-items:center; gap:10px; }
+  .chevron { font-size:10px; color:var(--muted); transition:transform 0.2s; }
+  .chevron.open { transform:rotate(180deg); }
+  .section-body { border-top:1px solid var(--border); }
+  .pod-row { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid rgba(30,33,48,0.6); }
+  .pod-row:last-child { border-bottom:none; }
+  .pod-name { font-size:12px; }
+  .pod-badges { display:flex; gap:6px; align-items:center; }
+  .dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:6px; }
+  .dot-green { background:var(--green); }
+  .dot-red { background:var(--red); }
+  .dot-amber { background:var(--amber); }
+  .dot-gray { background:var(--muted); }
+
+  /* Log viewer */
+  .log-section { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+  .log-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); }
+  .log-filters { display:flex; gap:6px; }
+  .filter { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px; padding:3px 9px; border-radius:3px; cursor:pointer; letter-spacing:0.5px; }
+  .filter.active { border-color:var(--green); color:var(--green); background:rgba(61,214,140,0.06); }
+  .log-body { padding:12px 16px; max-height:320px; overflow-y:auto; }
+  .log-entry { display:flex; gap:12px; padding:3px 0; border-bottom:1px solid rgba(30,33,48,0.4); font-size:11px; }
+  .log-entry:last-child { border-bottom:none; }
+  .log-t { color:var(--muted); flex-shrink:0; }
+  .log-ok { color:var(--green); }
+  .log-err { color:var(--red); }
+  .log-warn { color:var(--amber); }
+  .log-info { color:var(--blue); }
+  .log-dim { color:var(--text2); }
+
+  /* Grid 2-col */
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  @media(max-width:700px) { .status-bar,.grid2 { grid-template-columns:1fr 1fr; } }
+  @media(max-width:480px) { .status-bar { grid-template-columns:1fr 1fr; } .grid2 { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo"><em>⬡</em> Platform<em>.</em>OS</div>
+  <div class="header-right">
+    <div class="live-dot"></div>
+    <span class="countdown">refresh in <span id="cd">30</span>s</span>
+    <button class="refresh-btn" onclick="load()">↻</button>
+  </div>
+</div>
+
+<!-- Status bar -->
+<div class="status-bar">
+  <div class="stat">
+    <div class="stat-label">LLM Server</div>
+    <div class="stat-val" id="s-llama">—</div>
+    <div class="stat-sub" id="s-llama-sub">—</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">RAM frei</div>
+    <div class="stat-val" id="s-ram">—</div>
+    <div class="stat-sub">von 64 GB</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Letzter Run</div>
+    <div class="stat-val" id="s-run" style="font-size:16px;margin-top:4px">—</div>
+    <div class="stat-sub" id="s-run-sub">—</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Aktionen</div>
+    <div class="stat-val" id="s-actions">—</div>
+    <div class="stat-sub">heute</div>
+  </div>
+</div>
+
+<!-- Weekly Report -->
+<div class="report-card" id="report-card" style="display:none">
+  <div class="report-header">
+    <span class="report-title">Wochenbericht</span>
+    <span class="report-date" id="report-date">—</span>
+  </div>
+  <div class="report-text" id="report-text">—</div>
+</div>
+
+<!-- TurboQuant Intelligence -->
+<div class="intel-list" id="intel-section" style="display:none">
+  <div class="intel-header" onclick="toggleSection('intel-body','intel-chevron')">
+    <span class="intel-title">TurboQuant Intelligence</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span id="intel-count" class="badge badge-amber">—</span>
+      <span class="chevron open" id="intel-chevron">▼</span>
+    </div>
+  </div>
+  <div class="intel-body" id="intel-body"></div>
+</div>
+
+<!-- K8s + System Grid -->
+<div class="grid2">
+  <!-- K8s Pods -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection('pods-body','pods-chevron')">
+      <span class="section-title">Kubernetes Pods</span>
+      <div class="section-meta">
+        <span id="pods-summary" class="badge badge-green">—</span>
+        <span class="chevron" id="pods-chevron">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="pods-body" style="display:none">
+      <div id="pods-list"><div class="pod-row"><span class="log-dim">wird geladen...</span></div></div>
+    </div>
+  </div>
+
+  <!-- System Health -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection('sys-body','sys-chevron')">
+      <span class="section-title">System Health</span>
+      <div class="section-meta">
+        <span id="sys-summary" class="badge badge-green">OK</span>
+        <span class="chevron" id="sys-chevron">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="sys-body" style="display:none">
+      <div id="sys-list"><div class="pod-row"><span class="log-dim">wird geladen...</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Log Viewer -->
+<div class="log-section">
+  <div class="log-header">
+    <span class="section-title">Agent Log</span>
+    <div class="log-filters">
+      <button class="filter active" onclick="setFilter('all',this)">ALL</button>
+      <button class="filter" onclick="setFilter('ok',this)">OK</button>
+      <button class="filter" onclick="setFilter('warn',this)">WARN</button>
+      <button class="filter" onclick="setFilter('err',this)">ERR</button>
+      <button class="filter" onclick="setFilter('info',this)">INFO</button>
+    </div>
+  </div>
+  <div class="log-body" id="log-body">
+    <div class="log-entry"><span class="log-dim">wird geladen...</span></div>
+  </div>
+</div>
+
+<script>
+let logs = [], filter = 'all', intel = [], weeklyReport = null;
+
+function toggleSection(bodyId, chevronId) {
+  const body = document.getElementById(bodyId);
+  const chev = document.getElementById(chevronId);
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  chev.classList.toggle('open', !open);
+}
+
+function setFilter(f, btn) {
+  filter = f;
+  document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLogs();
+}
+
+function classify(line) {
+  if (line.includes('✅') || line.includes('läuft') && !line.includes('nicht')) return 'ok';
+  if (line.includes('❌') || line.includes('🚨') || line.includes('Killed') || line.includes('error')) return 'err';
+  if (line.includes('⚠️') || line.includes('down') || line.includes('nicht aktiv') || line.includes('nötig')) return 'warn';
+  if (line.includes('🔬') || line.includes('TurboQuant') || line.includes('Commit') || line.includes('WOCHENBERICHT')) return 'info';
+  return 'dim';
+}
+
+function parseTime(line) {
+  const m = line.match(/\[(\d{2}:\d{2}:\d{2})\]/) || line.match(/(\d{2}:\d{2}:\d{2}) CEST/);
+  return m ? m[1] : '';
+}
+
+function parseFullTime(line) {
+  const m = line.match(/\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]/);
+  return m ? m[1] : '';
+}
+
+function renderLogs() {
+  const body = document.getElementById('log-body');
+  const filtered = filter === 'all' ? logs : logs.filter(l => classify(l) === filter);
+  if (!filtered.length) { body.innerHTML = '<div class="log-entry"><span class="log-dim">Keine Einträge.</span></div>'; return; }
+  body.innerHTML = filtered.slice(-100).reverse().map(line => {
+    const cls = classify(line);
+    const t = parseTime(line);
+    const msg = line.replace(/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]\s*/, '').replace(/\[.+?\d{2}:\d{2}:\d{2} CEST \d{4}\]\s*/, '').trim();
+    return `<div class="log-entry"><span class="log-t">${t}</span><span class="log-${cls === 'dim' ? 'dim' : cls}">${msg}</span></div>`;
+  }).join('');
+}
+
+function renderIntel() {
+  if (!intel.length) return;
+  const section = document.getElementById('intel-section');
+  const body = document.getElementById('intel-body');
+  const count = document.getElementById('intel-count');
+  section.style.display = 'block';
+  count.textContent = intel.length + ' commits';
+
+  body.innerHTML = intel.slice(0, 10).map(a => {
+    const risk = a.risiko || 'unbekannt';
+    const badgeCls = risk === 'hoch' ? 'badge-red' : risk === 'mittel' ? 'badge-amber' : 'badge-green';
+    const relevant = a.relevant ? '' : '<span class="badge badge-gray">nicht relevant</span>';
+    return `<div class="intel-item">
+      <div class="intel-item-header">
+        <span class="intel-sha">[${a.short_sha || a.sha?.slice(0,7)}]</span>
+        <span class="badge ${badgeCls}">${a.category || '—'}</span>
+        ${relevant}
+      </div>
+      <div class="intel-msg">${(a.message || '').slice(0, 70)}</div>
+      ${a.auswirkung ? `<div class="intel-action"><span>→</span> ${a.auswirkung.slice(0,100)}</div>` : ''}
+      ${a.empfehlung ? `<div class="intel-action" style="color:var(--blue)">Empfehlung: ${a.empfehlung.slice(0,80)}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function updateStats() {
+  // LLM
+  const llamaRunning = logs.some(l => l.includes('llama-server läuft') || l.includes('server is listening'));
+  const llamaDown = logs.some(l => l.includes('llama-server down') || l.includes('nicht erreichbar'));
+  const el = document.getElementById('s-llama');
+  const sub = document.getElementById('s-llama-sub');
+  if (llamaRunning) { el.textContent = 'RUNNING'; el.className = 'stat-val green'; sub.textContent = 'Port 8080'; }
+  else if (llamaDown) { el.textContent = 'DOWN'; el.className = 'stat-val red'; sub.textContent = 'Incident Agent aktiv'; }
+  else { el.textContent = '?'; el.className = 'stat-val amber'; sub.textContent = 'Status unbekannt'; }
+
+  // RAM
+  const ramLine = logs.filter(l => l.includes('RAM frei:')).pop();
+  if (ramLine) {
+    const m = ramLine.match(/RAM frei:\s*([\d.]+)/);
+    if (m) { document.getElementById('s-ram').textContent = m[1] + ' GB'; document.getElementById('s-ram').className = 'stat-val ' + (parseFloat(m[1]) < 5 ? 'red' : 'green'); }
+  }
+
+  // Last run
+  const lastEnd = logs.filter(l => l.includes('Platform Agent v3 beendet')).pop();
+  if (lastEnd) {
+    const t = parseFullTime(lastEnd);
+    document.getElementById('s-run').textContent = t.split(' ')[1] || t;
+    document.getElementById('s-run').className = 'stat-val blue';
+    document.getElementById('s-run-sub').textContent = t.split(' ')[0] || '';
+  }
+
+  // Actions
+  const actions = logs.filter(l => l.includes('→ ') && !l.includes('Empfehlung')).length;
+  document.getElementById('s-actions').textContent = actions;
+  document.getElementById('s-actions').className = 'stat-val ' + (actions > 0 ? 'amber' : 'green');
+
+  // Pods
+  const podLines = logs.filter(l => l.includes('ollama-app') && l.includes('Running'));
+  const podList = document.getElementById('pods-list');
+  const podSummary = document.getElementById('pods-summary');
+  if (podLines.length) {
+    podSummary.textContent = podLines.length + ' running';
+    podSummary.className = 'badge badge-green';
+    podList.innerHTML = podLines.map(l => {
+      const name = l.match(/ollama-app[\w-]+/)?.[0] || 'pod';
+      const restarts = l.match(/restarts: (\d+)/)?.[1] || '0';
+      const r = parseInt(restarts);
+      return `<div class="pod-row">
+        <span><span class="dot ${r > 5 ? 'dot-amber' : 'dot-green'}"></span>${name.replace('ollama-app-','')}</span>
+        <span class="badge ${r > 5 ? 'badge-amber' : 'badge-green'}">${restarts} restarts</span>
+      </div>`;
+    }).join('');
+  } else {
+    podSummary.textContent = 'N/A';
+    podSummary.className = 'badge badge-gray';
+    podList.innerHTML = '<div class="pod-row"><span class="log-dim">Keine Pod-Daten</span></div>';
+  }
+
+  // System health
+  const diskLine = logs.filter(l => l.includes('Frei:') && l.includes('GB')).pop();
+  const gpuLine = logs.filter(l => l.includes('GPU Memory Limit')).pop();
+  const portLine = logs.filter(l => l.includes('Port-Forward')).pop();
+  let sysHtml = '';
+  if (diskLine) {
+    const m = diskLine.match(/Frei: (\d+) GB \| Modelle: (\d+) GB/);
+    if (m) sysHtml += `<div class="pod-row"><span>Disk frei</span><span class="badge badge-green">${m[1]} GB</span></div><div class="pod-row"><span>Modelle</span><span class="badge badge-gray">${m[2]} GB</span></div>`;
+  }
+  if (gpuLine) {
+    const ok = gpuLine.includes('✅');
+    sysHtml += `<div class="pod-row"><span>GPU Limit</span><span class="badge ${ok ? 'badge-green' : 'badge-red'}">${ok ? '52429 MB' : 'nicht gesetzt'}</span></div>`;
+  }
+  if (portLine) {
+    const ok = portLine.includes('aktiv') || portLine.includes('✅');
+    sysHtml += `<div class="pod-row"><span>Port-Forward</span><span class="badge ${ok ? 'badge-green' : 'badge-amber'}">${ok ? 'aktiv' : 'inaktiv'}</span></div>`;
+  }
+  document.getElementById('sys-list').innerHTML = sysHtml || '<div class="pod-row"><span class="log-dim">Keine Daten</span></div>';
+  document.getElementById('sys-summary').textContent = 'OK';
+}
+
+function renderWeekly() {
+  if (!weeklyReport) return;
+  const card = document.getElementById('report-card');
+  card.style.display = 'block';
+  document.getElementById('report-text').textContent = weeklyReport.report || weeklyReport;
+  document.getElementById('report-date').textContent = (weeklyReport.date || '').slice(0,10);
+}
+
+async function load() {
+  try {
+    const r = await fetch('/logs/agent.log');
+    if (r.ok) {
+      const text = await r.text();
+      logs = text.split('\n').filter(l => l.trim());
+      updateStats();
+      renderLogs();
+    }
+  } catch(e) { showDemo(); }
+
+  try {
+    const r2 = await fetch('/intelligence.json');
+    if (r2.ok) {
+      const data = await r2.json();
+      intel = data.analyses || [];
+      weeklyReport = (data.weekly_reports || [])[0] || null;
+      renderIntel();
+      renderWeekly();
+    }
+  } catch(e) {}
+}
+
+function showDemo() {
+  const now = new Date().toISOString().slice(0,19).replace('T',' ');
+  logs = [
+    `[${now}] 🤖 Platform Agent v3 gestartet`,
+    `[${now}]   ✅ open-webui: aktuell=v0.8.12`,
+    `[${now}]   ✅ ollama-app-ollama: Running (restarts: 0)`,
+    `[${now}]   ✅ ollama-app-open-webui: Running (restarts: 2)`,
+    `[${now}]   ✅ llama-server läuft auf Port 8080`,
+    `[${now}]   ✅ GPU Memory Limit: 52429 MB`,
+    `[${now}]   💾 Frei: 28 GB | Modelle: 106 GB`,
+    `[${now}]   RAM frei: 28.0 GB`,
+    `[${now}]   🔬 TurboQuant neuer Commit: [883bf4a]`,
+    `[${now}] 🤖 Platform Agent v3 beendet`,
+  ];
+  intel = [{short_sha:'883bf4a',message:'Update GGMLQuantizationType and LlamaFileType enums',category:'Feature',relevant:true,auswirkung:'Neue Quantisierungstypen TQ3_1S und TQ4_1S für Weight Compression',empfehlung:'Beim nächsten Update',risiko:'niedrig'}];
+  weeklyReport = {date:now,report:'Demo-Modus: Starte mit python3 -m http.server 8999 im agent/ Ordner um echte Daten zu sehen.'};
+  updateStats();
+  renderLogs();
+  renderIntel();
+  renderWeekly();
+  document.getElementById('countdown').parentElement.textContent = '⚠ Demo — starte: cd ~/mac-setup/agent && python3 -m http.server 8999';
+}
+
+let cd = 30;
+function tick() {
+  cd--;
+  const el = document.getElementById('cd');
+  if (el) el.textContent = cd;
+  if (cd <= 0) { cd = 30; load(); }
+}
+
+load();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>

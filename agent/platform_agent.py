@@ -478,6 +478,28 @@ def notify(state: AgentState) -> AgentState:
     log("─" * 60)
     return state
 
+
+# ── Intelligence Agent Integration ────────────────────────────
+def run_intelligence(state: AgentState) -> AgentState:
+    log("🧠 [7/7] Intelligence Agent...")
+    import sys
+    sys.path.insert(0, str(Path.home() / "mac-setup/agent"))
+    from intelligence_agent import build_graph as build_intel_graph
+
+    intel_agent = build_intel_graph()
+    result = intel_agent.invoke({
+        "commits": [],
+        "prs": [],
+        "analyses": [],
+        "weekly_report": "",
+        "notifications": []
+    })
+
+    for n in result.get("notifications", []):
+        state["notifications"].append(n)
+
+    return state
+
 # ── Graph ──────────────────────────────────────────────────────
 def build_graph():
     graph = StateGraph(AgentState)
@@ -500,7 +522,9 @@ def build_graph():
     graph.add_edge("check_llama_server", "check_system_health")
     graph.add_edge("check_system_health", "check_unsloth_models")
     graph.add_edge("check_unsloth_models", "check_argocd_and_commits")
-    graph.add_edge("check_argocd_and_commits", "notify")
+    graph.add_node("run_intelligence", run_intelligence)
+    graph.add_edge("check_argocd_and_commits", "run_intelligence")
+    graph.add_edge("run_intelligence", "notify")
     graph.add_edge("notify", END)
 
     return graph.compile()
@@ -522,3 +546,4 @@ if __name__ == "__main__":
 
     log("🤖 Platform Agent v3 beendet")
 # Import wird oben eingefügt — separater Patch
+

@@ -382,6 +382,26 @@ Schreibe einen prägnanten Bericht auf Deutsch (max 5 Sätze):
         log(f"  ✅ Wochenbericht erstellt")
         log(f"  {report[:200]}...")
         state["notifications"].append(f"📋 WOCHENBERICHT: {report[:150]}...")
+        
+        # MemPalace updaten
+        try:
+            import subprocess
+            knowledge_file = Path.home() / "mac-setup/agent/knowledge/decisions.md"
+            if knowledge_file.exists():
+                existing = knowledge_file.read_text()
+                new_entries = []
+                for a in intel.get("analyses", [])[:5]:
+                    if a.get("relevant") and a.get("short_sha","") not in existing:
+                        entry = f"\n## Commit {a.get('short_sha','?')} ({a.get('date','')[:10]})\n- {a.get('auswirkung','')}\n- Empfehlung: {a.get('empfehlung','')}\n"
+                        new_entries.append(entry)
+                if new_entries:
+                    with open(knowledge_file, "a") as kf:
+                        kf.write("\n# Auto-Update\n")
+                        kf.writelines(new_entries)
+                    subprocess.run(["mempalace", "mine", str(knowledge_file.parent), "--wing", "platform"], capture_output=True, timeout=30)
+                    log(f"  ✅ MemPalace aktualisiert ({len(new_entries)} Einträge)")
+        except Exception as me:
+            log(f"  ⚠️ MemPalace: {me}")
 
     except Exception as e:
         log(f"  ❌ Wochenbericht Fehler: {e}")

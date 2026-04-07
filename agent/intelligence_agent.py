@@ -201,13 +201,17 @@ Beantworte folgende Fragen präzise:
 3. AUSWIRKUNG: Was ändert sich konkret? (1-2 Sätze)
 4. EMPFEHLUNG: [Sofort neu kompilieren / Beim nächsten Update / Kein Handlungsbedarf]
 5. RISIKO: [niedrig / mittel / hoch]
+6. KOMPILIERBAR: Ist dieser Commit mit "cmake --build" auf dem llama.cpp Fork kompilierbar?
+   NUR ja wenn Repo = TheTom/llama-cpp-turboquant
+   MLX Repos (arozanov, helgklaizar, rachittshah, SharpAI/SwiftLM) = NEIN, anderer Stack
 
 Antworte in diesem Format:
 KATEGORIE: ...
 RELEVANT: ja/nein
 AUSWIRKUNG: ...
 EMPFEHLUNG: ...
-RISIKO: ..."""
+RISIKO: ...
+KOMPILIERBAR: ja/nein"""
 
         try:
             response = llm.invoke(prompt)
@@ -218,6 +222,7 @@ RISIKO: ..."""
             auswirkung = re.search(r"AUSWIRKUNG:\s*(.+)", analysis_text)
             empfehlung = re.search(r"EMPFEHLUNG:\s*(.+)", analysis_text)
             risiko = re.search(r"RISIKO:\s*(niedrig|mittel|hoch)", analysis_text, re.I)
+            kompilierbar = re.search(r"KOMPILIERBAR:\s*(ja|nein)", analysis_text, re.I)
 
             analysis = {
                 "sha": commit["sha"],
@@ -230,6 +235,7 @@ RISIKO: ..."""
                 "auswirkung": auswirkung.group(1).strip() if auswirkung else "",
                 "empfehlung": empfehlung.group(1).strip() if empfehlung else "",
                 "risiko": risiko.group(1).lower() if risiko else "unbekannt",
+                "kompilierbar": (kompilierbar.group(1).lower() == "ja") if kompilierbar else False,
                 "analyzed_at": datetime.now().isoformat()
             }
 

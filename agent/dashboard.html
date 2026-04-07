@@ -214,6 +214,9 @@ function renderIntel() {
       const sha=a.short_sha||(a.sha||'').substring(0,7);
       return '<div class="intel-item" style="padding:8px 16px;opacity:0.5"><div class="intel-row"><span class="intel-sha">['+sha+']</span><span class="badge badge-gray">'+a.category+'</span></div><div class="intel-msg">'+a.message+'</div></div>';
     }).join('')}</div>`;
+    const existing = document.getElementById('non-relevant-section');
+    if(existing) existing.remove();
+    extra.id = 'non-relevant-section';
     document.getElementById('intel-list').after(extra);
   }
   document.getElementById('intel-list').innerHTML = intelData.filter(a=>a.relevant).map(a=>{

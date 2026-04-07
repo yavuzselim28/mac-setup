@@ -27,7 +27,7 @@
 - cache-type-k-draft: turbo4
 - cache-type-v-draft: turbo4
 - Flash Attention: aktiviert
-- Kontext: 16384 tokens
+- Kontext: 32768 tokens
 - np: 1 (ein paralleler Slot)
 
 ## Relevanz-Kriterien für Commits
@@ -59,3 +59,15 @@
 - ROSA (Red Hat OpenShift on AWS)
 - PSF-Chargeback Modell für Multi-Tenant Cost Allocation
 - TurboQuant Business Case: 5x mehr concurrent Users pro GPU
+- Sparse V: aktiviert (skip low-weight V positions, +22% decode speed bei langem Kontext)
+
+## Beobachtete Projekte (zusätzlich zu TurboQuant)
+- milla-jovovich/mempalace — lokales AI Memory System, LongMemEval 100%, brandneu (Apr 2026)
+  → Relevant für: Agenten-Memory, SYSTEM_CONTEXT Ersatz
+  → Status: abwarten, zu neu
+- SharpAI/SwiftLM — Native Swift inference server, TurboQuant + MLX, M5 Pro Benchmarks
+  → Relevant für: möglicher llama.cpp Ersatz
+  → Status: beobachten
+- arozanov/turboquant-mlx — MLX TurboQuant Port, 0.98x Speed, custom Metal Kernels
+  → Relevant für: MLX Migration wenn llama.cpp zu langsam
+  → Status: beobachten

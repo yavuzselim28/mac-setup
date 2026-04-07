@@ -131,7 +131,22 @@ def analyze_commits(state: IntelState) -> IntelState:
     intel = load_intel()
     seen = set(persistent.get("seen_commits", []))
 
-    commits = get_github_commits("TheTom/llama-cpp-turboquant")
+    # Alle beobachteten Repos
+    watched_repos = [
+        ("TheTom/llama-cpp-turboquant", "feature/turboquant-kv-cache"),
+        ("milla-jovovich/mempalace", "main"),
+        ("SharpAI/SwiftLM", "main"),
+        ("arozanov/turboquant-mlx", "main"),
+    ]
+    
+    all_commits = []
+    for repo, branch in watched_repos:
+        repo_commits = get_github_commits(repo, branch, count=3)
+        for c in repo_commits:
+            c["_repo"] = repo
+        all_commits.extend(repo_commits)
+    
+    commits = all_commits
     new_commits = []
 
     for commit in commits:

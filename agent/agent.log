@@ -1713,3 +1713,116 @@ RISIKO: niedrig
 [2026-04-07 15:00:27]     → Port-Forward Port 80 neu gestartet
 [2026-04-07 15:00:27] ────────────────────────────────────────────────────────────
 [2026-04-07 15:00:27] 🤖 Platform Agent v3 beendet
+[2026-04-07 17:55:25] ============================================================
+[2026-04-07 17:55:25] 🤖 Platform Agent v3 gestartet
+[2026-04-07 17:55:25] 🔍 [1/6] GitHub Update-Check...
+[2026-04-07 17:55:25]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-07 17:55:26]   ✅ Keine operationalen Updates.
+[2026-04-07 17:55:26] 🏥 [2/6] K8s Health Check...
+[2026-04-07 17:55:26]   ✅ ollama-app-ollama-7f8d675d4d-b4v6f: Running (restarts: 13)
+[2026-04-07 17:55:26]   ✅ ollama-app-open-webui-699d455996-m99jp: Running (restarts: 13)
+[2026-04-07 17:55:26] 🧠 [3/6] llama-server Watchdog...
+[2026-04-07 17:55:26]   ✅ llama-server läuft auf Port 8080
+[2026-04-07 17:55:26] 💻 [4/6] System Health...
+[2026-04-07 17:55:26]   ✅ GPU Memory Limit: 52429 MB
+[2026-04-07 17:55:26]   💾 Frei: 568 GB | Modelle: 106 GB
+[2026-04-07 17:55:26]   ✅ Speicher OK
+[2026-04-07 17:55:26]   ✅ Port-Forward Port 80: aktiv
+[2026-04-07 17:55:26] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-07 17:55:26]   ✅ llama33-70b: keine Änderung
+[2026-04-07 17:55:26]   ✅ gemma4-31b: keine Änderung
+[2026-04-07 17:55:26] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-07 17:55:27]   ✅ TurboQuant: kein neuer Commit (830eb54)
+[2026-04-07 17:55:27] 🧠 [7/7] Intelligence Agent...
+[2026-04-07 17:55:27] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-07 17:55:28]   🆕 9 neue Commits gefunden
+[2026-04-07 17:55:28]   🤔 Analysiere: [1782628] docs: add narrative palace walkthrough to README...
+[2026-04-07 17:55:50]   ℹ️ [1782628] nicht relevant für dein Setup
+[2026-04-07 17:55:50]   🤔 Analysiere: [f14f59d] README: How You Actually Use It — MCP flow + local...
+[2026-04-07 17:56:01]   ℹ️ [f14f59d] nicht relevant für dein Setup
+[2026-04-07 17:56:01]   🤔 Analysiere: [f54d42f] README: AAAK works with local models too — Claude,...
+[2026-04-07 17:56:15]   ℹ️ [f54d42f] nicht relevant für dein Setup
+[2026-04-07 17:56:15]   🤔 Analysiere: [29f11a6] Revert "fix(deps): use remote URL dependencies for...
+[2026-04-07 17:56:30]   ℹ️ [29f11a6] nicht relevant für dein Setup
+[2026-04-07 17:56:30]   🤔 Analysiere: [7f62ac9] fix(deps): use remote URL dependencies for mlx-swi...
+[2026-04-07 17:56:44]   ℹ️ [7f62ac9] nicht relevant für dein Setup
+[2026-04-07 17:56:44]   🤔 Analysiere: [da535ea] chore: isolate HomeSec benchmark output to local t...
+[2026-04-07 17:56:57]   ℹ️ [da535ea] nicht relevant für dein Setup
+[2026-04-07 17:56:57]   🤔 Analysiere: [3c09674] Fix build backend for pip install compatibility...
+[2026-04-07 17:57:09]   ℹ️ [3c09674] nicht relevant für dein Setup
+[2026-04-07 17:57:09]   🤔 Analysiere: [cffcbf0] v0.2.0: standalone custom kernel package...
+[2026-04-07 17:57:22]   🟡 TurboQuant [cffcbf0] Feature: Der Commit fügt ein standalone custom kernel package hinzu, was möglicherweise d → Sofort neu kompilieren
+[2026-04-07 17:57:22]   🤔 Analysiere: [0d816e2] Update README.md...
+[2026-04-07 17:57:34]   ℹ️ [0d816e2] nicht relevant für dein Setup
+[2026-04-07 17:57:34] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-07 17:57:34]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-07 17:57:34]   ℹ️ Wochenbericht: letzter vor 0 Tagen — noch nicht fällig
+[2026-04-07 17:57:34] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-07 17:57:34]   🟡 TurboQuant [cffcbf0] Feature: Der Commit fügt ein standalone custom kernel package hinzu, was möglicherweise d → Sofort neu kompilieren
+[2026-04-07 17:57:34] ────────────────────────────────────────────────────────────
+[2026-04-07 17:57:34] 📋 Zusammenfassung:
+[2026-04-07 17:57:34]   🟡 TurboQuant [cffcbf0] Feature: Der Commit fügt ein standalone custom kernel package hinzu, was möglicherweise d → Sofort neu kompilieren
+[2026-04-07 17:57:34] ────────────────────────────────────────────────────────────
+[2026-04-07 17:57:34] 🤖 Platform Agent v3 beendet
+[2026-04-07 18:00:01] ============================================================
+[2026-04-07 18:00:01] 🤖 Platform Agent v3 gestartet
+[2026-04-07 18:00:01] 🔍 [1/6] GitHub Update-Check...
+[2026-04-07 18:00:01]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-07 18:00:02]   ✅ Keine operationalen Updates.
+[2026-04-07 18:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-07 18:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-07 18:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-07 18:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-07 18:00:02] 📊 Sammle System-Kontext...
+[2026-04-07 18:00:02]   RAM frei: 0.1 GB
+[2026-04-07 18:00:02]   Aktive Slots: 0/1
+[2026-04-07 18:00:02]   Cached Tokens: 0
+[2026-04-07 18:00:02]   Crashes letzte Stunde: 0
+[2026-04-07 18:00:02] 🤔 LLM analysiert Incident...
+[2026-04-07 18:00:30]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, weil das System unter hohem Speicherdruck steht, insbesondere durch die Belegung von 49,3 GB RAM durch den Kernel und die GPU, was darauf hindeutet, dass ein Speicherleck oder eine unzureichende Konfiguration vorliegt.
+AKTION: C
+BEGRÜNDUNG: Die Aktion C, den llama-server neu zu starten, ohne Änderungen vorzunehmen, ist die angemessenste Reaktion, da sie das Problem eines möglichen Speicherlecks oder einer Fehlkonfiguration direkt anspricht und eine kurze Unterbrechung in Kauf nimmt, um den Dienst wieder verfügbar zu machen, ohne die aktiven Nutzer oder die Kontextgröße zu beeinträchtigen.
+RISIKO: niedrig
+[2026-04-07 18:00:30] 🛡️ Sicherheitscheck...
+[2026-04-07 18:00:30]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-07 18:00:30] 🚀 Führe Aktion C aus...
+[2026-04-07 18:00:32]   ✅ llama-server (70B) neu gestartet
+[2026-04-07 18:00:32] 🔍 Prüfe ob Problem gelöst...
+[2026-04-07 18:00:37]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-07 18:00:37] 📋 Incident Report:
+[2026-04-07 18:00:37]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-07 18:00:37]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, weil das System unter hohem Speicherdruck steht, insbesondere durch die Belegung von 49,3 GB RAM durch den Kernel und die GPU, was darauf hindeutet, dass ein Speicherleck oder eine unzureichende Konfiguration vorliegt.
+[2026-04-07 18:00:37]   Aktion:    llama-server neu gestartet (PID 26129)
+[2026-04-07 18:00:37]   Eskaliert: False
+[2026-04-07 18:00:37]   Gelöst:    False
+[2026-04-07 18:00:37]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-07 18:00:37] ────────────────────────────────────────────────────────────
+[2026-04-07 18:00:37]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-07 18:00:37] 💻 [4/6] System Health...
+[2026-04-07 18:00:37]   💾 Frei: 568 GB | Modelle: 106 GB
+[2026-04-07 18:00:37]   ✅ Speicher OK
+[2026-04-07 18:00:37]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-07 18:00:37]   ✅ Port-Forward neu gestartet
+[2026-04-07 18:00:37] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-07 18:00:37]   ✅ llama33-70b: keine Änderung
+[2026-04-07 18:00:38]   ✅ gemma4-31b: keine Änderung
+[2026-04-07 18:00:38] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-07 18:00:38]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-07 18:00:38]   ✅ TurboQuant: kein neuer Commit (830eb54)
+[2026-04-07 18:00:38] 🧠 [7/7] Intelligence Agent...
+[2026-04-07 18:00:38] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-07 18:00:39]   ✅ Keine neuen Commits
+[2026-04-07 18:00:39] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-07 18:00:39]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-07 18:00:39]   ℹ️ Wochenbericht: letzter vor 0 Tagen — noch nicht fällig
+[2026-04-07 18:00:39] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-07 18:00:39]   ✅ Keine neuen Erkenntnisse
+[2026-04-07 18:00:39] ────────────────────────────────────────────────────────────
+[2026-04-07 18:00:39] 📋 Zusammenfassung:
+[2026-04-07 18:00:39]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-07 18:00:39]   ⏳ llama-server wird wiederhergestellt
+[2026-04-07 18:00:39]   Aktionen durchgeführt:
+[2026-04-07 18:00:39]     → Port-Forward Port 80 neu gestartet
+[2026-04-07 18:00:39] ────────────────────────────────────────────────────────────
+[2026-04-07 18:00:39] 🤖 Platform Agent v3 beendet

@@ -649,3 +649,69 @@ RISIKO: niedrig
 [2026-04-07 15:00:27]     → Port-Forward Port 80 neu gestartet
 [2026-04-07 15:00:27] ────────────────────────────────────────────────────────────
 [2026-04-07 15:00:27] 🤖 Platform Agent v3 beendet
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+bash: lsof: command not found
+bash: lsof: command not found
+[2026-04-07 18:00:01] ============================================================
+[2026-04-07 18:00:01] 🤖 Platform Agent v3 gestartet
+[2026-04-07 18:00:01] 🔍 [1/6] GitHub Update-Check...
+[2026-04-07 18:00:01]   open-webui: aktuell=v0.8.12, latest=v0.8.12
+[2026-04-07 18:00:02]   ✅ Keine operationalen Updates.
+[2026-04-07 18:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-07 18:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-07 18:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-07 18:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-07 18:00:02] 📊 Sammle System-Kontext...
+[2026-04-07 18:00:02]   RAM frei: 0.1 GB
+[2026-04-07 18:00:02]   Aktive Slots: 0/1
+[2026-04-07 18:00:02]   Cached Tokens: 0
+[2026-04-07 18:00:02]   Crashes letzte Stunde: 0
+[2026-04-07 18:00:02] 🤔 LLM analysiert Incident...
+[2026-04-07 18:00:30]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, weil das System unter hohem Speicherdruck steht, insbesondere durch die Belegung von 49,3 GB RAM durch den Kernel und die GPU, was darauf hindeutet, dass ein Speicherleck oder eine unzureichende Konfiguration vorliegt.
+AKTION: C
+BEGRÜNDUNG: Die Aktion C, den llama-server neu zu starten, ohne Änderungen vorzunehmen, ist die angemessenste Reaktion, da sie das Problem eines möglichen Speicherlecks oder einer Fehlkonfiguration direkt anspricht und eine kurze Unterbrechung in Kauf nimmt, um den Dienst wieder verfügbar zu machen, ohne die aktiven Nutzer oder die Kontextgröße zu beeinträchtigen.
+RISIKO: niedrig
+[2026-04-07 18:00:30] 🛡️ Sicherheitscheck...
+[2026-04-07 18:00:30]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-07 18:00:30] 🚀 Führe Aktion C aus...
+[2026-04-07 18:00:32]   ✅ llama-server (70B) neu gestartet
+[2026-04-07 18:00:32] 🔍 Prüfe ob Problem gelöst...
+[2026-04-07 18:00:37]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-07 18:00:37] 📋 Incident Report:
+[2026-04-07 18:00:37]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-07 18:00:37]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, weil das System unter hohem Speicherdruck steht, insbesondere durch die Belegung von 49,3 GB RAM durch den Kernel und die GPU, was darauf hindeutet, dass ein Speicherleck oder eine unzureichende Konfiguration vorliegt.
+[2026-04-07 18:00:37]   Aktion:    llama-server neu gestartet (PID 26129)
+[2026-04-07 18:00:37]   Eskaliert: False
+[2026-04-07 18:00:37]   Gelöst:    False
+[2026-04-07 18:00:37]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-07 18:00:37] ────────────────────────────────────────────────────────────
+[2026-04-07 18:00:37]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-07 18:00:37] 💻 [4/6] System Health...
+[2026-04-07 18:00:37]   💾 Frei: 568 GB | Modelle: 106 GB
+[2026-04-07 18:00:37]   ✅ Speicher OK
+[2026-04-07 18:00:37]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-07 18:00:37]   ✅ Port-Forward neu gestartet
+[2026-04-07 18:00:37] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-07 18:00:37]   ✅ llama33-70b: keine Änderung
+[2026-04-07 18:00:38]   ✅ gemma4-31b: keine Änderung
+[2026-04-07 18:00:38] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-07 18:00:38]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-07 18:00:38]   ✅ TurboQuant: kein neuer Commit (830eb54)
+[2026-04-07 18:00:38] 🧠 [7/7] Intelligence Agent...
+[2026-04-07 18:00:38] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-07 18:00:39]   ✅ Keine neuen Commits
+[2026-04-07 18:00:39] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-07 18:00:39]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-07 18:00:39]   ℹ️ Wochenbericht: letzter vor 0 Tagen — noch nicht fällig
+[2026-04-07 18:00:39] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-07 18:00:39]   ✅ Keine neuen Erkenntnisse
+[2026-04-07 18:00:39] ────────────────────────────────────────────────────────────
+[2026-04-07 18:00:39] 📋 Zusammenfassung:
+[2026-04-07 18:00:39]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-07 18:00:39]   ⏳ llama-server wird wiederhergestellt
+[2026-04-07 18:00:39]   Aktionen durchgeführt:
+[2026-04-07 18:00:39]     → Port-Forward Port 80 neu gestartet
+[2026-04-07 18:00:39] ────────────────────────────────────────────────────────────
+[2026-04-07 18:00:39] 🤖 Platform Agent v3 beendet

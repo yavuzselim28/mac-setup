@@ -222,6 +222,7 @@ RISIKO: ..."""
             analysis = {
                 "sha": commit["sha"],
                 "short_sha": commit["sha"][:7],
+                "repo": commit.get("repo", "TheTom/llama-cpp-turboquant"),
                 "message": commit["message"],
                 "date": commit["date"],
                 "category": category.group(1).strip() if category else "Unbekannt",

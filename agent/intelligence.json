@@ -5,12 +5,12 @@
       "short_sha": "ab9990d",
       "message": "Enhance Metal operations for TQ weights and concurrency handling for Gemma 4",
       "date": "2026-04-04T15:37:22Z",
-      "category": "Feature",
+      "category": "Performance",
       "relevant": true,
-      "auswirkung": "Der Commit verbessert die Metal-Operationen f\u00fcr TQ-Gewichte und die Konkurrenzverwaltung f\u00fcr Gemma 4, was zu einer besseren Leistung und Skalierbarkeit des Systems f\u00fchren kann. Dies kann insbesondere auf Apple-Silicon-Systemen wie dem M5 Pro eine Rolle spielen.",
+      "auswirkung": "Der Commit verbessert die Metal-Operationen f\u00fcr TQ-Gewichte und die Konkurrenzbehandlung f\u00fcr Gemma 4, was zu einer besseren Leistung und Skalierbarkeit f\u00fcr Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro f\u00fchren kann. Dies kann insbesondere die Leistung bei der Verarbeitung von gro\u00dfen Datenmengen und der Nutzung von mehreren parallelen Slots verbessern.",
       "empfehlung": "Sofort neu kompilieren",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:20:45.598975"
+      "analyzed_at": "2026-04-07T02:29:44.101283"
     },
     {
       "sha": "883bf4a",
@@ -19,22 +19,22 @@
       "date": "2026-04-04T17:08:38Z",
       "category": "Feature",
       "relevant": true,
-      "auswirkung": "Die \u00c4nderung aktualisiert die Enums GGMLQuantizationType und LlamaFileType, um die Quantisierungstypen TQ3_1S und TQ4_1S mit entsprechenden Gr\u00f6\u00dfen in GGML_QUANT_SIZES zu unterst\u00fctzen, was die Kompatibilit\u00e4t und Funktionalit\u00e4t des Systems verbessert.",
-      "empfehlung": "Sofort neu kompilieren",
+      "auswirkung": "Der Commit aktualisiert die Enums f\u00fcr Quantisierungstypen und Dateitypen in GGML, was neue Quantisierungstypen (TQ3_1S und TQ4_1S) mit entsprechenden Gr\u00f6\u00dfen in GGML_QUANT_SIZES hinzuf\u00fcgt. Dies kann die Kompatibilit\u00e4t und Leistung von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro verbessern.",
+      "empfehlung": "Beim n\u00e4chsten Update",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:20:30.298692"
+      "analyzed_at": "2026-04-07T02:28:59.748182"
     },
     {
       "sha": "7433ad9",
       "short_sha": "7433ad9",
       "message": "Merge pull request #52 from iamwavecut/feature/turboquant-kv-cache",
       "date": "2026-04-06T22:47:58Z",
-      "category": "Feature",
+      "category": "Bugfix/Feature",
       "relevant": true,
-      "auswirkung": "Der Commit behebt Qualit\u00e4tseinbu\u00dfen nach der Quantisierung von Modellen, insbesondere bei der Verwendung von Apple Metal, und verbessert die Stabilit\u00e4t des TurboQuant-KV-Caches. Dies f\u00fchrt zu einer besseren Leistung und Zuverl\u00e4ssigkeit bei der Verarbeitung von Modellen wie dem Gemma 4-Checkpoint.",
+      "auswirkung": "Der Commit behebt Probleme mit der Quantisierung und dem Laufverhalten des Gemma 4-Modells auf Apple Metal, was sich positiv auf die Stabilit\u00e4t und Qualit\u00e4t der Ausgaben auswirken k\u00f6nnte. Dies k\u00f6nnte auch Auswirkungen auf die Leistung und Zuverl\u00e4ssigkeit von Llama 3.3 70B Q4_K_M haben, da beide Modelle auf der gleichen Infrastruktur und Hardware laufen.",
       "empfehlung": "Sofort neu kompilieren",
-      "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:20:16.726888"
+      "risiko": "mittel",
+      "analyzed_at": "2026-04-07T02:28:42.587479"
     },
     {
       "sha": "dcf8430",
@@ -42,11 +42,11 @@
       "message": "fix: GCC double extern in ops.cpp turbo3_cpu_wht_group_size",
       "date": "2026-04-05T18:42:48Z",
       "category": "Bugfix",
-      "relevant": true,
-      "auswirkung": "Der Commit behebt ein Problem mit doppelten externen Deklarationen in der Datei ops.cpp, was zu Fehlern bei der Kompilierung mit GCC f\u00fchren kann. Dies kann die Stabilit\u00e4t und Zuverl\u00e4ssigkeit des Systems verbessern.",
-      "empfehlung": "Sofort neu kompilieren",
+      "relevant": false,
+      "auswirkung": "Der Commit behebt einen Bug im GCC-Code, der f\u00fcr die Apple Silicon-Architektur nicht relevant ist, da wir Clang als Compiler verwenden. Es \u00e4ndert sich nichts f\u00fcr die Llama-Modelle auf Apple Silicon M5 Pro.",
+      "empfehlung": "Kein Handlungsbedarf",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:19:58.004815"
+      "analyzed_at": "2026-04-07T02:28:21.669241"
     },
     {
       "sha": "acad28d",
@@ -54,18 +54,18 @@
       "message": "feat: add MoE expert count kernel instantiations + TQ4_1S backend tests",
       "date": "2026-04-06T23:11:07Z",
       "category": "Feature",
-      "relevant": true,
-      "auswirkung": "Der Commit f\u00fcgt neue Kernel-Instantierungen f\u00fcr MoE-Experten und Backend-Tests f\u00fcr TQ4_1S hinzu, was die Funktionalit\u00e4t und Leistung des Systems erweitert. Dies k\u00f6nnte zu verbesserten Leistungsmerkmalen und Stabilit\u00e4t f\u00fcr Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro f\u00fchren.",
-      "empfehlung": "Sofort neu kompilieren",
+      "relevant": false,
+      "auswirkung": "Der Commit f\u00fcgt MoE-Experten-Z\u00e4hl-Kernel-Instantierungen und TQ4_1S-Backend-Tests hinzu, was keine direkte Auswirkung auf Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro hat, da es sich um eine Erweiterung f\u00fcr MoE-Modelle (wie Gemma 4) handelt.",
+      "empfehlung": "Beim n\u00e4chsten Update",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:19:46.911841"
+      "analyzed_at": "2026-04-07T02:28:08.641721"
     }
   ],
   "weekly_reports": [
     {
-      "date": "2026-04-07T02:07:15.651364",
-      "report": "Hier ist der pr\u00e4gnante Wochenbericht:\n\n**Wochenbericht KI-Plattform**\n\nDer Gesamtstatus der Plattform ist derzeit kritisch. Die Performance liegt bei 0,0 tokens/sec, wobei zwei Server-Abst\u00fcrze verzeichnet wurden. Es gab in der letzten Woche keine neuen TurboQuant-Commits oder relevanten \u00c4nderungen. F\u00fcr die n\u00e4chste Woche wird eine dringende Fehleranalyse der Server-Instabilit\u00e4t empfohlen, um den Betrieb wiederherzustellen."
+      "date": "2026-04-07T02:29:44.162260",
+      "report": "**Wochenbericht f\u00fcr die lokale KI-Plattform**\n\nDer Gesamtstatus der Plattform ist stabil, jedoch mit einigen Herausforderungen in Bezug auf die Geschwindigkeit und Serverstabilit\u00e4t. Die Durchschnittsgeschwindigkeit lag bei 0,0 tokens/sec, was auf Optimierungsbedarf hinweist, und es kam zu zwei LLM-Server-Crashes. Die wichtigsten \u00c4nderungen umfassen drei neue Commits, darunter ein Performance-Commit (ab9990d), ein Feature-Commit (883bf4a) und zwei Bugfix-Commits (dcf8430 und 7433ad9). F\u00fcr die n\u00e4chste Woche empfehlen wir, die Serverstabilit\u00e4t und Geschwindigkeit zu \u00fcberpr\u00fcfen und gegebenenfalls Optimierungen vorzunehmen. Durch die Analyse der Commits konnten wir keine hohen Risiken identifizieren, jedoch sollten wir weiterhin die Plattform \u00fcberwachen, um sicherzustellen, dass die \u00c4nderungen wie erwartet funktionieren."
     }
   ],
-  "last_weekly": "2026-04-07T02:07:15.651364"
+  "last_weekly": "2026-04-07T02:29:44.162260"
 }

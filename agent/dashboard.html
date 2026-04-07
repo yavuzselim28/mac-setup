@@ -209,7 +209,7 @@ function renderIntel() {
     const relBadge = a.relevant ? '' : '<span class="badge badge-gray">nicht relevant</span>';
     return `<div class="intel-item">
       <div class="intel-row">
-        <span class="intel-sha">[${sha}]</span>
+        <a class="intel-sha" href="https://github.com/TheTom/llama-cpp-turboquant/commit/${sha}" target="_blank" style="text-decoration:none;color:var(--blue)">[${sha}] ↗</a>
         <span class="badge ${badgeCls}">${a.category||'—'}</span>
         ${relBadge}
       </div>
@@ -229,7 +229,7 @@ async function explain(btn) {
   box.style.display='block';
   box.innerHTML='<span style="color:var(--muted)">Frage LLM...</span>';
   try {
-    const r=await fetch('http://localhost:8080/v1/chat/completions',{
+    const r=await fetch('/llm',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({

@@ -202,7 +202,7 @@ function renderIntel() {
   if(!intelData.length) return;
   document.getElementById('intel-card').style.display='block';
   document.getElementById('intel-count').textContent = intelData.length+' commits';
-  document.getElementById('intel-list').innerHTML = intelData.map(a=>{
+  document.getElementById('intel-list').innerHTML = intelData.filter(a=>a.relevant).map(a=>{
     const sha = a.short_sha || (a.sha||'').substring(0,7);
     const risk = a.risiko||'';
     const badgeCls = risk==='hoch'?'badge-red':risk==='mittel'?'badge-amber':'badge-green';
@@ -213,7 +213,8 @@ function renderIntel() {
         <span class="badge ${badgeCls}">${a.category||'—'}</span>
         ${relBadge}
       </div>
-      <div class="intel-msg">${a.message||''}</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px">${(a.date||'').slice(0,10)} ${(a.date||'').slice(11,16)} · ${a.repo||''}</div>
+    <div class="intel-msg">${a.message||''}</div>
       ${a.auswirkung?`<div class="intel-detail">→ ${a.auswirkung}</div>`:''}
       ${a.empfehlung?`<div class="intel-emp">Empfehlung: ${a.empfehlung}</div>`:''}
       <button class="explain-btn" data-sha="${sha}" data-msg="${(a.message||'').replace(/"/g,'')}" data-cat="${a.category||''}" data-awk="${(a.auswirkung||'').replace(/"/g,'')}" onclick="explain(this)">→ Wie kompiliere ich das?</button>
@@ -287,11 +288,11 @@ function renderWeekly() {
 
 async function load() {
   try {
-    const r=await fetch('/logs/agent.log');
+    const r=await fetch('/logs/agent.log?t='+Date.now());
     if(r.ok){logs=(await r.text()).split('\n').filter(l=>l.trim());updateStats();renderLogs();}
   } catch(e){showDemo();}
   try {
-    const r2=await fetch('/intelligence.json');
+    const r2=await fetch('/intelligence.json?t='+Date.now());
     if(r2.ok){const d=await r2.json();intelData=d.analyses||[];weeklyReport=(d.weekly_reports||[])[0]||null;renderIntel();renderWeekly();}
   } catch(e){}
 }

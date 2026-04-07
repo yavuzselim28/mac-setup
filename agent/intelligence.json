@@ -3,6 +3,7 @@
     {
       "sha": "0d816e2",
       "short_sha": "0d816e2",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "Update README.md",
       "date": "2026-03-29T14:10:00Z",
       "category": "Docs",
@@ -10,11 +11,12 @@
       "auswirkung": "Der Commit enth\u00e4lt nur eine \u00c4nderung an der README-Datei, was keine Auswirkungen auf die Funktionalit\u00e4t oder Leistung von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro hat.",
       "empfehlung": "Kein Handlungsbedarf",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T17:57:34.271395"
+      "analyzed_at": "2026-04-07T18:04:54.037139"
     },
     {
       "sha": "cffcbf0",
       "short_sha": "cffcbf0",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "v0.2.0: standalone custom kernel package",
       "date": "2026-03-31T08:10:04Z",
       "category": "Feature",
@@ -22,11 +24,12 @@
       "auswirkung": "Der Commit f\u00fcgt ein standalone custom kernel package hinzu, was m\u00f6glicherweise die Leistung und Effizienz von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro verbessern k\u00f6nnte, indem es die Integration von TurboQuant mit custom Metal Kernels erm\u00f6glicht.",
       "empfehlung": "Sofort neu kompilieren",
       "risiko": "mittel",
-      "analyzed_at": "2026-04-07T17:57:22.912095"
+      "analyzed_at": "2026-04-07T18:04:42.607901"
     },
     {
       "sha": "3c09674",
       "short_sha": "3c09674",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "Fix build backend for pip install compatibility",
       "date": "2026-04-02T12:49:19Z",
       "category": "Bugfix",
@@ -34,11 +37,12 @@
       "auswirkung": "Der Commit behebt ein Problem beim Build-Prozess f\u00fcr pip-Installationskompatibilit\u00e4t, was jedoch nicht direkt mit der Leistung oder Funktionalit\u00e4t von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro zusammenh\u00e4ngt.",
       "empfehlung": "Beim n\u00e4chsten Update",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T17:57:09.589006"
+      "analyzed_at": "2026-04-07T18:04:29.238623"
     },
     {
       "sha": "da535ea",
       "short_sha": "da535ea",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "chore: isolate HomeSec benchmark output to local tmp directory",
       "date": "2026-04-06T17:26:48Z",
       "category": "Docs/Infra",
@@ -46,11 +50,12 @@
       "auswirkung": "Der Commit isoliert die Ausgabe des HomeSec-Benchmarks in ein lokales tmp-Verzeichnis, was keine direkten Auswirkungen auf die Leistung oder Funktionalit\u00e4t von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro hat.",
       "empfehlung": "Kein Handlungsbedarf",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T17:56:57.560530"
+      "analyzed_at": "2026-04-07T18:04:17.021646"
     },
     {
       "sha": "7f62ac9",
       "short_sha": "7f62ac9",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "fix(deps): use remote URL dependencies for mlx-swift and mlx-swift-lm",
       "date": "2026-04-06T21:37:32Z",
       "category": "Infra",
@@ -58,11 +63,12 @@
       "auswirkung": "Der Commit \u00e4ndert die Abh\u00e4ngigkeiten f\u00fcr mlx-swift und mlx-swift-lm, indem er remote URL-Abh\u00e4ngigkeiten verwendet, was keine direkten Auswirkungen auf die Leistung oder Funktionalit\u00e4t von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro hat.",
       "empfehlung": "Beim n\u00e4chsten Update",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T17:56:44.466975"
+      "analyzed_at": "2026-04-07T18:04:04.037883"
     },
     {
       "sha": "29f11a6",
       "short_sha": "29f11a6",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "Revert \"fix(deps): use remote URL dependencies for mlx-swift and mlx-swift-lm\"",
       "date": "2026-04-06T22:30:56Z",
       "category": "Bugfix/Infra",
@@ -70,11 +76,12 @@
       "auswirkung": "Der Commit revertiert eine \u00c4nderung, die remote URL-Abh\u00e4ngigkeiten f\u00fcr mlx-swift und mlx-swift-lm verwendet. Dies \u00e4ndert die Art und Weise, wie Abh\u00e4ngigkeiten geladen werden, aber es ist nicht direkt relevant f\u00fcr die Leistung oder Funktionalit\u00e4t von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro.",
       "empfehlung": "Beim n\u00e4chsten Update",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T17:56:30.584864"
+      "analyzed_at": "2026-04-07T18:03:50.291119"
     },
     {
       "sha": "f54d42f",
       "short_sha": "f54d42f",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "README: AAAK works with local models too \u2014 Claude, GPT, Gemini, Llama, Mistral",
       "date": "2026-04-06T05:14:15Z",
       "category": "Docs",
@@ -82,11 +89,12 @@
       "auswirkung": "Der Commit \u00e4ndert nur die README-Datei und f\u00fcgt Informationen \u00fcber die Kompatibilit\u00e4t von AAAK mit lokalen Modellen hinzu, was keine Auswirkungen auf die Leistung oder Funktionalit\u00e4t von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro hat.",
       "empfehlung": "Kein Handlungsbedarf",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T17:56:15.003810"
+      "analyzed_at": "2026-04-07T18:03:34.900316"
     },
     {
       "sha": "f14f59d",
       "short_sha": "f14f59d",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "README: How You Actually Use It \u2014 MCP flow + local model flow",
       "date": "2026-04-06T05:46:50Z",
       "category": "Docs",
@@ -94,11 +102,12 @@
       "auswirkung": "Der Commit enth\u00e4lt eine \u00c4nderung an der README-Datei, die den MCP-Flow und den lokalen Modell-Flow beschreibt, ohne dass dies Auswirkungen auf die Funktionalit\u00e4t oder Leistung des Systems hat.",
       "empfehlung": "Kein Handlungsbedarf",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T17:56:01.905402"
+      "analyzed_at": "2026-04-07T18:03:21.416496"
     },
     {
       "sha": "1782628",
       "short_sha": "1782628",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "docs: add narrative palace walkthrough to README",
       "date": "2026-04-06T20:34:39Z",
       "category": "Docs",
@@ -106,74 +115,53 @@
       "auswirkung": "Der Commit \u00e4ndert nur die Dokumentation und f\u00fcgt eine narrative Palace-Walkthrough zum README hinzu, was keine Auswirkungen auf die Performance oder Funktionalit\u00e4t von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro hat.",
       "empfehlung": "Kein Handlungsbedarf",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T17:55:50.263868"
-    },
-    {
-      "sha": "ab9990d",
-      "short_sha": "ab9990d",
-      "message": "Enhance Metal operations for TQ weights and concurrency handling for Gemma 4",
-      "date": "2026-04-04T15:37:22Z",
-      "category": "Performance",
-      "relevant": true,
-      "auswirkung": "Der Commit verbessert die Metal-Operationen f\u00fcr TQ-Gewichte und die Konkurrenzbehandlung f\u00fcr Gemma 4, was zu einer besseren Leistung und Skalierbarkeit f\u00fcr Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro f\u00fchren kann. Dies kann insbesondere die Leistung bei der Verarbeitung von gro\u00dfen Datenmengen und der Nutzung von mehreren parallelen Slots verbessern.",
-      "empfehlung": "Sofort neu kompilieren",
-      "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:29:44.101283"
-    },
-    {
-      "sha": "883bf4a",
-      "short_sha": "883bf4a",
-      "message": "Update GGMLQuantizationType and LlamaFileType enums to include TQ3_1S and TQ4_1S quantization types with corresponding sizes in GGML_QUANT_SIZES.",
-      "date": "2026-04-04T17:08:38Z",
-      "category": "Feature",
-      "relevant": true,
-      "auswirkung": "Der Commit aktualisiert die Enums f\u00fcr Quantisierungstypen und Dateitypen in GGML, was neue Quantisierungstypen (TQ3_1S und TQ4_1S) mit entsprechenden Gr\u00f6\u00dfen in GGML_QUANT_SIZES hinzuf\u00fcgt. Dies kann die Kompatibilit\u00e4t und Leistung von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro verbessern.",
-      "empfehlung": "Beim n\u00e4chsten Update",
-      "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:28:59.748182"
-    },
-    {
-      "sha": "7433ad9",
-      "short_sha": "7433ad9",
-      "message": "Merge pull request #52 from iamwavecut/feature/turboquant-kv-cache",
-      "date": "2026-04-06T22:47:58Z",
-      "category": "Bugfix/Feature",
-      "relevant": true,
-      "auswirkung": "Der Commit behebt Probleme mit der Quantisierung und dem Laufverhalten des Gemma 4-Modells auf Apple Metal, was sich positiv auf die Stabilit\u00e4t und Qualit\u00e4t der Ausgaben auswirken k\u00f6nnte. Dies k\u00f6nnte auch Auswirkungen auf die Leistung und Zuverl\u00e4ssigkeit von Llama 3.3 70B Q4_K_M haben, da beide Modelle auf der gleichen Infrastruktur und Hardware laufen.",
-      "empfehlung": "Sofort neu kompilieren",
-      "risiko": "mittel",
-      "analyzed_at": "2026-04-07T02:28:42.587479"
+      "analyzed_at": "2026-04-07T18:03:09.055594"
     },
     {
       "sha": "dcf8430",
       "short_sha": "dcf8430",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "fix: GCC double extern in ops.cpp turbo3_cpu_wht_group_size",
       "date": "2026-04-05T18:42:48Z",
       "category": "Bugfix",
       "relevant": false,
-      "auswirkung": "Der Commit behebt einen Bug im GCC-Code, der f\u00fcr die Apple Silicon-Architektur nicht relevant ist, da wir Clang als Compiler verwenden. Es \u00e4ndert sich nichts f\u00fcr die Llama-Modelle auf Apple Silicon M5 Pro.",
+      "auswirkung": "Der Commit behebt einen Bug in der Datei ops.cpp, der spezifisch f\u00fcr GCC ist, was f\u00fcr die Apple Silicon M5 Pro Plattform mit Clang Compiler nicht relevant ist. Es \u00e4ndert sich nichts f\u00fcr die Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro.",
       "empfehlung": "Kein Handlungsbedarf",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:28:21.669241"
+      "analyzed_at": "2026-04-07T18:02:56.896953"
     },
     {
       "sha": "acad28d",
       "short_sha": "acad28d",
+      "repo": "TheTom/llama-cpp-turboquant",
       "message": "feat: add MoE expert count kernel instantiations + TQ4_1S backend tests",
       "date": "2026-04-06T23:11:07Z",
       "category": "Feature",
-      "relevant": false,
-      "auswirkung": "Der Commit f\u00fcgt MoE-Experten-Z\u00e4hl-Kernel-Instantierungen und TQ4_1S-Backend-Tests hinzu, was keine direkte Auswirkung auf Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro hat, da es sich um eine Erweiterung f\u00fcr MoE-Modelle (wie Gemma 4) handelt.",
+      "relevant": true,
+      "auswirkung": "Der Commit f\u00fcgt MoE-Experten-Z\u00e4hl-Kernel-Instantiierungen und TQ4_1S-Backend-Tests hinzu, was m\u00f6glicherweise die Leistung und Funktionalit\u00e4t von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro verbessern k\u00f6nnte.",
       "empfehlung": "Beim n\u00e4chsten Update",
       "risiko": "niedrig",
-      "analyzed_at": "2026-04-07T02:28:08.641721"
+      "analyzed_at": "2026-04-07T18:02:42.362392"
+    },
+    {
+      "sha": "830eb54",
+      "short_sha": "830eb54",
+      "repo": "TheTom/llama-cpp-turboquant",
+      "message": "fix: cap map0 kernel shmem for 256-expert MoE models",
+      "date": "2026-04-07T00:32:59Z",
+      "category": "Bugfix",
+      "relevant": true,
+      "auswirkung": "Der Commit behebt ein Problem mit der Kapazit\u00e4t der Shared Memory f\u00fcr 256-Experten MoE-Modelle, was m\u00f6glicherweise die Stabilit\u00e4t und Leistung von Llama 3.3 70B Q4_K_M auf Apple Silicon M5 Pro verbessern kann.",
+      "empfehlung": "Sofort neu kompilieren",
+      "risiko": "niedrig",
+      "analyzed_at": "2026-04-07T18:02:29.221613"
     }
   ],
   "weekly_reports": [
     {
-      "date": "2026-04-07T02:29:44.162260",
-      "report": "**Wochenbericht f\u00fcr die lokale KI-Plattform**\n\nDer Gesamtstatus der Plattform ist stabil, jedoch mit einigen Herausforderungen in Bezug auf die Geschwindigkeit und Serverstabilit\u00e4t. Die Durchschnittsgeschwindigkeit lag bei 0,0 tokens/sec, was auf Optimierungsbedarf hinweist, und es kam zu zwei LLM-Server-Crashes. Die wichtigsten \u00c4nderungen umfassen drei neue Commits, darunter ein Performance-Commit (ab9990d), ein Feature-Commit (883bf4a) und zwei Bugfix-Commits (dcf8430 und 7433ad9). F\u00fcr die n\u00e4chste Woche empfehlen wir, die Serverstabilit\u00e4t und Geschwindigkeit zu \u00fcberpr\u00fcfen und gegebenenfalls Optimierungen vorzunehmen. Durch die Analyse der Commits konnten wir keine hohen Risiken identifizieren, jedoch sollten wir weiterhin die Plattform \u00fcberwachen, um sicherzustellen, dass die \u00c4nderungen wie erwartet funktionieren."
+      "date": "2026-04-07T18:04:54.051458",
+      "report": "**Wochenbericht f\u00fcr die lokale KI-Plattform**\n\nDer Gesamtstatus unserer lokalen KI-Plattform ist stabil, jedoch mit einigen Herausforderungen in Bezug auf die Performance. Die durchschnittliche Geschwindigkeit lag bei 0,0 tokens/sec, was auf Optimierungsbedarf hinweist, und es kam zu einem LLM-Server-Crash. Die wichtigsten \u00c4nderungen umfassen drei neue Commits, darunter ein Feature-Update und ein Bugfix, ohne jedoch ein hohes Risiko f\u00fcr die Plattform darzustellen. F\u00fcr die n\u00e4chste Woche empfehlen wir, die Performance zu \u00fcberpr\u00fcfen und Optimierungen vorzunehmen, um die Geschwindigkeit zu verbessern und Server-Crashes zu vermeiden. Durch die Analyse der Commits, wie z.B. 0d816e2, cffcbf0 und 3c09674, k\u00f6nnen wir weitere Verbesserungen und Stabilisierungen vornehmen."
     }
   ],
-  "last_weekly": "2026-04-07T02:29:44.162260"
+  "last_weekly": "2026-04-07T18:04:54.051458"
 }

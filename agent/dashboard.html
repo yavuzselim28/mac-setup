@@ -234,6 +234,7 @@ function renderIntel() {
     <div class="intel-msg">${a.message||''}</div>
       ${a.auswirkung?`<div class="intel-detail">→ ${a.auswirkung}</div>`:''}
       ${a.empfehlung?`<div class="intel-emp">Empfehlung: ${a.empfehlung}</div>`:''}
+      ${window.compiledSha && (a.short_sha||'').startsWith(window.compiledSha.slice(0,6)) ? '<div style="margin-top:6px"><span class="badge badge-green">✅ kompiliert</span></div>' : a.empfehlung && a.empfehlung.includes('kompilieren') ? '<div style="margin-top:6px"><span class="badge badge-amber">⏳ ausstehend</span></div>' : ''}
       <button class="explain-btn" data-sha="${sha}" data-msg="${(a.message||'').replace(/"/g,'')}" data-cat="${a.category||''}" data-awk="${(a.auswirkung||'').replace(/"/g,'')}" onclick="explain(this)">→ Wie kompiliere ich das?</button>
       <div class="explain-box" id="ex-${sha}" style="display:none"></div>
     </div>`;
@@ -303,7 +304,18 @@ function renderWeekly() {
   document.getElementById('report-date').textContent=(weeklyReport.date||'').substring(0,10);
 }
 
+async function loadState() {
+  try {
+    const r = await fetch('/agent_state.json?t='+Date.now());
+    if(r.ok) {
+      const d = await r.json();
+      window.compiledSha = d.compiled_sha || '';
+    }
+  } catch(e) {}
+}
+
 async function load() {
+  await loadState();
   try {
     const r=await fetch('/logs/agent.log?t='+Date.now());
     if(r.ok){logs=(await r.text()).split('\n').filter(l=>l.trim());updateStats();renderLogs();}

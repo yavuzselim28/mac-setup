@@ -77,7 +77,8 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
   <div style="display:flex;align-items:center;gap:12px;">
     <span class="live-dot"></span>
     <span style="font-size:11px;color:var(--muted)">refresh in <span id="cd">30</span>s</span>
-    <button class="refresh-btn" onclick="load()">↻ Refresh</button>
+    <!-- FIX: Refresh Button resettet jetzt auch den Countdown -->
+    <button class="refresh-btn" onclick="manualRefresh()">↻ Refresh</button>
   </div>
 </div>
 
@@ -158,6 +159,10 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 <script>
 let logs=[], filter='all', intelData=[], weeklyReport=null;
 
+// FIX: Speichert geladene Explain-Inhalte zwischen Refreshes
+// Key: sha, Value: { html: string, visible: boolean }
+const explainCache = {};
+
 function toggle(bodyId, chevId) {
   const b = document.getElementById(bodyId);
   const c = document.getElementById(chevId);
@@ -202,13 +207,10 @@ function renderIntel() {
   if(!intelData.length) return;
   document.getElementById('intel-card').style.display='block';
   const relevantCount = intelData.filter(a=>a.relevant).length;
-  const totalCount = intelData.length;
   document.getElementById('intel-count').textContent = relevantCount+' relevant';
-  
-  // Nicht-relevante als aufklappbare Sektion
+
   const notRelevant = intelData.filter(a=>!a.relevant);
   if(notRelevant.length) {
-    // Nicht-relevante als separater Kasten nach intel-card
     let extraCard = document.getElementById('non-relevant-card');
     if(!extraCard) {
       extraCard = document.createElement('div');
@@ -232,11 +234,33 @@ function renderIntel() {
         }).join('')}
       </div>`;
   }
+
+  // FIX: Vor dem Neu-Rendern aktuellen Explain-State sichern
+  intelData.filter(a=>a.relevant).forEach(a => {
+    const sha = a.short_sha || (a.sha||'').substring(0,7);
+    const box = document.getElementById('ex-'+sha);
+    if(box && box.dataset.loaded === '1') {
+      explainCache[sha] = { html: box.innerHTML, visible: box.style.display !== 'none' };
+    }
+  });
+
   document.getElementById('intel-list').innerHTML = intelData.filter(a=>a.relevant).map(a=>{
     const sha = a.short_sha || (a.sha||'').substring(0,7);
     const risk = a.risiko||'';
     const badgeCls = risk==='hoch'?'badge-red':risk==='mittel'?'badge-amber':'badge-green';
     const relBadge = a.relevant ? '' : '<span class="badge badge-gray">nicht relevant</span>';
+    const compiled = window.compiledCommits||[];
+    const isCompiled = compiled.some(c => sha.startsWith(c.slice(0,6)));
+    const compiledBadge = isCompiled
+      ? `<div style="margin-top:6px"><span class="badge badge-green">✅ kompiliert · ${compiled.find(c => sha.startsWith(c.slice(0,6)))||sha}</span></div>`
+      : (a.relevant ? '<div style="margin-top:6px"><span class="badge badge-amber">⏳ ausstehend</span></div>' : '');
+
+    // FIX: Cached explain-box wiederherstellen wenn vorhanden
+    const cached = explainCache[sha];
+    const explainDisplay = cached && cached.visible ? 'block' : 'none';
+    const explainContent = cached ? cached.html : '';
+    const explainLoaded = cached ? '1' : '';
+
     return `<div class="intel-item">
       <div class="intel-row">
         <a class="intel-sha" href="https://github.com/TheTom/llama-cpp-turboquant/commit/${sha}" target="_blank" style="text-decoration:none;color:var(--blue)">[${sha}] ↗</a>
@@ -244,19 +268,12 @@ function renderIntel() {
         ${relBadge}
       </div>
       <div style="font-size:10px;color:var(--muted);margin-bottom:4px">${(a.date||'').slice(0,10)} ${(a.date||'').slice(11,16)} · ${a.repo||''}</div>
-    <div class="intel-msg">${a.message||''}</div>
+      <div class="intel-msg">${a.message||''}</div>
       ${a.auswirkung?`<div class="intel-detail">→ ${a.auswirkung}</div>`:''}
       ${a.empfehlung?`<div class="intel-emp">Empfehlung: ${a.empfehlung}</div>`:''}
-      ${(()=>{
-        const compiled = window.compiledSha||'';
-        const sha = a.short_sha||'';
-        const isCompiled = compiled && sha.startsWith(compiled.slice(0,6));
-        if(isCompiled) return '<div style="margin-top:6px"><span class="badge badge-green">✅ kompiliert · '+compiled+'</span></div>';
-        if(a.relevant) return '<div style="margin-top:6px"><span class="badge badge-amber">⏳ ausstehend</span></div>';
-        return '';
-      })()}
-      <button class="explain-btn" data-sha="${sha}" data-msg="${(a.message||'').replace(/"/g,'')}" data-cat="${a.category||''}" data-awk="${(a.auswirkung||'').replace(/"/g,'')}" onclick="explain(this)">→ Wie kompiliere ich das?</button>
-      <div class="explain-box" id="ex-${sha}" style="display:none"></div>
+      ${compiledBadge}
+      <button class="explain-btn" data-sha="${sha}" data-msg="${(a.message||'').replace(/"/g,'&quot;')}" data-cat="${a.category||''}" data-awk="${(a.auswirkung||'').replace(/"/g,'&quot;')}" onclick="explain(this)">→ Wie kompiliere ich das?</button>
+      <div class="explain-box" id="ex-${sha}" style="display:${explainDisplay}" data-loaded="${explainLoaded}">${explainContent}</div>
     </div>`;
   }).join('');
 }
@@ -264,9 +281,18 @@ function renderIntel() {
 async function explain(btn) {
   const sha=btn.dataset.sha, msg=btn.dataset.msg, cat=btn.dataset.cat, awk=btn.dataset.awk;
   const box=document.getElementById('ex-'+sha);
-  if(box.dataset.loaded==='1'){box.style.display=box.style.display==='none'?'block':'none';return;}
+
+  // FIX: Toggle wenn bereits geladen (auch nach Refresh)
+  if(box.dataset.loaded==='1'){
+    box.style.display = box.style.display==='none' ? 'block' : 'none';
+    // Cache sichtbarkeit updaten
+    if(explainCache[sha]) explainCache[sha].visible = box.style.display !== 'none';
+    return;
+  }
+
   box.style.display='block';
   box.innerHTML='<span style="color:var(--text2)">⏳ Frage LLM...</span>';
+
   try {
     const r=await fetch('/llm',{
       method:'POST',
@@ -278,11 +304,23 @@ async function explain(btn) {
     });
     const d=await r.json();
     const text=d.choices?.[0]?.message?.content||'Keine Antwort';
+    const html=`<button class="close-btn" onclick="closeExplain('${sha}')">✕</button>${text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}`;
     box.dataset.loaded='1';
-    box.innerHTML=`<button class="close-btn" onclick="document.getElementById('ex-${sha}').style.display='none'">✕</button>${text.replace(/\n/g,'<br>')}`;
+    box.innerHTML=html;
+    // FIX: In Cache speichern
+    explainCache[sha] = { html: html, visible: true };
   } catch(e) {
-    box.innerHTML=`<button class="close-btn" onclick="document.getElementById('ex-${sha}').style.display='none'">✕</button>LLM nicht erreichbar — starte ai-llama-fast`;
+    const html=`<button class="close-btn" onclick="closeExplain('${sha}')">✕</button>LLM nicht erreichbar — starte ai-llama-fast`;
+    box.innerHTML=html;
+    // Nicht als loaded markieren damit Retry möglich
   }
+}
+
+// FIX: Separater Close-Handler der Cache updated
+function closeExplain(sha) {
+  const box = document.getElementById('ex-'+sha);
+  if(box) box.style.display='none';
+  if(explainCache[sha]) explainCache[sha].visible = false;
 }
 
 function updateStats() {
@@ -331,6 +369,7 @@ async function loadState() {
     if(r.ok) {
       const d = await r.json();
       window.compiledSha = d.compiled_sha || '';
+      window.compiledCommits = d.compiled_commits || [];
     }
   } catch(e) {}
 }
@@ -347,6 +386,14 @@ async function load() {
   } catch(e){}
 }
 
+// FIX: Manueller Refresh resettet Countdown
+function manualRefresh() {
+  cd = 30;
+  const el = document.getElementById('cd');
+  if(el) el.textContent = cd;
+  load();
+}
+
 function showDemo(){
   const n=new Date().toISOString().slice(0,19).replace('T',' ');
   logs=[`[${n}] 🤖 Platform Agent v3 gestartet`,`[${n}]   ✅ llama-server läuft auf Port 8080`,`[${n}]   ✅ ollama-app-ollama: Running (restarts: 0)`,`[${n}]   ✅ ollama-app-open-webui: Running (restarts: 2)`,`[${n}]   RAM frei: 28.0 GB`,`[${n}]   💾 Frei: 595 GB | Modelle: 106 GB`,`[${n}]   🔬 TurboQuant neuer Commit: [883bf4a]`,`[${n}] 🤖 Platform Agent v3 beendet`];
@@ -356,7 +403,12 @@ function showDemo(){
 }
 
 let cd=30;
-setInterval(()=>{cd--;const e=document.getElementById('cd');if(e)e.textContent=cd;if(cd<=0){cd=30;load();}},1000);
+setInterval(()=>{
+  cd--;
+  const e=document.getElementById('cd');
+  if(e) e.textContent=cd;
+  if(cd<=0){cd=30;load();}
+},1000);
 load();
 </script>
 </body>

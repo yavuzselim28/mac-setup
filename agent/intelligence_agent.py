@@ -3,16 +3,13 @@ import json
 import subprocess
 
 def mempalace_search(query: str) -> str:
-    """Suche in der Platform-Wissensbasis"""
     try:
         r = subprocess.run(
             ["mempalace", "search", query, "--limit", "2"],
             capture_output=True, text=True, timeout=10
         )
-        lines = [l for l in r.stdout.split('
-') if l.strip() and not l.startswith('=') and not l.startswith('-') and not l.startswith('[') and not l.startswith('Source') and not l.startswith('Match')]
-        return '
-'.join(lines[:5]) if lines else ""
+        lines = [l for l in r.stdout.splitlines() if l.strip() and not l.startswith('=') and not l.startswith('-') and not l.startswith('[') and not l.startswith('Source') and not l.startswith('Match')]
+        return "\n".join(lines[:5]) if lines else ""
     except:
         return ""
 import re
@@ -245,9 +242,12 @@ KOMPILIERBAR: ja/nein"""
             risiko = re.search(r"RISIKO:\s*(niedrig|mittel|hoch)", analysis_text, re.I)
             kompilierbar = re.search(r"KOMPILIERBAR:\s*(ja|nein)", analysis_text, re.I)
 
+            _persistent = load_state()
+            _compiled = _persistent.get("compiled_commits", [])
+            _short = commit["sha"][:7]
             analysis = {
                 "sha": commit["sha"],
-                "short_sha": commit["sha"][:7],
+                "short_sha": _short,
                 "repo": commit.get("repo", "TheTom/llama-cpp-turboquant"),
                 "message": commit["message"],
                 "date": commit["date"],
@@ -257,6 +257,7 @@ KOMPILIERBAR: ja/nein"""
                 "empfehlung": empfehlung.group(1).strip() if empfehlung else "",
                 "risiko": risiko.group(1).lower() if risiko else "unbekannt",
                 "kompilierbar": (kompilierbar.group(1).lower() == "ja") if kompilierbar else False,
+                "compiled": _short in _compiled,
                 "analyzed_at": datetime.now().isoformat()
             }
 

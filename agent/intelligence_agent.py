@@ -199,11 +199,20 @@ def analyze_commits(state: IntelState) -> IntelState:
         system_ctx = load_context()
         # Relevante Entscheidungen aus MemPalace laden
         mem_context = mempalace_search(commit["message"][:50])
+        # Build-Status aus agent_state
+        _ps = load_state()
+        _compiled = _ps.get("compiled_commits", [])
+        _compiled_sha = _ps.get("compiled_sha", "?")
+        _compiled_date = _ps.get("compiled_date", "?")
+        _build_ctx = f"Aktuell kompilierter HEAD: {_compiled_sha} (am {_compiled_date})\nBereits kompilierte Commits: {', '.join(_compiled[:8])}"
         
         prompt = f"""Du bist ein Platform Engineer der TurboQuant KV-Cache Änderungen bewertet.
 
 MEIN SYSTEM:
 {system_ctx}
+
+BUILD-STATUS:
+{_build_ctx}
 
 FRÜHERE ENTSCHEIDUNGEN (aus Platform-Wissensbasis):
 {mem_context}

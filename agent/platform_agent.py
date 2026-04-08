@@ -400,6 +400,63 @@ def check_system_health(state: AgentState) -> AgentState:
         log("  ✅ Port-Forward neu gestartet")
         state["actions_taken"].append("Port-Forward Port 80 neu gestartet")
 
+    # Aktuell kompilierten Commit erkennen und in State schreiben
+    try:
+        code, current_sha = run(["git", "-C", str(LLAMA_DIR), "rev-parse", "HEAD"])
+        if code == 0 and current_sha.strip():
+            short = current_sha.strip()[:7]
+            persistent = load_state()
+            compiled_commits = persistent.get("compiled_commits", [])
+            if short not in compiled_commits:
+                compiled_commits.insert(0, short)
+                compiled_commits = compiled_commits[:20]
+                persistent["compiled_commits"] = compiled_commits
+                persistent["compiled_sha"] = short
+                persistent["compiled_date"] = datetime.now().strftime("%Y-%m-%d")
+                save_state(persistent)
+                log(f"  ✅ Kompilierter Commit erkannt: {short}")
+            else:
+                log(f"  ✅ Build-Stand: {short} (bereits bekannt)")
+    except Exception as e:
+        log(f"  ⚠️ Build-Commit nicht lesbar: {e}")
+
+    # MemPalace Build-Status aktualisieren
+    try:
+        persistent = load_state()
+        compiled = persistent.get("compiled_commits", [])
+        compiled_sha = persistent.get("compiled_sha", "?")
+        compiled_date = persistent.get("compiled_date", "?")
+        knowledge_file = Path.home() / "mac-setup/agent/knowledge/performance.md"
+        with open(knowledge_file, "r") as f:
+            perf_content = f.read()
+        build_marker = "## Aktueller Build-Status"
+        build_entry = f"""## Aktueller Build-Status
+- HEAD: {compiled_sha} (kompiliert am {compiled_date})
+- Branch: feature/turboquant-kv-cache
+- Kompilierte Commits: {", ".join(compiled[:5])}
+- Build-Befehl: cd ~/llama-cpp-turboquant && cmake --build build --config Release -j$(sysctl -n hw.logicalcpu)
+- Letzte Aktualisierung: {datetime.now().strftime("%Y-%m-%d %H:%M")}
+"""
+        if build_marker in perf_content:
+            import re as _re
+            start = perf_content.index(build_marker)
+            next_sec = perf_content.find("\n##", start + 1)
+            if next_sec == -1:
+                perf_content = perf_content[:start] + build_entry
+            else:
+                perf_content = perf_content[:start] + build_entry + perf_content[next_sec:]
+        else:
+            perf_content += "\n" + build_entry
+        with open(knowledge_file, "w") as f:
+            f.write(perf_content)
+        subprocess.run(
+            ["mempalace", "mine", str(knowledge_file.parent), "--wing", "platform"],
+            capture_output=True, timeout=30
+        )
+        log(f"  ✅ MemPalace Build-Status aktualisiert ({compiled_sha})")
+    except Exception as me:
+        log(f"  ⚠️ MemPalace Build-Update: {me}")
+
     return state
 
 # ── Node 7: Unsloth Modell-Watcher ────────────────────────────

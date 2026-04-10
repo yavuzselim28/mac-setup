@@ -1,0 +1,49 @@
+# kube-prometheus-stack values.yaml
+# Repo: yavuzselim28/mac-setup
+# Pfad: charts/kube-prometheus-stack-values.yaml
+# Deployen: helm upgrade monitoring prometheus-community/kube-prometheus-stack \
+#             -n monitoring -f charts/kube-prometheus-stack-values.yaml
+
+# ─────────────────────────────────────────────
+# GRAFANA
+# ─────────────────────────────────────────────
+grafana:
+  initChownData:
+    enabled: false
+  persistence:
+    enabled: true
+    size: 2Gi
+
+# ─────────────────────────────────────────────
+# PROMETHEUS
+# ─────────────────────────────────────────────
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+
+# ─────────────────────────────────────────────
+# ALERTMANAGER
+# ─────────────────────────────────────────────
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: "webhook-test"
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 1h
+
+    receivers:
+      - name: "webhook-test"
+        webhook_configs:
+          - url: "https://webhook.site/db9c390d-4f07-421c-a3c7-7a6a0043c6d1"
+            send_resolved: true

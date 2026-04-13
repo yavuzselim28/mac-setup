@@ -1,0 +1,13 @@
+loki:
+  enabled: true
+  image:
+    tag: 2.9.0
+
+promtail:
+  enabled: true
+
+grafana:
+  enabled: false
+
+prometheus:
+  enabled: false

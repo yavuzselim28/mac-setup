@@ -12,7 +12,7 @@ grafana:
     enabled: false
   persistence:
     enabled: true
-    size: 2Gi
+    size: 10Gi
 
 # ─────────────────────────────────────────────
 # PROMETHEUS

@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: tenant-quota-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+  - name: tenant-resource-monitoring
+    rules:
+    - alert: TenantCPUQuotaNearLimit
+      expr: |
+        (
+          sum by (namespace) (
+            rate(container_cpu_usage_seconds_total{container!="", pod!="", namespace!~"kube-system|kube-public|monitoring"}[5m])
+          )
+          /
+          sum by (namespace) (
+            kube_resourcequota{type="hard", resource="limits.cpu", namespace!~"kube-system|kube-public|monitoring"}
+          )
+        ) > 0.8
+      for: 15m
+      labels:
+        severity: warning
+        team: platform-ops
+      annotations:
+        summary: "Tenant CPU Quota High: {{ $labels.namespace }}"
+        description: "Namespace {{ $labels.namespace }} has been using more than 80% of its CPU quota for 15 minutes. Current: {{ $value | humanizePercentage }}"
+        action: "Contact tenant to discuss quota increase or optimize resource usage."

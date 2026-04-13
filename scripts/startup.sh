@@ -51,5 +51,5 @@ echo "[$(date)] ✅ K8s Pods gestartet" >> $LOG
 echo "[$(date)] ✅ Startup fertig — starte manuell: ai-llama-fast" >> $LOG
 
 # Platform Agent einmal beim Start ausführen
-/opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent.py >> $LOG 2>&1
+/opt/homebrew/bin/python3 $HOME/mac-setup/agent/platform_agent_lg.py >> $LOG 2>&1
 echo "[$(date)] ✅ Platform Agent fertig" >> $LOG

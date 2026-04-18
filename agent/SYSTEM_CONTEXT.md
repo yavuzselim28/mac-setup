@@ -17,8 +17,16 @@ Dieses Projekt ist mein lokales AI-Setup zum Lernen und Testen.
 - Fork: TheTom/llama-cpp-turboquant (branch: feature/turboquant-kv-cache)
 - Binary: ~/llama-cpp-turboquant/build/bin/llama-server
 - Kompilieren: cd ~/llama-cpp-turboquant && cmake --build build --config Release -j$(sysctl -n hw.logicalcpu)
-- Letzter kompilierter Commit: 830eb54 (fix: cap map0 kernel shmem)
-- Ausstehend: a8de291 (KV-Cache Hardening), c30bc9e (Bounded Queries Fix)
+- Aktueller HEAD: 40b6f96 (Merge pull request #60 from TheTom/feature/alpha-scaling)
+- Offizieller Release: tqp-v0.1.0 (tag auf eea498c) — TQ4_1S 3.5x faster, AMD RDNA4, Vulkan turbo3
+
+### Kompilierte Commits (compiled_commits in agent_state.json)
+| SHA | Beschreibung | Status |
+|-----|-------------|--------|
+| 40b6f96 | Merge alpha-scaling (aktueller HEAD) | ✅ kompiliert |
+| 830eb54 | fix: cap map0 kernel shmem for 256-expert MoE | ✅ kompiliert |
+| acad28d | feat: MoE expert count + TQ4_1S backend tests | ✅ kompiliert |
+| cffcbf0 | (älterer Commit) | ✅ kompiliert |
 
 ### Modelle
 | Alias | Modell | Größe | Pfad |
@@ -64,17 +72,25 @@ Dieses Projekt ist mein lokales AI-Setup zum Lernen und Testen.
 - com.yavuz.platform-agent → stündlicher Health Check
 - com.yavuz.startup-terminal → Terminal mit Live-Log beim Login
 - com.yavuz.port-forward → Port-Forward dauerhaft auf localhost:3000
-- com.yavuz.dashboard → HTTP Server auf localhost:8999
+- com.yavuz.dashboard → HTTP Server + Proxy auf localhost:8999
 
 ## Agent System
-### Platform Agent (7 Nodes, ~/mac-setup/agent/platform_agent.py)
+
+### Platform Agent (~/mac-setup/agent/platform_agent.py)
 - check_updates: Open WebUI GitHub Release
 - check_k8s_health: Pods überwachen, Restarts
 - check_llama_server: Watchdog → Incident Agent
-- check_system_health: GPU Limit, Disk, Port-Forward
+- check_system_health: GPU Limit, Disk, Port-Forward, Build-Commit auto-detect, MemPalace Update, intelligence.json compiled-Flags sync
 - check_unsloth_models: neue GGUF-Versionen
 - check_argocd_and_commits: ArgoCD Sync, TurboQuant Commits
 - run_intelligence: Intelligence Agent aufrufen
+
+### Build-Commit Auto-Detection (in check_system_health)
+- Liest bei jedem Run: git -C ~/llama-cpp-turboquant rev-parse HEAD
+- Schreibt HEAD automatisch in compiled_commits + compiled_sha in agent_state.json
+- Aktualisiert performance.md mit "## Aktueller Build-Status" Block
+- Synct intelligence.json compiled-Flags gegen compiled_commits bei jedem Run
+- Kein manueller Eingriff nötig nach git pull + cmake
 
 ### Incident Agent (~/mac-setup/agent/incident_agent.py)
 - Aktion A (K8s stoppen): DEAKTIVIERT — zu destruktiv
@@ -85,25 +101,44 @@ Dieses Projekt ist mein lokales AI-Setup zum Lernen und Testen.
 
 ### Intelligence Agent (~/mac-setup/agent/intelligence_agent.py)
 Beobachtete Repos:
-- TheTom/llama-cpp-turboquant — primär, kompilierbar
+- TheTom/llama-cpp-turboquant (feature/turboquant-kv-cache) — primär, kompilierbar
 - milla-jovovich/mempalace — Memory System
 - SharpAI/SwiftLM — Swift Server
 - arozanov/turboquant-mlx — MLX Port
 
 Stack-Grenzen: NUR TheTom Commits kompilierbar.
-MLX Repos (arozanov, helgklaizar, rachittshah) = anderer Stack.
+MLX Repos (arozanov, helgklaizar, rachittshah, SharpAI) = anderer Stack.
 
-### Dashboard
+LLM-Analyse-Prompt enthält BUILD-STATUS Block:
+- Aktuell kompilierter HEAD + Datum
+- Liste compiled_commits
+- Branch-Name + exakter cmake-Befehl
+
+### Dashboard (~/mac-setup/agent/dashboard.html)
 - URL: http://localhost:8999/dashboard.html
-- Proxy Server: ~/mac-setup/agent/proxy.py
-- Zeigt: LLM Status, RAM, Wochenbericht, TurboQuant Commits
+- Proxy: ~/mac-setup/agent/proxy.py (Port 8999)
+- Run Agent Button: POST /run-agent → startet platform_agent.py als Subprocess, pollt /agent-status alle 2s
+- explain-box: Antwort bleibt nach Refresh erhalten (explainCache im JS)
+- Refresh Button: resettet Countdown korrekt (manualRefresh())
+- compiled_commits Array-Check: zeigt ✅ kompiliert für alle bekannten SHAs
+- Aktionen-Zähler: zählt nur echte Agent-Aktionen (neu gestartet, Sync, GPU)
+
+### Proxy (~/mac-setup/agent/proxy.py)
+Endpoints:
+- POST /llm → leitet zu localhost:8080/v1/chat/completions (timeout 120s)
+- POST /run-agent → startet platform_agent.py im Hintergrund (threading.Lock, kein Doppelstart)
+- GET /agent-status → {running: bool, pid: int}
+- GET /* → SimpleHTTPRequestHandler (statische Files aus ~/mac-setup/agent/)
+Agent-Subprocess verwendet: /opt/homebrew/bin/python3 (absoluter Pfad wegen LaunchAgent PATH)
 
 ## MemPalace (Wissensbasis)
 - Installiert: pip3 install mempalace
-- Palace: ~/.mempalace/palace/
+- Palace: ~/.mempalace/palace/ (ChromaDB backend)
 - Knowledge: ~/mac-setup/agent/knowledge/ (decisions.md, incidents.md, performance.md)
 - Suchen: mempalace search "deine Frage"
-- Auto-Update: Intelligence Agent updatet nach Wochenbericht
+- performance.md enthält "## Aktueller Build-Status" — wird bei jedem Agent-Run überschrieben
+- Force-Reindex nötig nach File-Änderungen: python3 chromadb direkt → col.delete(id) + col.add()
+- Wing "platform" in ~/.mempalace/config.json nicht registriert (nur Default-Wings drin)
 
 ## Sudoers (NOPASSWD)
 /etc/sudoers.d/yavuz-platform:
@@ -115,15 +150,22 @@ MLX Repos (arozanov, helgklaizar, rachittshah) = anderer Stack.
 - ai-llama-fast: Port 8080, turbo4, Speculative Decoding, --metrics, 32k Kontext
 - monitoring-start/stop: Prometheus/Grafana/OpenCost
 
-## Bekannte Lösungen
+## Bekannte Lösungen & Fallstricke
 - localhost ohne WLAN: /etc/hosts mit "127.0.0.1 localhost"
 - Loopback nach Neustart: sudo ifconfig lo0 alias 10.254.254.254 255.255.255.255
 - git pull Konflikte: git merge --abort && git reset --hard origin/feature/turboquant-kv-cache
-- Grafana Passwort: kubectl exec -n monitoring deployment/monitoring-grafana -c grafana -- grafana cli admin reset-admin-password NEUESPASSWORT
+- Grafana Passwort reset: kubectl exec -n monitoring deployment/monitoring-grafana -c grafana -- grafana cli admin reset-admin-password NEUESPASSWORT
+- sed -i auf macOS: keine unterschiedlich langen Strings möglich → python3 str.replace() verwenden
+- LaunchAgent PATH: immer absolute Pfade in Subprocesses verwenden (/opt/homebrew/bin/python3)
+- LaunchAgent neu laden: unload + load (bootstrap schlägt oft fehl mit Error 5, ignorieren)
+- Port bereits belegt: kill $(lsof -ti:PORT)
+- MemPalace "already filed": Force-Reindex via chromadb Python direkt
+- Phantom-Commits: SHAs von GitHub API die nicht im Branch existieren → aus intelligence.json entfernen
 
 ## Offene TODOs
-- [ ] a8de291 + c30bc9e kompilieren (KV-Cache Hardening + Bounded Queries)
-- [ ] Agent erkennt automatisch kompilierte Commits (compiled_commits in agent_state.json)
 - [ ] tokens/sec korrekt messen (Metrics Endpoint Fix)
 - [ ] RAM-Verlauf Chart im Dashboard
 - [ ] Tailscale vollständig einrichten für Handy-Zugang
+- [ ] explain()-Antwortqualität: Compile-Befehle statisch hardcoden statt LLM generieren lassen
+- [ ] MemPalace Wing "platform" in ~/.mempalace/config.json registrieren
+- [ ] Kubernetes Pods Badge zeigt falsche Zahl wenn Docker nicht läuft

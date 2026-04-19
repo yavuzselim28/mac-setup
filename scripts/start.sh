@@ -1,6 +1,17 @@
 #!/bin/bash
 sudo sysctl iogpu.wired_limit_mb=52429 2>/dev/null
 echo "🚀 Starting Ollama + Open WebUI..."
+
+# Ollama für kagent starten (falls nicht bereits läuft)
+if ! curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
+  echo "🤖 Starte Ollama (kagent LLM Backend)..."
+  OLLAMA_CONTEXT_LENGTH=65536 ollama serve &
+  sleep 5
+  echo "✅ Ollama läuft auf Port 11434"
+else
+  echo "✅ Ollama läuft bereits"
+fi
+
 kubectl scale deployment ollama-app-ollama -n ollama --replicas=1
 kubectl scale deployment ollama-app-open-webui -n ollama --replicas=1
 echo "⏳ Warte bis Pods ready sind..."
@@ -19,6 +30,7 @@ echo "✅ Done!"
 echo "🤖 Open WebUI: http://ollama.local"
 echo "🔗 Grafana: http://grafana.local"
 echo "🔗 OpenCost: http://opencost.local"
+echo "🤖 kagent LLM: http://localhost:11434 (qwen2.5:32b)"
 echo ""
 echo "Starte jetzt in einem neuen Terminal: ai-llama / ai-qwen / ai-mistral"
 echo ""

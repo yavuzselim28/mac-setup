@@ -1,12 +1,12 @@
 import urllib.request
 import ssl
+import re
 from typing import Any
 from mcp.server import Server
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 from mcp.types import Tool, TextContent
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount
-from starlette.requests import Request
 from starlette.responses import Response
 import uvicorn
 import contextlib
@@ -22,7 +22,7 @@ async def list_tools() -> list[Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "url": {"type": "string", "description": "The URL to fetch"},
+                    "url": {"type": "string"},
                     "max_bytes": {"type": "integer", "default": 10000}
                 },
                 "required": ["url"]
@@ -30,12 +30,12 @@ async def list_tools() -> list[Tool]:
         ),
         Tool(
             name="fetch_release_notes",
-            description="Fetch Kubernetes or OpenShift release notes for a specific version.",
+            description="Fetch Kubernetes or OpenShift release notes. type must be exactly 'kubernetes' or 'openshift' (lowercase).",
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "version": {"type": "string", "description": "Version e.g. '1.35'"},
-                    "type": {"type": "string", "default": "kubernetes"}
+                    "version": {"type": "string", "description": "e.g. '1.35'"},
+                    "type": {"type": "string", "enum": ["kubernetes", "openshift"], "default": "kubernetes"}
                 },
                 "required": ["version"]
             }
@@ -62,20 +62,40 @@ async def handle_http_get(arguments: dict) -> list[TextContent]:
     except Exception as e:
         return [TextContent(type="text", text=f"Error: {str(e)}")]
 
+def strip_html(html: str) -> str:
+    text = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL)
+    text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL)
+    text = re.sub(r'<[^>]+>', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text[:8000].strip()
+
 async def handle_fetch_release_notes(arguments: dict) -> list[TextContent]:
     version = arguments.get("version", "1.35").lstrip("v").strip()
     parts = version.split(".")
     minor = f"{parts[0]}.{parts[1]}" if len(parts) >= 2 else version
-    notes_type = arguments.get("type", "kubernetes")
+    # Normalize type to lowercase
+    notes_type = arguments.get("type", "kubernetes").lower()
+
     if notes_type == "kubernetes":
         url = f"https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-{minor}.md"
-        result = await handle_http_get({"url": url, "max_bytes": 15000})
-        return [TextContent(type="text", text=f"Kubernetes {minor} Release Notes:\n\n{result[0].text}")]
-    ocp_map = {"1.31":"4.15","1.32":"4.16","1.33":"4.17","1.34":"4.17","1.35":"4.18","1.36":"4.19"}
-    ocp = ocp_map.get(minor, "4.17")
-    url = f"https://docs.openshift.com/container-platform/{ocp}/release_notes/ocp-{ocp.replace('.', '-')}-release-notes.html"
-    result = await handle_http_get({"url": url, "max_bytes": 10000})
-    return [TextContent(type="text", text=f"OpenShift {ocp} Release Notes:\n\n{result[0].text}")]
+        try:
+            ctx = ssl.create_default_context()
+            req = urllib.request.Request(url, headers={"User-Agent": "kagent-http-mcp/1.0"})
+            with urllib.request.urlopen(req, context=ctx, timeout=15) as r:
+                content = r.read(15000).decode("utf-8", errors="replace")
+                return [TextContent(type="text", text=f"Kubernetes {minor} CHANGELOG:\n\n{content}")]
+        except Exception as e:
+            return [TextContent(type="text", text=f"Error fetching K8s {minor} notes: {str(e)}")]
+
+    elif notes_type == "openshift":
+        ocp_map = {"1.31":"4.15","1.32":"4.16","1.33":"4.17","1.34":"4.17","1.35":"4.18","1.36":"4.19"}
+        ocp = ocp_map.get(minor, "4.17")
+        url = f"https://docs.openshift.com/container-platform/{ocp}/release_notes/ocp-{ocp.replace('.', '-')}-release-notes.html"
+        result = await handle_http_get({"url": url, "max_bytes": 50000})
+        clean = strip_html(result[0].text)
+        return [TextContent(type="text", text=f"OpenShift {ocp} Release Notes (text):\n\n{clean}")]
+
+    return [TextContent(type="text", text=f"Unknown type: {notes_type}. Use 'kubernetes' or 'openshift'.")]
 
 session_manager = StreamableHTTPSessionManager(app=app_server, stateless=True)
 

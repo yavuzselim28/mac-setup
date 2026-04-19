@@ -1,0 +1,248 @@
+2026-04-09 00:02:07,348 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-09 00:02:07,358 [INFO] Node: check_k8s
+2026-04-09 00:02:07,460 [INFO] Node: check_llama
+2026-04-09 00:02:07,503 [INFO] Node: check_updates
+2026-04-09 00:02:07,760 [INFO] Node: check_unsloth
+2026-04-09 00:02:07,970 [INFO] Node: check_system
+2026-04-09 00:02:08,065 [INFO] Node: run_intelligence
+2026-04-09 00:02:09,886 [INFO] Node: update_mempalace
+2026-04-09 00:02:09,919 [INFO] Node: build_report
+2026-04-09 00:02:09,920 [INFO] === Agent-Run abgeschlossen ===
+2026-04-09 00:04:02,837 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-09 00:04:02,846 [INFO] Node: check_k8s
+2026-04-09 00:04:02,928 [INFO] Node: check_llama
+2026-04-09 00:04:02,939 [INFO] Node: check_updates
+2026-04-09 00:04:03,183 [INFO] Node: check_unsloth
+2026-04-09 00:04:03,394 [INFO] Node: check_system
+2026-04-09 00:04:03,483 [INFO] Node: run_intelligence
+2026-04-09 00:04:05,627 [INFO] Node: update_mempalace
+2026-04-09 00:04:05,660 [INFO] Node: build_report
+2026-04-09 00:04:05,660 [INFO] === Agent-Run abgeschlossen ===
+2026-04-09 00:35:51,465 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-09 00:35:51,475 [INFO] Node: check_k8s
+2026-04-09 00:35:51,553 [INFO] Node: check_llama
+2026-04-09 00:35:51,564 [INFO] Node: check_updates
+2026-04-09 00:35:51,822 [INFO] Node: check_unsloth
+2026-04-09 00:35:52,028 [INFO] Node: check_system
+2026-04-09 00:35:52,113 [INFO] Node: run_intelligence
+2026-04-09 00:35:53,886 [INFO] Node: update_mempalace
+2026-04-09 00:35:53,917 [INFO] Node: build_report
+2026-04-09 00:35:53,918 [INFO] === Agent-Run abgeschlossen ===
+2026-04-09 00:42:15,795 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-09 00:42:15,804 [INFO] Node: check_k8s
+2026-04-09 00:42:15,882 [INFO] Node: check_llama
+2026-04-09 00:42:15,892 [INFO] Node: check_updates
+2026-04-09 00:42:16,119 [INFO] Node: check_unsloth
+2026-04-09 00:42:16,321 [INFO] Node: check_system
+2026-04-09 00:42:16,404 [INFO] Node: run_intelligence
+2026-04-09 00:42:18,250 [INFO] Node: update_mempalace
+2026-04-09 00:42:18,282 [INFO] Node: build_report
+2026-04-09 00:42:18,283 [INFO] === Agent-Run abgeschlossen ===
+2026-04-09 00:57:04,293 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-09 00:57:04,303 [INFO] Node: check_k8s — prüfe Pod-Status
+2026-04-09 00:57:04,380 [INFO]   → 32 Pods, 1 Issues
+2026-04-09 00:57:04,380 [INFO] Node: check_llama — prüfe llama-server auf Port 8080
+2026-04-09 00:57:04,389 [INFO]   → alive=True, tok/s=None, restarts/h=0
+2026-04-09 00:57:04,390 [INFO] Node: check_updates — prüfe Open WebUI GitHub Release
+2026-04-09 00:57:04,653 [INFO] Node: check_unsloth — prüfe neue GGUF-Modelle
+2026-04-09 00:57:04,855 [INFO] Node: check_system — GPU, Disk, Build-SHA, Port-Forward
+2026-04-09 00:57:04,930 [INFO] Node: run_intelligence — TurboQuant Commits analysieren
+2026-04-09 00:57:06,638 [INFO] Node: update_mempalace — Wissen indexieren
+2026-04-09 00:57:06,672 [INFO] Node: build_report — Markdown-Report generieren
+2026-04-09 00:57:06,672 [INFO] === Agent-Run abgeschlossen ===
+2026-04-09 01:00:39,902 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-09 01:02:20,197 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-09 01:02:20,213 [INFO] Node: check_k8s — prüfe Pod-Status
+2026-04-09 01:02:20,388 [INFO]   → 32 Pods, 1 Issues
+2026-04-09 01:02:20,389 [INFO] Node: check_llama — prüfe llama-server auf Port 8080
+2026-04-09 01:02:20,400 [INFO]   → alive=True, tok/s=None, restarts/h=0
+2026-04-09 01:02:20,401 [INFO] Node: check_updates — prüfe Open WebUI GitHub Release
+2026-04-09 01:02:20,644 [INFO] Node: check_unsloth — prüfe neue GGUF-Modelle
+2026-04-09 01:02:20,837 [INFO] Node: check_system — GPU, Disk, Build-SHA, Port-Forward
+2026-04-09 01:02:20,922 [INFO] Node: run_intelligence — TurboQuant Commits analysieren
+2026-04-09 01:03:40,785 [INFO] Node: update_mempalace — Wissen indexieren
+2026-04-09 01:03:40,841 [INFO] Node: build_report — Markdown-Report generieren
+2026-04-09 01:03:40,842 [INFO] === Agent-Run abgeschlossen ===
+2026-04-13 10:09:09,976 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-13 10:09:09,989 [INFO] Node: check_k8s — prüfe Pod-Status
+2026-04-13 10:09:10,529 [INFO]   → 34 Pods, 2 Issues
+2026-04-13 10:09:10,530 [INFO] Node: check_llama — prüfe llama-server auf Port 8080
+2026-04-13 10:09:10,542 [INFO]   → alive=True, tok/s=None, restarts/h=0
+2026-04-13 10:09:10,543 [INFO] Node: check_updates — prüfe Open WebUI GitHub Release
+2026-04-13 10:09:10,782 [INFO] Node: check_unsloth — prüfe neue GGUF-Modelle
+2026-04-13 10:09:10,994 [INFO] Node: check_system — GPU, Disk, Build-SHA, Port-Forward
+2026-04-13 10:09:11,085 [INFO] Node: run_intelligence — deaktiviert, wird übersprungen
+2026-04-13 10:09:11,085 [INFO] Node: update_mempalace — Wissen indexieren
+2026-04-13 10:09:11,117 [INFO] Node: build_report — Markdown-Report generieren
+2026-04-13 10:09:11,118 [INFO] === Agent-Run abgeschlossen ===
+2026-04-13 11:36:29,909 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-13 11:36:29,927 [INFO] Node: check_k8s — prüfe Pod-Status
+2026-04-13 11:36:29,985 [INFO]   → 34 Pods, 3 Issues
+2026-04-13 11:36:29,986 [INFO] Node: check_llama — prüfe llama-server auf Port 8080
+2026-04-13 11:36:29,998 [INFO]   → alive=False, tok/s=None, restarts/h=0
+2026-04-13 11:36:30,000 [INFO] Node: incident — llama-server DOWN, entscheide Aktion
+2026-04-13 11:36:30,000 [INFO] Node: do_restart — starte llama-server neu
+ggml_metal_device_init: testing tensor API for f16 support
+ggml_metal_device_init: testing tensor API for bfloat support
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_init: turbo3 sparse V dequant enabled (opt-out: TURBO_SPARSE_V=0)
+ggml_metal_library_init: loaded in 0.031 sec
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyCommon3 (3003)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = true
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 54975.79 MB
+error: invalid argument: --draft-model
+2026-04-13 11:36:41,043 [ERROR] Neustart fehlgeschlagen — Fallback 8B
+2026-04-13 11:36:41,045 [INFO] Node: do_fallback — starte 8B Fallback auf Port 8082
+2026-04-13 11:36:43,154 [INFO] Node: check_updates — prüfe Open WebUI GitHub Release
+ggml_metal_device_init: testing tensor API for f16 support
+ggml_metal_device_init: testing tensor API for bfloat support
+ggml_metal_library_init: using embedded metal library
+ggml_metal_library_init: turbo3 sparse V dequant enabled (opt-out: TURBO_SPARSE_V=0)
+ggml_metal_library_init: loaded in 0.019 sec
+ggml_metal_rsets_init: creating a residency set collection (keep_alive = 180 s)
+ggml_metal_device_init: GPU name:   MTL0
+ggml_metal_device_init: GPU family: MTLGPUFamilyApple10  (1010)
+ggml_metal_device_init: GPU family: MTLGPUFamilyCommon3 (3003)
+ggml_metal_device_init: GPU family: MTLGPUFamilyMetal4  (5002)
+ggml_metal_device_init: simdgroup reduction   = true
+ggml_metal_device_init: simdgroup matrix mul. = true
+ggml_metal_device_init: has unified memory    = true
+ggml_metal_device_init: has bfloat            = true
+ggml_metal_device_init: has tensor            = true
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 54975.79 MB
+main: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true
+system info: n_threads = 6, n_threads_batch = 6, total_threads = 18
+
+system_info: n_threads = 6 (n_threads_batch = 6) / 18 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | 
+
+Running without SSL
+init: using 17 threads for HTTP server
+start: binding port with default address family
+main: loading model
+srv    load_model: loading model '/Users/yavuztopcu/models/llama31-8b-draft.gguf'
+common_init_result: fitting params to device memory, for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on
+llama_params_fit_impl: projected to use 6533 MiB of device memory vs. 52428 MiB of free device memory
+llama_params_fit_impl: will leave 45894 >= 1024 MiB of free device memory, no changes needed
+llama_params_fit: successfully fit params to free device memory
+llama_params_fit: fitting params to free memory took 0.12 seconds
+llama_model_load_from_file_impl: using device MTL0 (Apple M5 Pro) (unknown id) - 52428 MiB free
+llama_model_loader: loaded meta data with 33 key-value pairs and 292 tensors from /Users/yavuztopcu/models/llama31-8b-draft.gguf (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = llama
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = Meta Llama 3.1 8B Instruct
+llama_model_loader: - kv   3:                           general.finetune str              = Instruct
+llama_model_loader: - kv   4:                           general.basename str              = Meta-Llama-3.1
+llama_model_loader: - kv   5:                         general.size_label str              = 8B
+llama_model_loader: - kv   6:                            general.license str              = llama3.1
+llama_model_loader: - kv   7:                               general.tags arr[str,6]       = ["facebook", "meta", "pytorch", "llam...
+llama_model_loader: - kv   8:                          general.languages arr[str,8]       = ["en", "de", "fr", "it", "pt", "hi", ...
+llama_model_loader: - kv   9:                          llama.block_count u32              = 32
+llama_model_loader: - kv  10:                       llama.context_length u32              = 131072
+llama_model_loader: - kv  11:                     llama.embedding_length u32              = 4096
+llama_model_loader: - kv  12:                  llama.feed_forward_length u32              = 14336
+llama_model_loader: - kv  13:                 llama.attention.head_count u32              = 32
+llama_model_loader: - kv  14:              llama.attention.head_count_kv u32              = 8
+llama_model_loader: - kv  15:                       llama.rope.freq_base f32              = 500000.000000
+llama_model_loader: - kv  16:     llama.attention.layer_norm_rms_epsilon f32              = 0.000010
+llama_model_loader: - kv  17:                          general.file_type u32              = 15
+llama_model_loader: - kv  18:                           llama.vocab_size u32              = 128256
+llama_model_loader: - kv  19:                 llama.rope.dimension_count u32              = 128
+llama_model_loader: - kv  20:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  21:                         tokenizer.ggml.pre str              = llama-bpe
+2026-04-13 11:36:43,369 [INFO] Node: check_unsloth — prüfe neue GGUF-Modelle
+llama_model_loader: - kv  22:                      tokenizer.ggml.tokens arr[str,128256]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+llama_model_loader: - kv  23:                  tokenizer.ggml.token_type arr[i32,128256]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv  24:                      tokenizer.ggml.merges arr[str,280147]  = ["Ġ Ġ", "Ġ ĠĠĠ", "ĠĠ ĠĠ", "...
+llama_model_loader: - kv  25:                tokenizer.ggml.bos_token_id u32              = 128000
+llama_model_loader: - kv  26:                tokenizer.ggml.eos_token_id u32              = 128009
+llama_model_loader: - kv  27:                    tokenizer.chat_template str              = {{- bos_token }}\n{%- if custom_tools ...
+llama_model_loader: - kv  28:               general.quantization_version u32              = 2
+llama_model_loader: - kv  29:                      quantize.imatrix.file str              = /models_out/Meta-Llama-3.1-8B-Instruc...
+llama_model_loader: - kv  30:                   quantize.imatrix.dataset str              = /training_dir/calibration_datav3.txt
+llama_model_loader: - kv  31:             quantize.imatrix.entries_count i32              = 224
+llama_model_loader: - kv  32:              quantize.imatrix.chunks_count i32              = 125
+llama_model_loader: - type  f32:   66 tensors
+llama_model_loader: - type q4_K:  193 tensors
+llama_model_loader: - type q6_K:   33 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = Q4_K - Medium
+print_info: file size   = 4.58 GiB (4.89 BPW) 
+load: 0 unused tokens
+load: printing all EOG tokens:
+load:   - 128001 ('<|end_of_text|>')
+load:   - 128008 ('<|eom_id|>')
+load:   - 128009 ('<|eot_id|>')
+load: special tokens cache size = 256
+load: token to piece cache size = 0.7999 MB
+print_info: arch                  = llama
+print_info: vocab_only            = 0
+print_info: no_alloc              = 0
+print_info: n_ctx_train           = 131072
+print_info: n_embd                = 4096
+print_info: n_embd_inp            = 4096
+print_info: n_layer               = 32
+print_info: n_head                = 32
+print_info: n_head_kv             = 8
+print_info: n_rot                 = 128
+print_info: n_swa                 = 0
+print_info: is_swa_any            = 0
+print_info: n_embd_head_k         = 128
+print_info: n_embd_head_v         = 128
+print_info: n_gqa                 = 4
+print_info: n_embd_k_gqa          = 1024
+print_info: n_embd_v_gqa          = 1024
+print_info: f_norm_eps            = 0.0e+00
+print_info: f_norm_rms_eps        = 1.0e-05
+print_info: f_clamp_kqv           = 0.0e+00
+print_info: f_max_alibi_bias      = 0.0e+00
+print_info: f_logit_scale         = 0.0e+00
+print_info: f_attn_scale          = 0.0e+00
+print_info: n_ff                  = 14336
+print_info: n_expert              = 0
+print_info: n_expert_used         = 0
+print_info: n_expert_groups       = 0
+print_info: n_group_used          = 0
+print_info: causal attn           = 1
+print_info: pooling type          = -1
+print_info: rope type             = 0
+print_info: rope scaling          = linear
+print_info: freq_base_train       = 500000.0
+print_info: freq_scale_train      = 1
+print_info: n_ctx_orig_yarn       = 131072
+print_info: rope_yarn_log_mul     = 0.0000
+print_info: rope_finetuned        = unknown
+print_info: model type            = 8B
+print_info: model params          = 8.03 B
+print_info: general.name          = Meta Llama 3.1 8B Instruct
+print_info: vocab type            = BPE
+print_info: n_vocab               = 128256
+print_info: n_merges              = 280147
+print_info: BOS token             = 128000 '<|begin_of_text|>'
+print_info: EOS token             = 128009 '<|eot_id|>'
+print_info: EOT token             = 128001 '<|end_of_text|>'
+print_info: EOM token             = 128008 '<|eom_id|>'
+print_info: LF token              = 198 'Ċ'
+print_info: EOG token             = 128001 '<|end_of_text|>'
+print_info: EOG token             = 128008 '<|eom_id|>'
+print_info: EOG token             = 128009 '<|eot_id|>'
+print_info: max token length      = 256
+load_tensors: loading model tensors, this can take a while... (mmap = true, direct_io = false)
+2026-04-13 11:36:43,656 [INFO] Node: check_system — GPU, Disk, Build-SHA, Port-Forward
+2026-04-13 11:36:43,726 [INFO] Node: run_intelligence — deaktiviert, wird übersprungen
+2026-04-13 11:36:43,726 [INFO] Node: update_mempalace — Wissen indexieren
+2026-04-13 11:36:43,762 [INFO] Node: build_report — Markdown-Report generieren
+2026-04-13 11:36:43,763 [INFO] === Agent-Run abgeschlossen ===
+2026-04-13 11:36:43,763 [WARNING] Fehler: ['llama-server 70B tot — Fallback aktiv']

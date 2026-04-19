@@ -20,10 +20,6 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 .refresh-btn{background:transparent;border:1px solid var(--border);color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer;}
 .refresh-btn:hover{border-color:var(--green);color:var(--green);}
-.run-btn{background:rgba(61,214,140,0.08);border:1px solid var(--green);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 14px;border-radius:4px;cursor:pointer;font-weight:600;}
-.run-btn:hover{background:rgba(61,214,140,0.18);}
-.run-btn:disabled{opacity:0.4;cursor:not-allowed;border-color:var(--muted);color:var(--muted);background:transparent;}
-.run-btn.running{border-color:var(--amber);color:var(--amber);background:rgba(245,166,35,0.08);}
 .status-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px 16px;}
 .stat-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
@@ -82,7 +78,6 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
     <span class="live-dot"></span>
     <span style="font-size:11px;color:var(--muted)">refresh in <span id="cd">30</span>s</span>
     <!-- FIX: Refresh Button resettet jetzt auch den Countdown -->
-    <button class="run-btn" id="run-btn" onclick="runAgent()">▶ Run Agent</button>
     <button class="refresh-btn" onclick="manualRefresh()">↻ Refresh</button>
   </div>
 </div>
@@ -277,7 +272,7 @@ function renderIntel() {
       ${a.auswirkung?`<div class="intel-detail">→ ${a.auswirkung}</div>`:''}
       ${a.empfehlung?`<div class="intel-emp">Empfehlung: ${a.empfehlung}</div>`:''}
       ${compiledBadge}
-      <button class="explain-btn" style="display:none" data-sha="${sha}" data-msg="${(a.message||'').replace(/"/g,'&quot;')}" data-cat="${a.category||''}" data-awk="${(a.auswirkung||'').replace(/"/g,'&quot;')}" onclick="explain(this)">→ Wie kompiliere ich das?</button>
+      <button class="explain-btn" data-sha="${sha}" data-msg="${(a.message||'').replace(/"/g,'&quot;')}" data-cat="${a.category||''}" data-awk="${(a.auswirkung||'').replace(/"/g,'&quot;')}" onclick="explain(this)">→ Wie kompiliere ich das?</button>
       <div class="explain-box" id="ex-${sha}" style="display:${explainDisplay}" data-loaded="${explainLoaded}">${explainContent}</div>
     </div>`;
   }).join('');
@@ -295,7 +290,8 @@ async function explain(btn) {
     return;
   }
 
-  box.style.display='none'; return; // LLM-Abfrage deaktiviert
+  box.style.display='block';
+  box.innerHTML='<span style="color:var(--text2)">⏳ Frage LLM...</span>';
 
   try {
     const r=await fetch('/llm',{
@@ -303,7 +299,7 @@ async function explain(btn) {
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'local',max_tokens:600,
-        messages:[{role:'user',content:`Setup: MacBook Pro M5 Pro 64GB, Apple Silicon, Metal, Clang (KEIN GCC).\nFork: TheTom/llama-cpp-turboquant\nBranch: feature/turboquant-kv-cache\nBuild-Verzeichnis: ~/llama-cpp-turboquant/\nBuild-Befehl: cd ~/llama-cpp-turboquant && cmake --build build --config Release -j$(sysctl -n hw.logicalcpu)\nBinary: ~/llama-cpp-turboquant/build/bin/llama-server\nKV-Cache: --cache-type-k turbo4 --cache-type-v turbo4, Flash Attention: -fa, GPU Offload: -ngl 99, Kontext: 32k\n\nCommit [${sha}]: ${msg}\nKategorie: ${cat}\nAuswirkung: ${awk}\n\nErkläre auf Deutsch:\n1. Was ändert sich konkret für mein Setup?\n2. Exakte Befehle für mein Setup (git pull auf Branch feature/turboquant-kv-cache, dann cmake --build)\n3. Was danach testen?`}]
+        messages:[{role:'user',content:`Ich habe MacBook Pro M5 Pro 64GB. TheTom/llama-cpp-turboquant Fork, turbo4 KV-Cache, Apple Metal/Clang.\n\nCommit [${sha}]: ${msg}\nKategorie: ${cat}\nAuswirkung: ${awk}\n\nErkläre auf Deutsch:\n1. Was ändert sich für mein Setup?\n2. Exakte Befehle zum Neu-Kompilieren\n3. Was testen danach?`}]
       })
     });
     const d=await r.json();
@@ -341,7 +337,7 @@ function updateStats() {
   const lastEnd=logs.filter(l=>l.includes('Platform Agent v3 beendet')).pop();
   if(lastEnd){const m=lastEnd.match(/\[(\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2}))\]/);if(m){document.getElementById('s-run').textContent=m[2];document.getElementById('s-run').className='stat-val blue';document.getElementById('s-run-sub').textContent=m[1].split(' ')[0];}}
 
-  const actions=logs.filter(l=>l.includes('Aktionen durchgeführt')||l.includes('actions_taken')||(l.includes('→ ')&&(l.includes('neu gestartet')||l.includes('Sync')||l.includes('GPU')))).length;
+  const actions=logs.filter(l=>l.includes('→ ')&&!l.includes('Empfehlung')&&!l.includes('Auswirkung')).length;
   const el3=document.getElementById('s-actions');el3.textContent=actions;el3.className='stat-val '+(actions>0?'amber':'green');
 
   const podLines=logs.filter(l=>l.includes('ollama-app')&&l.includes('Running'));
@@ -373,6 +369,7 @@ async function loadState() {
     if(r.ok) {
       const d = await r.json();
       window.compiledSha = d.compiled_sha || '';
+      window.compiledCommits = d.compiled_commits || [];
     }
   } catch(e) {}
 }
@@ -395,51 +392,6 @@ function manualRefresh() {
   const el = document.getElementById('cd');
   if(el) el.textContent = cd;
   load();
-}
-
-async function runAgent() {
-  const btn = document.getElementById('run-btn');
-  btn.disabled = true;
-  btn.classList.add('running');
-  btn.textContent = '⏳ Läuft...';
-  try {
-    const r = await fetch('/run-agent', { method: 'POST' });
-    const d = await r.json();
-    if(d.status === 'already_running') {
-      btn.textContent = '⏳ Läuft bereits...';
-    } else {
-      btn.textContent = '⏳ Läuft... (PID ' + d.pid + ')';
-    }
-    pollAgentStatus();
-  } catch(e) {
-    btn.disabled = false;
-    btn.classList.remove('running');
-    btn.textContent = '▶ Run Agent';
-  }
-}
-
-async function pollAgentStatus() {
-  const btn = document.getElementById('run-btn');
-  const check = async () => {
-    try {
-      const r = await fetch('/agent-status');
-      const d = await r.json();
-      if(d.running) {
-        setTimeout(check, 2000);
-      } else {
-        btn.disabled = false;
-        btn.classList.remove('running');
-        btn.textContent = '▶ Run Agent';
-        // Automatisch neu laden wenn Agent fertig
-        setTimeout(() => load(), 500);
-      }
-    } catch(e) {
-      btn.disabled = false;
-      btn.classList.remove('running');
-      btn.textContent = '▶ Run Agent';
-    }
-  };
-  setTimeout(check, 2000);
 }
 
 function showDemo(){

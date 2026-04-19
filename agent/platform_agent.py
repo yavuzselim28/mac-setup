@@ -457,6 +457,19 @@ def check_system_health(state: AgentState) -> AgentState:
     except Exception as me:
         log(f"  ⚠️ MemPalace Build-Update: {me}")
 
+    # intelligence.json compiled-Flags aktualisieren
+    try:
+        intel_file = Path.home() / "mac-setup/agent/intelligence.json"
+        if intel_file.exists():
+            intel = json.loads(intel_file.read_text())
+            compiled_list = load_state().get("compiled_commits", [])
+            for a in intel.get("analyses", []):
+                a["compiled"] = a.get("short_sha", "") in compiled_list
+            intel_file.write_text(json.dumps(intel, indent=2))
+            log(f"  ✅ intelligence.json compiled-Flags aktualisiert")
+    except Exception as e:
+        log(f"  ⚠️ intelligence.json Update: {e}")
+
     return state
 
 # ── Node 7: Unsloth Modell-Watcher ────────────────────────────

@@ -1,27 +1,43 @@
 {
   "llama_restarts": [
-    "2026-04-07T19:00:02.207689"
+    "2026-04-18T12:00:02.128658"
   ],
   "seen_commits": [
-    "7f62ac9",
-    "f14f59d",
+    "eb5a677",
+    "05ad2dc",
+    "963c04c",
+    "69afba3",
+    "667d895",
+    "da64016",
     "cffcbf0",
-    "0f59dad",
-    "3c09674",
-    "29f11a6",
-    "0665bd0",
-    "acad28d",
-    "1782628",
-    "830eb54",
-    "da535ea",
-    "dcf8430",
-    "852fa86",
-    "f54d42f",
-    "0d816e2"
+    "c6e6212",
+    "59798f1",
+    "b552bcf",
+    "54a18fc",
+    "8590cbf",
+    "85cfe0b",
+    "6ad2d01",
+    "f81ee30",
+    "7ce93af",
+    "3a0f782",
+    "b609c8a",
+    "ad806cf",
+    "dc40fb7",
+    "cf2c4aa",
+    "26835e3",
+    "2a56940",
+    "1073622",
+    "3919f13",
+    "f138d49",
+    "4b5808a",
+    "18a65cc",
+    "6889c6f",
+    "0009301",
+    "40b6f96"
   ],
   "seen_models": {
     "llama33-70b": "2025-05-10T04:18:57.000Z",
-    "gemma4-31b": "2026-04-04T06:17:43.000Z"
+    "gemma4-31b": "2026-04-11T07:49:34.000Z"
   },
   "metrics": [
     {
@@ -72,12 +88,267 @@
       "total_tokens": 2585,
       "timestamp": "2026-04-07T19:01:24.771700",
       "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 3951,
+      "timestamp": "2026-04-07T19:44:48.013336",
+      "ram_free_gb": 0.2
+    },
+    {
+      "total_tokens": 4459,
+      "timestamp": "2026-04-07T20:03:07.664648",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 6119,
+      "timestamp": "2026-04-07T22:01:27.465681",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-07T23:15:23.956561",
+      "ram_free_gb": 2.5
+    },
+    {
+      "timestamp": "2026-04-08T10:41:22.885790",
+      "ram_free_gb": 9.5
+    },
+    {
+      "timestamp": "2026-04-08T11:08:52.728666",
+      "ram_free_gb": 8.1
+    },
+    {
+      "timestamp": "2026-04-08T14:10:57.957051",
+      "ram_free_gb": 5.4
+    },
+    {
+      "timestamp": "2026-04-08T15:04:21.170579",
+      "ram_free_gb": 0.2
+    },
+    {
+      "timestamp": "2026-04-08T17:05:31.207930",
+      "ram_free_gb": 1.0
+    },
+    {
+      "timestamp": "2026-04-08T18:01:48.382314",
+      "ram_free_gb": 0.2
+    },
+    {
+      "timestamp": "2026-04-08T19:01:42.512514",
+      "ram_free_gb": 1.0
+    },
+    {
+      "total_tokens": 3401,
+      "timestamp": "2026-04-08T20:01:37.926328",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 3580,
+      "timestamp": "2026-04-08T20:18:03.858790",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 3580,
+      "timestamp": "2026-04-08T20:23:46.752244",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 3580,
+      "timestamp": "2026-04-08T20:24:43.092698",
+      "ram_free_gb": 0.2
+    },
+    {
+      "total_tokens": 3580,
+      "timestamp": "2026-04-08T20:24:49.192992",
+      "ram_free_gb": 0.2
+    },
+    {
+      "total_tokens": 3580,
+      "timestamp": "2026-04-08T20:37:00.768119",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 4563,
+      "timestamp": "2026-04-08T20:50:26.421966",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 7582,
+      "timestamp": "2026-04-08T23:32:43.540918",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 8739,
+      "timestamp": "2026-04-08T23:37:36.816669",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:00:31.389382",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:02:09.748503",
+      "ram_free_gb": 0.2
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:04:05.506135",
+      "ram_free_gb": 0.2
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:06:12.645424",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:06:37.733635",
+      "ram_free_gb": 0.3
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:35:53.762511",
+      "ram_free_gb": 0.2
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:42:18.125396",
+      "ram_free_gb": 0.9
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:53:28.349089",
+      "ram_free_gb": 0.2
+    },
+    {
+      "total_tokens": 9258,
+      "timestamp": "2026-04-09T00:57:06.507086",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 9688,
+      "timestamp": "2026-04-09T01:00:30.072330",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 12912,
+      "timestamp": "2026-04-09T01:03:40.616813",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 6574,
+      "timestamp": "2026-04-09T02:03:45.982151",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 4070,
+      "timestamp": "2026-04-09T09:02:31.484857",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 4575,
+      "timestamp": "2026-04-09T13:00:31.587673",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 5007,
+      "timestamp": "2026-04-09T16:00:32.192322",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 6326,
+      "timestamp": "2026-04-09T17:02:25.460151",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 7721,
+      "timestamp": "2026-04-09T19:01:49.649188",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 10701,
+      "timestamp": "2026-04-09T21:03:51.410040",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 11206,
+      "timestamp": "2026-04-09T22:00:31.162559",
+      "ram_free_gb": 0.1
+    },
+    {
+      "total_tokens": 13310,
+      "timestamp": "2026-04-09T23:05:06.568151",
+      "ram_free_gb": 0.2
+    },
+    {
+      "total_tokens": 13310,
+      "timestamp": "2026-04-09T23:29:19.461225",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-10T00:01:24.028365",
+      "ram_free_gb": 0.5
+    },
+    {
+      "timestamp": "2026-04-10T07:03:42.180974",
+      "ram_free_gb": 0.2
+    },
+    {
+      "timestamp": "2026-04-10T08:00:41.546391",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-10T13:05:39.497575",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-10T14:00:22.378731",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-10T19:35:06.393153",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-11T16:05:26.208488",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-12T14:12:02.158344",
+      "ram_free_gb": 0.0
+    },
+    {
+      "timestamp": "2026-04-13T06:49:10.077697",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-13T10:05:22.743487",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-13T18:00:50.112182",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-18T12:14:59.169827",
+      "ram_free_gb": 0.1
     }
   ],
-  "compiled_sha": "830eb54",
-  "compiled_date": "2026-04-07",
+  "compiled_sha": "8590cbf",
+  "compiled_date": "2026-04-09",
   "compiled_commits": [
+    "8590cbf",
+    "40b6f96",
     "830eb54",
-    "acad28d"
+    "acad28d",
+    "cffcbf0"
+  ],
+  "last_check": "2026-04-13T11:36:43.724823",
+  "last_report": "# Platform Agent Report\n_2026-04-13 11:36:43_\n\n## System\n- GPU Limit: ? MB\n- Disk: 12Gi used, 595Gi frei\n- Port-Forward: \u2705\n- Build SHA: `8590cbf`\n\n## llama-server\n- Status: \u274c down\n- Restarts/h: 0\n\n## Kubernetes\n- Pods: 34\n- Issues:\n  - argocd/argocd-applicationset-controller-7dc85c9598-m2rgs: Running, restarts=1411\n  - argocd/argocd-redis-65b5bbd8cb-khz5t: Pending, restarts=26\n  - cert-manager/cert-manager-868586f9dc-rlvg4: Running, restarts=510\n\n## Updates\n- Open WebUI latest: `v0.8.12`\n\n## Aktionen (2)\n- k8s: 3 issue(s)\n- Fallback 8B auf Port 8082 gestartet\n\n## Fehler\n- \u26a0\ufe0f llama-server 70B tot \u2014 Fallback aktiv",
+  "last_run": "2026-04-13 11:36:43",
+  "actions_count": 2,
+  "restart_history": [
+    1776073001.0419252
   ]
 }

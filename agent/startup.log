@@ -1661,3 +1661,65 @@ deployment.apps/ollama-app-ollama scaled
 deployment.apps/ollama-app-open-webui scaled
 [Mon Apr  6 20:39:02 CEST 2026] ✅ K8s Pods gestartet
 [Mon Apr  6 20:39:02 CEST 2026] ✅ Startup fertig — starte manuell: ai-llama-fast
+[Mon Apr 13 11:36:12 CEST 2026] 🚀 Startup Script gestartet
+[Mon Apr 13 11:36:12 CEST 2026] ⏳ Warte auf Docker...
+[Mon Apr 13 11:36:19 CEST 2026] ✅ Docker bereit
+[Mon Apr 13 11:36:19 CEST 2026] ⏳ Warte auf K8s...
+[Mon Apr 13 11:36:28 CEST 2026] ✅ K8s bereit
+[Mon Apr 13 11:36:28 CEST 2026] ✅ Crash-Counter zurückgesetzt
+[Mon Apr 13 11:36:28 CEST 2026] ✅ Loopback Alias gesetzt
+iogpu.wired_limit_mb: 0 -> 52429
+[Mon Apr 13 11:36:28 CEST 2026] ✅ GPU Limit gesetzt
+deployment.apps/ollama-app-ollama scaled
+deployment.apps/ollama-app-open-webui scaled
+[Mon Apr 13 11:36:28 CEST 2026] ✅ K8s Pods gestartet
+[Mon Apr 13 11:36:28 CEST 2026] ✅ Startup fertig — starte manuell: ai-llama-fast
+/opt/homebrew/lib/python3.14/site-packages/langchain_core/_api/deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+2026-04-13 11:36:29,909 [INFO] === Platform Agent (LangGraph) gestartet ===
+2026-04-13 11:36:29,927 [INFO] Node: check_k8s — prüfe Pod-Status
+2026-04-13 11:36:29,985 [INFO]   → 34 Pods, 3 Issues
+2026-04-13 11:36:29,986 [INFO] Node: check_llama — prüfe llama-server auf Port 8080
+2026-04-13 11:36:29,998 [INFO]   → alive=False, tok/s=None, restarts/h=0
+2026-04-13 11:36:30,000 [INFO] Node: incident — llama-server DOWN, entscheide Aktion
+2026-04-13 11:36:30,000 [INFO] Node: do_restart — starte llama-server neu
+2026-04-13 11:36:41,043 [ERROR] Neustart fehlgeschlagen — Fallback 8B
+2026-04-13 11:36:41,045 [INFO] Node: do_fallback — starte 8B Fallback auf Port 8082
+2026-04-13 11:36:43,154 [INFO] Node: check_updates — prüfe Open WebUI GitHub Release
+2026-04-13 11:36:43,369 [INFO] Node: check_unsloth — prüfe neue GGUF-Modelle
+2026-04-13 11:36:43,656 [INFO] Node: check_system — GPU, Disk, Build-SHA, Port-Forward
+2026-04-13 11:36:43,726 [INFO] Node: run_intelligence — deaktiviert, wird übersprungen
+2026-04-13 11:36:43,726 [INFO] Node: update_mempalace — Wissen indexieren
+2026-04-13 11:36:43,762 [INFO] Node: build_report — Markdown-Report generieren
+2026-04-13 11:36:43,763 [INFO] === Agent-Run abgeschlossen ===
+# Platform Agent Report
+_2026-04-13 11:36:43_
+
+## System
+- GPU Limit: ? MB
+- Disk: 12Gi used, 595Gi frei
+- Port-Forward: ✅
+- Build SHA: `8590cbf`
+
+## llama-server
+- Status: ❌ down
+- Restarts/h: 0
+
+## Kubernetes
+- Pods: 34
+- Issues:
+  - argocd/argocd-applicationset-controller-7dc85c9598-m2rgs: Running, restarts=1411
+  - argocd/argocd-redis-65b5bbd8cb-khz5t: Pending, restarts=26
+  - cert-manager/cert-manager-868586f9dc-rlvg4: Running, restarts=510
+
+## Updates
+- Open WebUI latest: `v0.8.12`
+
+## Aktionen (2)
+- k8s: 3 issue(s)
+- Fallback 8B auf Port 8082 gestartet
+
+## Fehler
+- ⚠️ llama-server 70B tot — Fallback aktiv
+2026-04-13 11:36:43,763 [WARNING] Fehler: ['llama-server 70B tot — Fallback aktiv']
+[Mon Apr 13 11:36:43 CEST 2026] ✅ Platform Agent fertig

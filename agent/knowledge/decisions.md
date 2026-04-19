@@ -86,3 +86,17 @@
 - NUR TheTom/llama-cpp-turboquant Commits können kompiliert werden
 - MLX Repos (arozanov, helgklaizar, rachittshah, SharpAI) = anderer Stack, nicht kompilierbar
 - Kompilierung: cd ~/llama-cpp-turboquant && cmake --build build --config Release -j$(sysctl -n hw.logicalcpu)
+
+# Auto-Update
+
+## Commit 4b5808a (2026-04-17)
+- Behebt Fehler in seltenen Szenarien (Edge Cases), die bei einer Validierung der KV-Cache-Quantisierung festgestellt wurden. Dies verbessert die Stabilität und verhindert potenzielle Qualitätsverluste bei langen Kontexten.
+- Empfehlung: Sofort neu kompilieren
+
+## Commit 54a18fc (2026-04-17)
+- Implementiert Serialisierung und verbessert die API-Exports sowie die Testabdeckung für V-Only TurboQuant (VOnlyTQ) und adaptive Quantisierungsstrategien des KV-Caches.
+- Empfehlung: Beim nächsten Update
+
+## Commit 7ce93af (2026-04-17)
+- Korrektur von Speicher-Offsets und State-Settern im KV-Cache; verhindert potenzielle Memory-Corruption oder falsche Token-Generierung bei Nutzung von turbo4.
+- Empfehlung: Sofort neu kompilieren

@@ -55,3 +55,7 @@
 **Ursache:** Agent zählt Startup als Crash
 **Lösung:** Aktion A deaktiviert, Crash-Counter beim Startup zurücksetzen
 **Status:** Gelöst
+
+### 2026-04-13 11:36
+- Aktion: fallback_started
+- llama_status: {'alive': False, 'tok_s': None, 'restart_count_this_hour': 0}

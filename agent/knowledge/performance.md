@@ -38,3 +38,10 @@
 - Wöchentlicher automatischer Benchmark Agent (TODO)
 - tokens/sec Tracking über Zeit (stündlich via Intelligence Agent)
 - RAM-Verlauf Chart im Dashboard (TODO)
+
+## Aktueller Build-Status
+- HEAD: 8590cbf (kompiliert am 2026-04-09)
+- Branch: feature/turboquant-kv-cache
+- Kompilierte Commits: 8590cbf, 40b6f96, 830eb54, acad28d, cffcbf0
+- Build-Befehl: cd ~/llama-cpp-turboquant && cmake --build build --config Release -j$(sysctl -n hw.logicalcpu)
+- Letzte Aktualisierung: 2026-04-18 12:03

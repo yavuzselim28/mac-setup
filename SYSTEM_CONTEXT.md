@@ -145,10 +145,14 @@ kagent dashboard  # → http://localhost:8082
 - Getestet: Multi-Namespace Analyse, CrashLoopBackOff Root Cause ✅
 
 #### release-agent
-- Tools: k8s_get_resources, k8s_get_cluster_configuration, shell
-- System Prompt: K8s→OCP Versionsmatrix + K8s 1.35 Breaking Changes
-- Limitation: shell Tool hat kein curl (läuft in kagent-tools Pod)
-- Lösung: http-fetch-mcp in Entwicklung
+- Tools: k8s_get_resources, k8s_get_cluster_configuration, http_get, fetch_release_notes
+- http-fetch-mcp als zweiter Tool Server verbunden ✅
+- Kann echte Release Notes von GitHub/Red Hat fetchen ✅
+- System Prompt Lessons Learned:
+  - K8s CHANGELOG hat KEINE "Breaking Changes" Sektion → suche nach "Urgent Upgrade Notes", "Deprecations", "API Changes", "Removals"
+  - type Parameter IMMER lowercase (kubernetes/openshift) — qwen schreibt sonst "Kubernetes" → falsche Branch
+  - NIEMALS nach Bestätigung fragen → sofort Tools ausführen
+  - fetch_release_notes hat enum für type → verhindert Case-Fehler nach Fix
 
 ### Tool Server
 
@@ -156,13 +160,28 @@ kagent dashboard  # → http://localhost:8082
 - RemoteMCPServer v1alpha2, URL: http://kagent-tools.kagent:8084/mcp
 - 100+ Tools — NICHT manuell neu anlegen
 
-#### http-fetch-mcp (in Entwicklung)
+#### http-fetch-mcp ✅ (deployed, Stand April 2026)
 - Tools: http_get, fetch_release_notes
 - Code: ~/mac-setup/kagent/http-fetch-mcp/server.py
-- Deploy: docker build + git push → ArgoCD
+- Port: 8085 (nicht 8080!)
+- Transport: StreamableHTTP (/mcp endpoint) — NICHT SSE (/sse)
+- URL: http://http-fetch-mcp.kagent.svc.cluster.local:8085/mcp
+- imagePullPolicy: IfNotPresent (nicht Never!)
+- Status: discovered tools = http_get, fetch_release_notes ✅
+- Deploy: docker build -t http-fetch-mcp:latest . && kubectl rollout restart
+- Wichtig: k8s.yaml RemoteMCPServer nutzt spec.url direkt (NICHT spec.config)
+- MCP Framework: StreamableHTTPSessionManager(app=server, stateless=True)
 
-### MCP Server bauen — Struktur
+### MCP Server bauen — Struktur (StreamableHTTP)
 ```python
+from mcp.server import Server
+from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
+from mcp.types import Tool, TextContent
+from starlette.applications import Starlette
+from starlette.routing import Route, Mount
+from starlette.responses import Response
+import uvicorn, contextlib
+
 server = Server("name")
 
 @server.list_tools()
@@ -171,10 +190,31 @@ async def list_tools():
 
 @server.call_tool()
 async def call_tool(name, arguments):
-    # subprocess.run(), requests.get(), boto3, kubectl, etc.
     return [TextContent(type="text", text=result)]
-# SSE/Starlette/uvicorn Setup → immer gleich, copy/paste
+
+session_manager = StreamableHTTPSessionManager(app=server, stateless=True)
+
+@contextlib.asynccontextmanager
+async def lifespan(app):
+    async with session_manager.run():
+        yield
+
+starlette_app = Starlette(
+    lifespan=lifespan,
+    routes=[
+        Mount("/mcp", app=session_manager.handle_request),
+        Route("/health", endpoint=lambda r: Response("ok")),
+    ]
+)
+
+if __name__ == "__main__":
+    uvicorn.run(starlette_app, host="0.0.0.0", port=8085)
 ```
+Wichtig:
+- Transport: StreamableHTTP (nicht SSE) — kagent nutzt POST/DELETE auf /mcp
+- RemoteMCPServer spec.url direkt (nicht spec.config)
+- stateless=True für einfache Server ohne Session-State
+- imagePullPolicy: IfNotPresent (nicht Never) für lokale Images
 
 ### Phase 0 Ergebnisse ✅ (2026-04-18/19)
 - kagent installiert und stabil
@@ -200,9 +240,14 @@ async def call_tool(name, arguments):
 - API Version → immer v1alpha2
 - Context Overflow → max 5 Tools pro Agent
 - Ollama truncation → OLLAMA_CONTEXT_LENGTH=65536
-- shell Tool kein curl → http-fetch-mcp bauen
+- shell Tool kein curl → http-fetch-mcp verwenden
 - OOM llama.cpp + Docker 20GB → Ollama verwenden
 - Anthropic API ≠ Claude Pro → separates Guthaben
+- MCP Server Port: uvicorn Default kann variieren → im server.py explizit setzen
+- RemoteMCPServer spec.config → funktioniert NICHT → spec.url direkt verwenden
+- imagePullPolicy: Never → ErrImageNeverPull → IfNotPresent verwenden
+- StreamableHTTP DELETE 405 → trailing slash Problem, ignorierbar wenn Tools discovered
+- kagent-tools Pod hat kein curl/wget → nur kubectl im PATH
 
 ## Observability Stack
 
@@ -231,6 +276,11 @@ async def call_tool(name, arguments):
 - com.yavuz.port-forward → Port-Forward localhost:3000
 - com.yavuz.dashboard → localhost:8999
 
+### start.sh (~/mac-setup/scripts/start.sh)
+- Startet: GPU Limit, Ollama serve, K8s Pods, Port-Forward
+- Ollama wird automatisch gestartet falls nicht läuft (OLLAMA_CONTEXT_LENGTH=65536)
+- ollama-start Alias → ~/mac-setup/scripts/start.sh
+
 ## Agent System (LangGraph)
 - File: ~/mac-setup/agent/platform_agent_lg.py
 - Checkpointer: SqliteSaver → checkpoint.db
@@ -249,7 +299,11 @@ async def call_tool(name, arguments):
 - LaunchAgent PATH: absolute Pfade (/opt/homebrew/bin/python3)
 
 ## Offene TODOs
-- [ ] http-fetch-mcp deployen + release-agent erweitern
+- [x] http-fetch-mcp deployen ✅
+- [x] release-agent mit http-fetch-mcp verbinden ✅
+- [x] release-agent System Prompt optimiert (CHANGELOG Sektionen, lowercase type) ✅
+- [x] ollama serve in start.sh integriert ✅
+- [ ] release-agent weiter testen mit echten ROSA Release Notes
 - [ ] kagent Phase 1: LangGraph Runtime + Intent Router + HITL
 - [ ] kagent Phase 2: RBAC Rollen (viewer/operator/deployer/admin)
 - [ ] kagent Phase 3: Prometheus + Grafana MCP
@@ -259,4 +313,4 @@ async def call_tool(name, arguments):
 - [ ] Grafana Tempo (OpenTelemetry)
 - [ ] Langfuse aktivieren (Python 3.14 Support abwarten)
 - [ ] TurboFlash V4 testen wenn M5 Pro Fix kommt
-- [ ] Blueprint + SYSTEM_CONTEXT.md ins Git
+- [ ] SYSTEM_CONTEXT.md regelmäßig ins Git pushen

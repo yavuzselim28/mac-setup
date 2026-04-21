@@ -1,6 +1,51 @@
 {
   "analyses": [
     {
+      "sha": "87102fb",
+      "short_sha": "87102fb",
+      "repo": "TheTom/llama-cpp-turboquant",
+      "message": "Merge pull request #1041 from MemPalace/release/3.3.2",
+      "date": "2026-04-20T18:46:51Z",
+      "category": "Performance / Bugfix",
+      "relevant": true,
+      "auswirkung": "Integration von Stabilit\u00e4ts- und Performance-Optimierungen aus dem MemPalace-Release 3.3.2 in den KV-Cache-Stack. Dies verbessert voraussichtlich die Zuverl\u00e4ssigkeit der `turbo4` Kompression bei gro\u00dfen Kontexten.",
+      "empfehlung": "Sofort neu kompilieren",
+      "risiko": "niedrig",
+      "kompilierbar": true,
+      "compiled": false,
+      "analyzed_at": "2026-04-21T21:45:47.230767"
+    },
+    {
+      "sha": "f4ffeb4",
+      "short_sha": "f4ffeb4",
+      "repo": "TheTom/llama-cpp-turboquant",
+      "message": "Merge pull request #93 from TheTom/fix/test-turbo-quant-inverse-wht",
+      "date": "2026-04-20T14:40:44Z",
+      "category": "Bugfix (Test)",
+      "relevant": false,
+      "auswirkung": "Es wird eine Funktion f\u00fcr die inverse Fast Walsh-Hadamard Transform (`turbo_cpu_fwht_inverse`) hinzugef\u00fcgt, um die Genauigkeit der internen Test-Metriken zu verbessern. Es gibt laut PR-Beschreibung keinen Einfluss auf die Runtime (Inferenz).",
+      "empfehlung": "Kein Handlungsbedarf",
+      "risiko": "niedrig",
+      "kompilierbar": true,
+      "compiled": false,
+      "analyzed_at": "2026-04-21T21:44:31.546918"
+    },
+    {
+      "sha": "8ba9f12",
+      "short_sha": "8ba9f12",
+      "repo": "TheTom/llama-cpp-turboquant",
+      "message": "vulkan: TQ4_1s support for model weights (#69)",
+      "date": "2026-04-20T23:12:38Z",
+      "category": "Feature",
+      "relevant": false,
+      "auswirkung": "Dieser Commit implementiert die Unterst\u00fctzung von TQ4_1S-quantisierten Modellgewichten spezifisch f\u00fcr den **Vulkan-Backend**. Da dein System auf Apple Silicon (M5 Pro) mit dem **Metal-Backend** l\u00e4uft, hat diese \u00c4nderung keinen Einfluss auf deine Performance oder Funktionalit\u00e4t.",
+      "empfehlung": "Kein Handlungsbedarf",
+      "risiko": "niedrig",
+      "kompilierbar": true,
+      "compiled": false,
+      "analyzed_at": "2026-04-21T21:43:31.484605"
+    },
+    {
       "sha": "4b5808a",
       "short_sha": "4b5808a",
       "repo": "TheTom/llama-cpp-turboquant",

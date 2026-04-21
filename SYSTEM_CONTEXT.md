@@ -51,6 +51,48 @@ Dieses Projekt ist mein lokales AI-Setup zum Lernen und Testen.
 - Default für Platform Engineering Tasks: ai-gemma (17GB, 141 tok/s Prefill)
 - Heavy Reasoning: ai-llama-fast (40GB, Speculative Decoding)
 - Für kagent: Ollama verwenden (nicht llama.cpp) — Tool Use funktioniert nur mit Ollama
+- Für HolmesGPT: Gemma 4 via llama.cpp (Port 8080) ✅
+
+## HolmesGPT — K8s Diagnose Tool (Stand April 2026)
+
+### Was ist HolmesGPT
+CLI-Tool für Kubernetes Root Cause Analysis. Nur Diagnose, keine Aktionen.
+Installiert via: brew install holmesgpt (v0.24.4)
+
+### Arbeitsteilung
+| Tool | Use Case |
+|------|----------|
+| HolmesGPT | "Warum crasht Pod X?" / Root Cause Analysis |
+| kagent k8s-agent | "Lege Namespace Y an" / Aktionen |
+| kagent release-agent | "Was ändert sich in Version Z?" |
+
+### Konfiguration
+- Config: ~/.holmes/config.yaml
+```yaml
+model: "openai/gemma"
+api_key: "dummy"
+api_base: "http://localhost:8080/v1"
+max_steps: 10
+```
+- Wichtig: llama-server muss laufen (ai-gemma alias) bevor Holmes gestartet wird
+- Wichtig: Holmes immer aus ~ starten (nicht aus llama-cpp-turboquant/) — sonst liest kubernetes_tabular_query lokale Dateien
+
+### Aliases (.zshrc)
+```bash
+alias h="cd ~ && holmes ask --fast-mode"
+alias holmes="cd ~ && holmes ask --fast-mode"
+```
+
+### Getestet ✅ (2026-04-21)
+- "welches ist der pod mit den meisten restarts?" → korrekte Antwort, 2-5 Tool Calls
+- Gemma denkt laut mit (Reasoning sichtbar im Output)
+
+### Bekannte Probleme
+- Ollama + Holmes → Infinite Loop / raw JSON Output — NICHT verwenden
+- Holmes mit Ollama qwen2.5:14b: "could not find tool respond" Bug in LiteLLM
+- Holmes mit Ollama qwen2.5:32b: OOM durch RAM-Druck (32b + 14b gleichzeitig geladen)
+- kubernetes_tabular_query liest lokale Dateien wenn Holmes aus falschem Verzeichnis gestartet → cd ~ fix
+- HolmesGPT ist read-only — kann keine K8s Ressourcen erstellen/ändern
 
 ### TurboQuant Konfiguration
 - Cache: --cache-type-k q8_0 --cache-type-v turbo4 (asymmetrisch)
@@ -303,6 +345,7 @@ Wichtig:
 - [x] release-agent mit http-fetch-mcp verbinden ✅
 - [x] release-agent System Prompt optimiert (CHANGELOG Sektionen, lowercase type) ✅
 - [x] ollama serve in start.sh integriert ✅
+- [x] HolmesGPT installiert und mit Gemma 4 via llama.cpp konfiguriert ✅
 - [ ] release-agent weiter testen mit echten ROSA Release Notes
 - [ ] kagent Phase 1: LangGraph Runtime + Intent Router + HITL
 - [ ] kagent Phase 2: RBAC Rollen (viewer/operator/deployer/admin)

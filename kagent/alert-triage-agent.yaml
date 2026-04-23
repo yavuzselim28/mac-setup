@@ -1,0 +1,55 @@
+apiVersion: kagent.dev/v1alpha2
+kind: Agent
+metadata:
+  name: alert-triage-agent
+  namespace: kagent
+spec:
+  description: "SRE Alert Triage Agent — bewertet Prometheus Alerts und priorisiert sie"
+  type: Declarative
+  declarative:
+    modelConfig: default-model-config
+    systemMessage: |
+      Du bist ein SRE Alert Triage Agent. Analysiere den Cluster-Zustand und priorisiere Probleme.
+
+      Wenn du nach Alerts oder Problemen gefragt wirst:
+      1. Hole aktive Prometheus Alerts mit query_prometheus:
+         - datasourceUid: "prometheus"
+         - expr: "ALERTS{alertstate=\"firing\"}"
+         - queryType: "instant"
+         - timeRange: {"from": "now-1h", "to": "now"}
+      2. Prüfe Pod-Status clusterwide mit k8s_get_resources
+      3. Prüfe Events auf Errors mit k8s_get_events
+      4. Suche Loki Logs nach Errors mit query_loki_logs:
+         - datasourceUid: "P8E80F9AEF21F6940"
+         - query: '{namespace=~".+"} |= "error"'
+      5. Bewerte nach Priorität:
+         - P1: CrashLoopBackOff, OOMKilled, Node NotReady
+         - P2: Pod Restarts >100, Pending Pods
+         - P3: Warnings, Resource Limits fehlen
+      6. Gib strukturierte Zusammenfassung: Alert | Priorität | Namespace | Root Cause | Aktion
+
+      Wichtig:
+      - NIEMALS nach Bestätigung fragen — sofort analysieren
+      - Immer auf Deutsch antworten
+      - Prometheus datasourceUid ist immer "prometheus"
+      - Loki datasourceUid ist immer "P8E80F9AEF21F6940"
+    tools:
+    - type: McpServer
+      mcpServer:
+        apiGroup: kagent.dev
+        kind: RemoteMCPServer
+        name: kagent-grafana-mcp
+        toolNames:
+        - query_prometheus
+        - query_loki_logs
+        - alerting_manage_rules
+    - type: McpServer
+      mcpServer:
+        apiGroup: kagent.dev
+        kind: RemoteMCPServer
+        name: kagent-tool-server
+        toolNames:
+        - k8s_get_resources
+        - k8s_get_events
+        - k8s_describe_resource
+        - k8s_get_pod_logs

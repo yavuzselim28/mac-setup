@@ -59,3 +59,11 @@
 ### 2026-04-13 11:36
 - Aktion: fallback_started
 - llama_status: {'alive': False, 'tok_s': None, 'restart_count_this_hour': 0}
+
+### 2026-04-22 23:12
+- Aktion: fallback_started
+- llama_status: {'alive': False, 'tok_s': None, 'restart_count_this_hour': 0}
+
+### 2026-04-23 00:06
+- Aktion: fallback_started
+- llama_status: {'alive': False, 'tok_s': None, 'restart_count_this_hour': 1}

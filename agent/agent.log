@@ -5554,3 +5554,829 @@ RISIKO: niedrig
 [2026-04-21 22:00:02]   Cached Tokens: 0
 [2026-04-21 22:00:02]   Crashes letzte Stunde: 1
 [2026-04-21 22:00:02] 🤔 LLM analysiert Incident...
+[2026-04-21 23:00:02] ============================================================
+[2026-04-21 23:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-21 23:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-21 23:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-21 23:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-21 23:00:02]   ✅ Keine operationalen Updates.
+[2026-04-21 23:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-21 23:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-21 23:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-21 23:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-21 23:00:02] 📊 Sammle System-Kontext...
+[2026-04-21 23:00:03]   RAM frei: 0.8 GB
+[2026-04-21 23:00:03]   Aktive Slots: 0/0
+[2026-04-21 23:00:03]   Cached Tokens: 0
+[2026-04-21 23:00:03]   Crashes letzte Stunde: 1
+[2026-04-21 23:00:03] 🤔 LLM analysiert Incident...
+[2026-04-21 23:00:03]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-21 23:00:03]   ✅ Fallback-LLM bereits aktiv
+[2026-04-21 23:00:03]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-22 00:00:02] ============================================================
+[2026-04-22 00:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-22 00:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-22 00:00:03]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-22 00:00:03]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-22 00:00:03]   ✅ Keine operationalen Updates.
+[2026-04-22 00:00:03] 🏥 [2/6] K8s Health Check...
+[2026-04-22 00:00:03]   ⚠️ K8s nicht erreichbar
+[2026-04-22 00:00:03] 🧠 [3/6] llama-server Watchdog...
+[2026-04-22 00:00:03]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-22 00:00:03] 📊 Sammle System-Kontext...
+[2026-04-22 00:00:03]   RAM frei: 9.7 GB
+[2026-04-22 00:00:03]   Aktive Slots: 0/0
+[2026-04-22 00:00:03]   Cached Tokens: 0
+[2026-04-22 00:00:03]   Crashes letzte Stunde: 1
+[2026-04-22 00:00:03] 🤔 LLM analysiert Incident...
+[2026-04-22 00:00:03]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-22 00:00:03]   ✅ Fallback-LLM bereits aktiv
+[2026-04-22 00:00:03]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-22 01:00:01] ============================================================
+[2026-04-22 01:00:01] 🤖 Platform Agent v3 gestartet
+[2026-04-22 01:00:01] 🔍 [1/6] GitHub Update-Check...
+[2026-04-22 01:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-22 01:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-22 01:00:02]   ✅ Keine operationalen Updates.
+[2026-04-22 01:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-22 01:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-22 01:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-22 01:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-22 01:00:02] 📊 Sammle System-Kontext...
+[2026-04-22 01:00:02]   RAM frei: 0.2 GB
+[2026-04-22 01:00:02]   Aktive Slots: 0/0
+[2026-04-22 01:00:02]   Cached Tokens: 0
+[2026-04-22 01:00:02]   Crashes letzte Stunde: 1
+[2026-04-22 01:00:02] 🤔 LLM analysiert Incident...
+[2026-04-22 01:00:02]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-22 01:00:02]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-22 01:00:02]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-22 01:00:22]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-22 01:00:28]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da der freie RAM unter 8 GB liegt und der RAM belegt durch Kernel/GPU bereits 3,3 GB beträgt, was darauf hindeutet, dass ein RAM-Problem vorliegt.
+
+AKTION: C
+
+BEGRÜNDUNG: Die beste Aktion ist es, den llama-server neu zu starten, ohne Änderungen, da dies das Problem der Speicherlecks behebt und eine kurze Unterbrechung verursacht. Dies ist eine sichere Aktion, da aktive Nutzer nicht vorhanden sind und die Crashes in der letzten Stunde nicht über 3x liegen.
+
+RISIKO: mittel
+
+Begründung: Die Aktion hat ein mittleres Risiko, da sie eine kurze Unterbrechung verursacht, aber die Wahrscheinlichkeit eines Fehlers bei der Wiederherstellung des llama-servers ist relativ gering.
+[2026-04-22 01:00:28] 🛡️ Sicherheitscheck...
+[2026-04-22 01:00:28]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-22 01:00:28] 🚀 Führe Aktion C aus...
+[2026-04-22 01:00:30]   ✅ llama-server (70B) neu gestartet
+[2026-04-22 01:00:30] 🔍 Prüfe ob Problem gelöst...
+[2026-04-22 01:00:35]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-22 01:00:35] 📋 Incident Report:
+[2026-04-22 01:00:35]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-22 01:00:35]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da der freie RAM unter 8 GB liegt und der RAM belegt durch Kernel/GPU bereits 3,3 GB beträgt, was darauf hindeutet, dass ein RAM-Problem vorliegt.
+[2026-04-22 01:00:35]   Aktion:    llama-server neu gestartet (PID 91415)
+[2026-04-22 01:00:35]   Eskaliert: False
+[2026-04-22 01:00:35]   Gelöst:    False
+[2026-04-22 01:00:35]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-22 01:00:35] ────────────────────────────────────────────────────────────
+[2026-04-22 01:00:35]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-22 01:00:35] 💻 [4/6] System Health...
+[2026-04-22 01:00:35]   💾 Frei: 519 GB | Modelle: 106 GB
+[2026-04-22 01:00:35]   ✅ Speicher OK
+[2026-04-22 01:00:35]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-22 01:00:35]   ✅ Port-Forward neu gestartet
+[2026-04-22 01:00:36]   ✅ Build-Stand: 8590cbf (bereits bekannt)
+[2026-04-22 01:00:36]   ⚠️ MemPalace Build-Update: [Errno 2] No such file or directory: 'mempalace'
+[2026-04-22 01:00:36]   ✅ intelligence.json compiled-Flags aktualisiert
+[2026-04-22 01:00:36] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-22 01:00:36]   ✅ llama33-70b: keine Änderung
+[2026-04-22 01:00:36]   ✅ gemma4-31b: keine Änderung
+[2026-04-22 01:00:36] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-22 01:00:36]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-22 01:00:37]   ✅ TurboQuant: kein neuer Commit (4d24ad8)
+[2026-04-22 01:00:37] 🧠 [7/7] Intelligence Agent...
+[2026-04-22 01:00:37] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-22 01:00:38]   🆕 6 neue Commits gefunden
+[2026-04-22 01:00:38]   🤔 Analysiere: [cf0477b] Merge pull request #1052 from MemPalace/merge/main...
+[2026-04-22 01:00:40]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 01:00:40]   🤔 Analysiere: [936f186] release: merge main into release/3.3.2 — keep 3.3....
+[2026-04-22 01:00:41]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 01:00:41]   🤔 Analysiere: [1724a48] fix(build): safely append Homebrew paths to avoid ...
+[2026-04-22 01:00:43]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 01:00:43]   🤔 Analysiere: [dc877e9] fix(build): ensure Homebrew tools are in PATH to f...
+[2026-04-22 01:00:45]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 01:00:45]   🤔 Analysiere: [edef2db] chore: SwiftLM version bump post GLM-5.1 revert (s...
+[2026-04-22 01:00:47]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 01:00:47]   🤔 Analysiere: [4b5808a] Fix edge cases from second audit...
+[2026-04-22 01:00:49]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 01:00:49] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-22 01:00:49]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-22 01:00:49]   ℹ️ Wochenbericht: letzter vor 3 Tagen — noch nicht fällig
+[2026-04-22 01:00:49] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-22 01:00:49]   ✅ Keine neuen Erkenntnisse
+[2026-04-22 01:00:49] ────────────────────────────────────────────────────────────
+[2026-04-22 01:00:49] 📋 Zusammenfassung:
+[2026-04-22 01:00:49]   📊 turboquant: vtqp-v0.1.1 verfügbar — manuelle Prüfung empfohlen
+[2026-04-22 01:00:49]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-22 01:00:49]   ⏳ llama-server wird wiederhergestellt
+[2026-04-22 01:00:49]   Aktionen durchgeführt:
+[2026-04-22 01:00:49]     → Port-Forward Port 80 neu gestartet
+[2026-04-22 01:00:49] ────────────────────────────────────────────────────────────
+[2026-04-22 01:00:49] 🤖 Platform Agent v3 beendet
+[2026-04-22 02:00:01] ============================================================
+[2026-04-22 02:00:01] 🤖 Platform Agent v3 gestartet
+[2026-04-22 02:00:01] 🔍 [1/6] GitHub Update-Check...
+[2026-04-22 02:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-22 02:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-22 02:00:02]   ✅ Keine operationalen Updates.
+[2026-04-22 02:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-22 02:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-22 02:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-22 02:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-22 02:00:02] 📊 Sammle System-Kontext...
+[2026-04-22 02:00:02]   RAM frei: 0.1 GB
+[2026-04-22 02:00:02]   Aktive Slots: 0/0
+[2026-04-22 02:00:02]   Cached Tokens: 0
+[2026-04-22 02:00:02]   Crashes letzte Stunde: 1
+[2026-04-22 02:00:02] 🤔 LLM analysiert Incident...
+[2026-04-22 02:00:02]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-22 02:00:02]   ✅ Fallback-LLM bereits aktiv
+[2026-04-22 02:00:02]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-22 02:00:10]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da die verfügbare RAM unter 8 GB liegt, was darauf hindeutet, dass ein RAM-Problem vorliegt.
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Die Aktion C ist die beste Wahl, da sie das RAM-Leck behebt und die Plattform wiederherstellt, ohne dass die Kontext-Reduzierung oder die Unterbrechung der WebUI erforderlich ist.
+RISIKO: mittel
+
+Begründung:
+- Die aktiven Nutzer-Slots sind 0, also ist die Kontext-Reduzierung nicht erforderlich.
+- Die Crashes in der letzten Stunde sind 1, was unter der Schwellenwert von 3x liegt, also kein sofortiges Eskalieren erforderlich.
+- Der freie RAM liegt unter 8 GB, was darauf hindeutet, dass ein RAM-Problem vorliegt.
+- Die Ursache ist nicht unklar, da die RAM-Verfügbarkeit eindeutig ist.
+[2026-04-22 02:00:10] 🛡️ Sicherheitscheck...
+[2026-04-22 02:00:10]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-22 02:00:10] 🚀 Führe Aktion C aus...
+[2026-04-22 02:00:12]   ✅ llama-server (70B) neu gestartet
+[2026-04-22 02:00:12] 🔍 Prüfe ob Problem gelöst...
+[2026-04-22 02:00:17]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-22 02:00:17] 📋 Incident Report:
+[2026-04-22 02:00:17]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-22 02:00:17]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da die verfügbare RAM unter 8 GB liegt, was darauf hindeutet, dass ein RAM-Problem vorliegt.
+[2026-04-22 02:00:17]   Aktion:    llama-server neu gestartet (PID 93159)
+[2026-04-22 02:00:17]   Eskaliert: False
+[2026-04-22 02:00:17]   Gelöst:    False
+[2026-04-22 02:00:17]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-22 02:00:17] ────────────────────────────────────────────────────────────
+[2026-04-22 02:00:17]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-22 02:00:17] 💻 [4/6] System Health...
+[2026-04-22 02:00:17]   💾 Frei: 460 GB | Modelle: 106 GB
+[2026-04-22 02:00:17]   ✅ Speicher OK
+[2026-04-22 02:00:17]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-22 02:00:17]   ✅ Port-Forward neu gestartet
+[2026-04-22 02:00:17]   ✅ Build-Stand: 8590cbf (bereits bekannt)
+[2026-04-22 02:00:17]   ⚠️ MemPalace Build-Update: [Errno 2] No such file or directory: 'mempalace'
+[2026-04-22 02:00:17]   ✅ intelligence.json compiled-Flags aktualisiert
+[2026-04-22 02:00:17] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-22 02:00:17]   ✅ llama33-70b: keine Änderung
+[2026-04-22 02:00:17]   ✅ gemma4-31b: keine Änderung
+[2026-04-22 02:00:17] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-22 02:00:17]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-22 02:00:18]   ✅ TurboQuant: kein neuer Commit (4d24ad8)
+[2026-04-22 02:00:18] 🧠 [7/7] Intelligence Agent...
+[2026-04-22 02:00:18] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-22 02:00:19]   🆕 6 neue Commits gefunden
+[2026-04-22 02:00:19]   🤔 Analysiere: [cf0477b] Merge pull request #1052 from MemPalace/merge/main...
+[2026-04-22 02:00:21]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 02:00:21]   🤔 Analysiere: [936f186] release: merge main into release/3.3.2 — keep 3.3....
+[2026-04-22 02:00:22]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 02:00:22]   🤔 Analysiere: [116ee91] Merge pull request #70 from SharpAI/fix/gemma4-too...
+[2026-04-22 02:00:24]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 02:00:24]   🤔 Analysiere: [b09190a] Update mlx-swift-lm submodule reference to include...
+[2026-04-22 02:00:26]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 02:00:26]   🤔 Analysiere: [8faef54] Fix Gemma-4 Tool Regression (Issue #69)...
+[2026-04-22 02:00:28]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 02:00:28]   🤔 Analysiere: [4b5808a] Fix edge cases from second audit...
+[2026-04-22 02:00:30]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 02:00:30] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-22 02:00:30]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-22 02:00:30]   ℹ️ Wochenbericht: letzter vor 3 Tagen — noch nicht fällig
+[2026-04-22 02:00:30] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-22 02:00:30]   ✅ Keine neuen Erkenntnisse
+[2026-04-22 02:00:30] ────────────────────────────────────────────────────────────
+[2026-04-22 02:00:30] 📋 Zusammenfassung:
+[2026-04-22 02:00:30]   📊 turboquant: vtqp-v0.1.1 verfügbar — manuelle Prüfung empfohlen
+[2026-04-22 02:00:30]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-22 02:00:30]   ⏳ llama-server wird wiederhergestellt
+[2026-04-22 02:00:30]   Aktionen durchgeführt:
+[2026-04-22 02:00:30]     → Port-Forward Port 80 neu gestartet
+[2026-04-22 02:00:30] ────────────────────────────────────────────────────────────
+[2026-04-22 02:00:30] 🤖 Platform Agent v3 beendet
+[2026-04-22 22:00:02] ============================================================
+[2026-04-22 22:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-22 22:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-22 22:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-22 22:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-22 22:00:02]   ✅ Keine operationalen Updates.
+[2026-04-22 22:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-22 22:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-22 22:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-22 22:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-22 22:00:02] 📊 Sammle System-Kontext...
+[2026-04-22 22:00:02]   RAM frei: 0.6 GB
+[2026-04-22 22:00:02]   Aktive Slots: 0/1
+[2026-04-22 22:00:02]   Cached Tokens: 0
+[2026-04-22 22:00:02]   Crashes letzte Stunde: 1
+[2026-04-22 22:00:02] 🤔 LLM analysiert Incident...
+[2026-04-22 23:00:01] ============================================================
+[2026-04-22 23:00:01] 🤖 Platform Agent v3 gestartet
+[2026-04-22 23:00:01] 🔍 [1/6] GitHub Update-Check...
+[2026-04-22 23:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-22 23:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-22 23:00:02]   ✅ Keine operationalen Updates.
+[2026-04-22 23:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-22 23:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-22 23:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-22 23:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-22 23:00:02] 📊 Sammle System-Kontext...
+[2026-04-22 23:00:02]   RAM frei: 1.2 GB
+[2026-04-22 23:00:02]   Aktive Slots: 0/0
+[2026-04-22 23:00:02]   Cached Tokens: 0
+[2026-04-22 23:00:02]   Crashes letzte Stunde: 1
+[2026-04-22 23:00:02] 🤔 LLM analysiert Incident...
+[2026-04-22 23:00:02]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-22 23:00:02]   ✅ Fallback-LLM bereits aktiv
+[2026-04-22 23:00:02]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-22 23:00:08]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da die K8s Pods nicht erreichbar sind und der RAM belegt ist, was möglicherweise auf ein Speicherproblem zurückzuführen ist.
+
+AKTION: C) llama-server neu starten ohne Änderungen
+
+BEGRÜNDUNG: Da aktive Nutzer nicht vorhanden sind und die Crashes nicht über 3x in der letzten Stunde liegen, ist eine Neustart des llama-servers ohne Änderungen eine sichere Option, um das Speicherleck zu beheben und die Plattform wiederherzustellen.
+
+RISIKO: mittel
+
+Begründung: Ein Neustart des llama-servers ohne Änderungen birgt ein mittleres Risiko, da er möglicherweise nicht erfolgreich sein könnte und weitere Probleme verursachen könnte. Es ist jedoch die sicherste Option unter den gegebenen Umständen.
+[2026-04-22 23:00:08] 🛡️ Sicherheitscheck...
+[2026-04-22 23:00:08]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-22 23:00:08] 🚀 Führe Aktion C aus...
+[2026-04-22 23:00:10]   ✅ llama-server (70B) neu gestartet
+[2026-04-22 23:00:10] 🔍 Prüfe ob Problem gelöst...
+[2026-04-22 23:00:15]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-22 23:00:15] 📋 Incident Report:
+[2026-04-22 23:00:15]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-22 23:00:15]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da die K8s Pods nicht erreichbar sind und der RAM belegt ist, was möglicherweise auf ein Speicherproblem zurückzuführen ist.
+[2026-04-22 23:00:15]   Aktion:    llama-server neu gestartet (PID 98092)
+[2026-04-22 23:00:15]   Eskaliert: False
+[2026-04-22 23:00:15]   Gelöst:    False
+[2026-04-22 23:00:15]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-22 23:00:15] ────────────────────────────────────────────────────────────
+[2026-04-22 23:00:15]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-22 23:00:15] 💻 [4/6] System Health...
+[2026-04-22 23:00:15]   💾 Frei: 457 GB | Modelle: 106 GB
+[2026-04-22 23:00:15]   ✅ Speicher OK
+[2026-04-22 23:00:15]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-22 23:00:15]   ✅ Port-Forward neu gestartet
+[2026-04-22 23:00:15]   ✅ Build-Stand: 8590cbf (bereits bekannt)
+[2026-04-22 23:00:15]   ⚠️ MemPalace Build-Update: [Errno 2] No such file or directory: 'mempalace'
+[2026-04-22 23:00:15]   ✅ intelligence.json compiled-Flags aktualisiert
+[2026-04-22 23:00:15] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-22 23:00:15]   ✅ llama33-70b: keine Änderung
+[2026-04-22 23:00:16]   ✅ gemma4-31b: keine Änderung
+[2026-04-22 23:00:16] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-22 23:00:16]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-22 23:00:16]   🔬 TurboQuant neuer Commit: [9e3fb40] fix(hip): add missing f16-turbo fattn-vec instances to HIP C
+[2026-04-22 23:00:16] 🧠 [7/7] Intelligence Agent...
+[2026-04-22 23:00:16] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-22 23:00:18]   🆕 10 neue Commits gefunden
+[2026-04-22 23:00:18]   🤔 Analysiere: [b3401ea] Cherry-pick upstream CMake glob for model sources...
+[2026-04-22 23:00:19]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:19]   🤔 Analysiere: [dad4e2e] Cherry-pick upstream speculative decoding for hybr...
+[2026-04-22 23:00:20]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:20]   🤔 Analysiere: [87102fb] Merge pull request #1041 from MemPalace/release/3....
+[2026-04-22 23:00:22]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:22]   🤔 Analysiere: [cf0477b] Merge pull request #1052 from MemPalace/merge/main...
+[2026-04-22 23:00:24]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:24]   🤔 Analysiere: [936f186] release: merge main into release/3.3.2 — keep 3.3....
+[2026-04-22 23:00:25]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:25]   🤔 Analysiere: [e4a2036] Merge pull request #73 from SharpAI/fix/gemma4-qua...
+[2026-04-22 23:00:28]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:28]   🤔 Analysiere: [ed5f8f6] docs: remove GLM 5.1 from supported models (still ...
+[2026-04-22 23:00:29]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:29]   🤔 Analysiere: [ccccdeb] docs: expand Supported Models section to full arch...
+[2026-04-22 23:00:31]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:31]   🤔 Analysiere: [54a18fc] Serialization, __init__ exports, test coverage for...
+[2026-04-22 23:00:32]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:32]   🤔 Analysiere: [4b5808a] Fix edge cases from second audit...
+[2026-04-22 23:00:34]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-22 23:00:34] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-22 23:00:34]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-22 23:00:34]   ℹ️ Wochenbericht: letzter vor 4 Tagen — noch nicht fällig
+[2026-04-22 23:00:34] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-22 23:00:34]   ✅ Keine neuen Erkenntnisse
+[2026-04-22 23:00:34] ────────────────────────────────────────────────────────────
+[2026-04-22 23:00:34] 📋 Zusammenfassung:
+[2026-04-22 23:00:34]   📊 turboquant: vtqp-v0.1.1 verfügbar — manuelle Prüfung empfohlen
+[2026-04-22 23:00:34]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-22 23:00:34]   ⏳ llama-server wird wiederhergestellt
+[2026-04-22 23:00:34]   🔬 TurboQuant neuer Commit: [9e3fb40] fix(hip): add missing f16-turbo fattn-vec instances to HIP C
+[2026-04-22 23:00:34]   Aktionen durchgeführt:
+[2026-04-22 23:00:34]     → Port-Forward Port 80 neu gestartet
+[2026-04-22 23:00:34] ────────────────────────────────────────────────────────────
+[2026-04-22 23:00:34] 🤖 Platform Agent v3 beendet
+[2026-04-23 00:00:02] ============================================================
+[2026-04-23 00:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-23 00:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-23 00:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-23 00:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-23 00:00:02]   ✅ Keine operationalen Updates.
+[2026-04-23 00:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-23 00:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-23 00:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-23 00:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-23 00:00:02] 📊 Sammle System-Kontext...
+[2026-04-23 00:00:02]   RAM frei: 26.3 GB
+[2026-04-23 00:00:02]   Aktive Slots: 0/0
+[2026-04-23 00:00:02]   Cached Tokens: 0
+[2026-04-23 00:00:02]   Crashes letzte Stunde: 0
+[2026-04-23 00:00:02] 🤔 LLM analysiert Incident...
+[2026-04-23 00:00:02]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-23 00:00:02]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-23 00:00:02]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-23 00:00:22]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-23 00:00:29]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da die K8s Pods nicht erreichbar sind und der RAM-Verbrauch durch Kernel/GPU zu hoch ist.
+AKTION: C) llama-server neu starten ohne Änderungen
+BEGRÜNDUNG: Durch das Neustarten des llama-servers ohne Änderungen wird das Problem möglicherweise gelöst, da es sich um ein Speicherleck handeln könnte, das durch das Neustarten behoben werden kann. Außerdem wird die WebUI nicht unterbrochen, da keine aktiven Nutzer vorhanden sind.
+RISIKO: mittel
+
+Begründung:
+- Die aktiven Nutzer-Slots sind 0, daher ist es sicher, den llama-server neu zu starten.
+- Die Crashes in der letzten Stunde sind 0, daher ist es nicht notwendig, das Problem zu eskalieren.
+- Der freie RAM ist 26.3 GB, was höher als 8 GB ist, daher ist es unwahrscheinlich, dass das Problem durch RAM-Engpässe verursacht wird.
+- Die Ursache ist jedoch noch nicht klar, daher ist es wichtig, das Problem zu beobachten und möglicherweise weitere Schritte einzuleiten.
+[2026-04-23 00:00:29] 🛡️ Sicherheitscheck...
+[2026-04-23 00:00:29]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-23 00:00:29] 🚀 Führe Aktion C aus...
+[2026-04-23 00:00:31]   ✅ llama-server (70B) neu gestartet
+[2026-04-23 00:00:31] 🔍 Prüfe ob Problem gelöst...
+[2026-04-23 00:00:36]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-23 00:00:36] 📋 Incident Report:
+[2026-04-23 00:00:36]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-23 00:00:36]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da die K8s Pods nicht erreichbar sind und der RAM-Verbrauch durch Kernel/GPU zu hoch ist.
+[2026-04-23 00:00:36]   Aktion:    llama-server neu gestartet (PID 9965)
+[2026-04-23 00:00:36]   Eskaliert: False
+[2026-04-23 00:00:36]   Gelöst:    False
+[2026-04-23 00:00:36]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-23 00:00:36] ────────────────────────────────────────────────────────────
+[2026-04-23 00:00:36]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-23 00:00:36] 💻 [4/6] System Health...
+[2026-04-23 00:00:36]   💾 Frei: 466 GB | Modelle: 106 GB
+[2026-04-23 00:00:36]   ✅ Speicher OK
+[2026-04-23 00:00:36]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-23 00:00:36]   ✅ Port-Forward neu gestartet
+[2026-04-23 00:00:37]   ✅ Build-Stand: 8590cbf (bereits bekannt)
+[2026-04-23 00:00:37]   ⚠️ MemPalace Build-Update: [Errno 2] No such file or directory: 'mempalace'
+[2026-04-23 00:00:37]   ✅ intelligence.json compiled-Flags aktualisiert
+[2026-04-23 00:00:37] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-23 00:00:37]   ✅ llama33-70b: keine Änderung
+[2026-04-23 00:00:38]   ✅ gemma4-31b: keine Änderung
+[2026-04-23 00:00:38] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-23 00:00:38]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-23 00:00:38]   ✅ TurboQuant: kein neuer Commit (9e3fb40)
+[2026-04-23 00:00:38] 🧠 [7/7] Intelligence Agent...
+[2026-04-23 00:00:38] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-23 00:00:40]   🆕 10 neue Commits gefunden
+[2026-04-23 00:00:40]   🤔 Analysiere: [b3401ea] Cherry-pick upstream CMake glob for model sources...
+[2026-04-23 00:00:41]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 00:00:41]   🤔 Analysiere: [dad4e2e] Cherry-pick upstream speculative decoding for hybr...
+[2026-04-23 00:00:42]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 00:00:42]   🤔 Analysiere: [87102fb] Merge pull request #1041 from MemPalace/release/3....
+[2026-04-23 00:00:44]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 00:00:44]   🤔 Analysiere: [cf0477b] Merge pull request #1052 from MemPalace/merge/main...
+[2026-04-23 00:00:46]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 00:00:46]   🤔 Analysiere: [936f186] release: merge main into release/3.3.2 — keep 3.3....
+[2026-04-23 00:00:47]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 00:00:47]   🤔 Analysiere: [e4a2036] Merge pull request #73 from SharpAI/fix/gemma4-qua...
+[2026-04-23 00:00:50]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 00:00:50]   🤔 Analysiere: [ed5f8f6] docs: remove GLM 5.1 from supported models (still ...
+[2026-04-23 00:00:52]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 00:00:52]   🤔 Analysiere: [ccccdeb] docs: expand Supported Models section to full arch...
+[2026-04-23 00:00:53]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 00:00:53]   🤔 Analysiere: [54a18fc] Serialization, __init__ exports, test coverage for...
+[2026-04-23 00:00:54]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 00:00:54]   🤔 Analysiere: [4b5808a] Fix edge cases from second audit...
+[2026-04-23 00:00:56]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 00:00:56] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-23 00:00:56]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-23 00:00:56]   ℹ️ Wochenbericht: letzter vor 4 Tagen — noch nicht fällig
+[2026-04-23 00:00:56] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-23 00:00:56]   ✅ Keine neuen Erkenntnisse
+[2026-04-23 00:00:56] ────────────────────────────────────────────────────────────
+[2026-04-23 00:00:56] 📋 Zusammenfassung:
+[2026-04-23 00:00:56]   📊 turboquant: vtqp-v0.1.1 verfügbar — manuelle Prüfung empfohlen
+[2026-04-23 00:00:56]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-23 00:00:56]   ⏳ llama-server wird wiederhergestellt
+[2026-04-23 00:00:56]   Aktionen durchgeführt:
+[2026-04-23 00:00:56]     → Port-Forward Port 80 neu gestartet
+[2026-04-23 00:00:56] ────────────────────────────────────────────────────────────
+[2026-04-23 00:00:56] 🤖 Platform Agent v3 beendet
+[2026-04-23 01:00:02] ============================================================
+[2026-04-23 01:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-23 01:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-23 01:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-23 01:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-23 01:00:02]   ✅ Keine operationalen Updates.
+[2026-04-23 01:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-23 01:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-23 01:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-23 01:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-23 01:00:02] 📊 Sammle System-Kontext...
+[2026-04-23 01:00:02]   RAM frei: 14.5 GB
+[2026-04-23 01:00:02]   Aktive Slots: 0/0
+[2026-04-23 01:00:02]   Cached Tokens: 0
+[2026-04-23 01:00:02]   Crashes letzte Stunde: 0
+[2026-04-23 01:00:02] 🤔 LLM analysiert Incident...
+[2026-04-23 01:00:02]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-23 01:00:02]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-23 01:00:02]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-23 01:00:22]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-23 01:00:28]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da die K8s Pods nicht erreichbar sind und der RAM-Verbrauch durch Kernel/GPU zu hoch ist.
+
+AKTION: C) llama-server neu starten ohne Änderungen
+
+BEGRÜNDUNG: Da aktive Nutzer nicht vorhanden sind und der RAM-Verbrauch durch Kernel/GPU zu hoch ist, ist eine Neustart des llama-servers ohne Änderungen die beste Vorgehensweise, um das Problem zu beheben. Dies behebt mögliche Speicherlecks und bringt die Plattform wieder online.
+
+RISIKO: mittel
+
+Begründung: Ein Neustart des llama-servers ohne Änderungen birgt ein mittleres Risiko, da er möglicherweise nicht erfolgreich sein könnte und weitere Schritte erforderlich wären. Es ist jedoch die beste Vorgehensweise, um das Problem zu beheben, da es die Plattform wieder online bringt und mögliche Speicherlecks behebt.
+[2026-04-23 01:00:28] 🛡️ Sicherheitscheck...
+[2026-04-23 01:00:28]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-23 01:00:28] 🚀 Führe Aktion C aus...
+[2026-04-23 01:00:30]   ✅ llama-server (70B) neu gestartet
+[2026-04-23 01:00:30] 🔍 Prüfe ob Problem gelöst...
+[2026-04-23 01:00:35]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-23 01:00:35] 📋 Incident Report:
+[2026-04-23 01:00:35]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-23 01:00:35]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da die K8s Pods nicht erreichbar sind und der RAM-Verbrauch durch Kernel/GPU zu hoch ist.
+[2026-04-23 01:00:35]   Aktion:    llama-server neu gestartet (PID 4011)
+[2026-04-23 01:00:35]   Eskaliert: False
+[2026-04-23 01:00:35]   Gelöst:    False
+[2026-04-23 01:00:35]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-23 01:00:35] ────────────────────────────────────────────────────────────
+[2026-04-23 01:00:35]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-23 01:00:35] 💻 [4/6] System Health...
+[2026-04-23 01:00:35]   💾 Frei: 467 GB | Modelle: 106 GB
+[2026-04-23 01:00:35]   ✅ Speicher OK
+[2026-04-23 01:00:35]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-23 01:00:35]   ✅ Port-Forward neu gestartet
+[2026-04-23 01:00:36]   ✅ Build-Stand: 8590cbf (bereits bekannt)
+[2026-04-23 01:00:36]   ⚠️ MemPalace Build-Update: [Errno 2] No such file or directory: 'mempalace'
+[2026-04-23 01:00:36]   ✅ intelligence.json compiled-Flags aktualisiert
+[2026-04-23 01:00:36] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-23 01:00:36]   ✅ llama33-70b: keine Änderung
+[2026-04-23 01:00:36]   ✅ gemma4-31b: keine Änderung
+[2026-04-23 01:00:37] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-23 01:00:37]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-23 01:00:37]   ✅ TurboQuant: kein neuer Commit (9e3fb40)
+[2026-04-23 01:00:37] 🧠 [7/7] Intelligence Agent...
+[2026-04-23 01:00:37] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-23 01:00:38]   🆕 10 neue Commits gefunden
+[2026-04-23 01:00:38]   🤔 Analysiere: [b3401ea] Cherry-pick upstream CMake glob for model sources...
+[2026-04-23 01:00:40]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:40]   🤔 Analysiere: [dad4e2e] Cherry-pick upstream speculative decoding for hybr...
+[2026-04-23 01:00:41]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:41]   🤔 Analysiere: [87102fb] Merge pull request #1041 from MemPalace/release/3....
+[2026-04-23 01:00:43]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:43]   🤔 Analysiere: [cf0477b] Merge pull request #1052 from MemPalace/merge/main...
+[2026-04-23 01:00:45]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:45]   🤔 Analysiere: [936f186] release: merge main into release/3.3.2 — keep 3.3....
+[2026-04-23 01:00:46]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:46]   🤔 Analysiere: [e4a2036] Merge pull request #73 from SharpAI/fix/gemma4-qua...
+[2026-04-23 01:00:49]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:49]   🤔 Analysiere: [ed5f8f6] docs: remove GLM 5.1 from supported models (still ...
+[2026-04-23 01:00:50]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:50]   🤔 Analysiere: [ccccdeb] docs: expand Supported Models section to full arch...
+[2026-04-23 01:00:51]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:51]   🤔 Analysiere: [54a18fc] Serialization, __init__ exports, test coverage for...
+[2026-04-23 01:00:53]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:53]   🤔 Analysiere: [4b5808a] Fix edge cases from second audit...
+[2026-04-23 01:00:54]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 01:00:54] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-23 01:00:54]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-23 01:00:54]   ℹ️ Wochenbericht: letzter vor 4 Tagen — noch nicht fällig
+[2026-04-23 01:00:54] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-23 01:00:54]   ✅ Keine neuen Erkenntnisse
+[2026-04-23 01:00:54] ────────────────────────────────────────────────────────────
+[2026-04-23 01:00:54] 📋 Zusammenfassung:
+[2026-04-23 01:00:54]   📊 turboquant: vtqp-v0.1.1 verfügbar — manuelle Prüfung empfohlen
+[2026-04-23 01:00:54]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-23 01:00:54]   ⏳ llama-server wird wiederhergestellt
+[2026-04-23 01:00:54]   Aktionen durchgeführt:
+[2026-04-23 01:00:54]     → Port-Forward Port 80 neu gestartet
+[2026-04-23 01:00:54] ────────────────────────────────────────────────────────────
+[2026-04-23 01:00:54] 🤖 Platform Agent v3 beendet
+[2026-04-23 02:00:01] ============================================================
+[2026-04-23 02:00:01] 🤖 Platform Agent v3 gestartet
+[2026-04-23 02:00:01] 🔍 [1/6] GitHub Update-Check...
+[2026-04-23 02:00:01]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-23 02:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-23 02:00:02]   ✅ Keine operationalen Updates.
+[2026-04-23 02:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-23 02:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-23 02:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-23 02:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-23 02:00:02] 📊 Sammle System-Kontext...
+[2026-04-23 02:00:02]   RAM frei: 2.4 GB
+[2026-04-23 02:00:02]   Aktive Slots: 0/0
+[2026-04-23 02:00:02]   Cached Tokens: 0
+[2026-04-23 02:00:02]   Crashes letzte Stunde: 1
+[2026-04-23 02:00:02] 🤔 LLM analysiert Incident...
+[2026-04-23 02:00:02]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-23 02:00:02]   ✅ Fallback-LLM bereits aktiv
+[2026-04-23 02:00:02]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-23 02:00:08]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da die K8s Pods nicht erreichbar sind und der RAM belegt ist, was möglicherweise auf ein Speicherleck oder ein anderes RAM-Problem hinweist.
+
+AKTION: C) llama-server neu starten ohne Änderungen
+
+BEGRÜNDUNG: Da aktive Nutzer nicht vorhanden sind und keine Crashes in der letzten Stunde auftreten, ist eine Neustart des llama-servers ohne Änderungen eine sichere Option, um das Problem zu beheben. Der Neustart behebt mögliche Speicherlecks und bringt die Plattform wieder in den normalen Zustand.
+
+RISIKO: mittel
+
+Begründung: Der Neustart des llama-servers ohne Änderungen birgt ein mittleres Risiko, da es zu einer kurzen Unterbrechung der Plattform kommen kann. Es ist jedoch eine sichere Option, um das Problem zu beheben, und das Risiko ist nicht sehr hoch.
+[2026-04-23 02:00:08] 🛡️ Sicherheitscheck...
+[2026-04-23 02:00:08]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-23 02:00:08] 🚀 Führe Aktion C aus...
+[2026-04-23 02:00:10]   ✅ llama-server (70B) neu gestartet
+[2026-04-23 02:00:10] 🔍 Prüfe ob Problem gelöst...
+[2026-04-23 02:00:15]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-23 02:00:15] 📋 Incident Report:
+[2026-04-23 02:00:15]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-23 02:00:15]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da die K8s Pods nicht erreichbar sind und der RAM belegt ist, was möglicherweise auf ein Speicherleck oder ein anderes RAM-Problem hinweist.
+[2026-04-23 02:00:15]   Aktion:    llama-server neu gestartet (PID 7500)
+[2026-04-23 02:00:15]   Eskaliert: False
+[2026-04-23 02:00:15]   Gelöst:    False
+[2026-04-23 02:00:15]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-23 02:00:15] ────────────────────────────────────────────────────────────
+[2026-04-23 02:00:15]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-23 02:00:15] 💻 [4/6] System Health...
+[2026-04-23 02:00:15]   💾 Frei: 466 GB | Modelle: 106 GB
+[2026-04-23 02:00:15]   ✅ Speicher OK
+[2026-04-23 02:00:15]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-23 02:00:15]   ✅ Port-Forward neu gestartet
+[2026-04-23 02:00:15]   ✅ Build-Stand: 8590cbf (bereits bekannt)
+[2026-04-23 02:00:15]   ⚠️ MemPalace Build-Update: [Errno 2] No such file or directory: 'mempalace'
+[2026-04-23 02:00:15]   ✅ intelligence.json compiled-Flags aktualisiert
+[2026-04-23 02:00:15] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-23 02:00:15]   ✅ llama33-70b: keine Änderung
+[2026-04-23 02:00:15]   ✅ gemma4-31b: keine Änderung
+[2026-04-23 02:00:16] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-23 02:00:16]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-23 02:00:16]   ✅ TurboQuant: kein neuer Commit (9e3fb40)
+[2026-04-23 02:00:16] 🧠 [7/7] Intelligence Agent...
+[2026-04-23 02:00:16] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-23 02:00:17]   🆕 10 neue Commits gefunden
+[2026-04-23 02:00:17]   🤔 Analysiere: [b3401ea] Cherry-pick upstream CMake glob for model sources...
+[2026-04-23 02:00:19]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:19]   🤔 Analysiere: [dad4e2e] Cherry-pick upstream speculative decoding for hybr...
+[2026-04-23 02:00:20]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:20]   🤔 Analysiere: [87102fb] Merge pull request #1041 from MemPalace/release/3....
+[2026-04-23 02:00:22]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:22]   🤔 Analysiere: [cf0477b] Merge pull request #1052 from MemPalace/merge/main...
+[2026-04-23 02:00:24]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:24]   🤔 Analysiere: [936f186] release: merge main into release/3.3.2 — keep 3.3....
+[2026-04-23 02:00:25]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:25]   🤔 Analysiere: [e4a2036] Merge pull request #73 from SharpAI/fix/gemma4-qua...
+[2026-04-23 02:00:28]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:28]   🤔 Analysiere: [ed5f8f6] docs: remove GLM 5.1 from supported models (still ...
+[2026-04-23 02:00:29]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:29]   🤔 Analysiere: [ccccdeb] docs: expand Supported Models section to full arch...
+[2026-04-23 02:00:30]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:30]   🤔 Analysiere: [54a18fc] Serialization, __init__ exports, test coverage for...
+[2026-04-23 02:00:32]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:32]   🤔 Analysiere: [4b5808a] Fix edge cases from second audit...
+[2026-04-23 02:00:33]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 02:00:33] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-23 02:00:33]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-23 02:00:33]   ℹ️ Wochenbericht: letzter vor 4 Tagen — noch nicht fällig
+[2026-04-23 02:00:33] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-23 02:00:33]   ✅ Keine neuen Erkenntnisse
+[2026-04-23 02:00:33] ────────────────────────────────────────────────────────────
+[2026-04-23 02:00:33] 📋 Zusammenfassung:
+[2026-04-23 02:00:33]   📊 turboquant: vtqp-v0.1.1 verfügbar — manuelle Prüfung empfohlen
+[2026-04-23 02:00:33]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-23 02:00:33]   ⏳ llama-server wird wiederhergestellt
+[2026-04-23 02:00:33]   Aktionen durchgeführt:
+[2026-04-23 02:00:33]     → Port-Forward Port 80 neu gestartet
+[2026-04-23 02:00:33] ────────────────────────────────────────────────────────────
+[2026-04-23 02:00:33] 🤖 Platform Agent v3 beendet
+[2026-04-23 11:00:02] ============================================================
+[2026-04-23 11:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-23 11:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-23 11:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-23 11:00:03]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-23 11:00:03]   ✅ Keine operationalen Updates.
+[2026-04-23 11:00:03] 🏥 [2/6] K8s Health Check...
+[2026-04-23 11:00:03]   ⚠️ K8s nicht erreichbar
+[2026-04-23 11:00:03] 🧠 [3/6] llama-server Watchdog...
+[2026-04-23 11:00:03]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-23 11:00:03] 📊 Sammle System-Kontext...
+[2026-04-23 11:00:03]   RAM frei: 0.2 GB
+[2026-04-23 11:00:03]   Aktive Slots: 0/0
+[2026-04-23 11:00:03]   Cached Tokens: 0
+[2026-04-23 11:00:03]   Crashes letzte Stunde: 2
+[2026-04-23 11:00:03] 🤔 LLM analysiert Incident...
+[2026-04-23 11:00:03]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-23 11:00:03]   ✅ Fallback-LLM bereits aktiv
+[2026-04-23 11:00:03]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-23 11:00:09]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, da die verfügbare RAM zu gering ist, um das Hauptmodell (Llama 3.3 70B) zu hosten.
+
+AKTION: C) llama-server neu starten ohne Änderungen
+
+BEGRÜNDUNG: Da aktive Nutzer nicht vorhanden sind und die Crashes in der letzten Stunde nicht über 3x liegen, ist es sicher, den llama-server neu zu starten, um Speicherlecks zu beheben. Dies behebt möglicherweise das Problem und ist eine schnelle und einfache Lösung.
+
+RISIKO: mittel
+
+Begründung: Es gibt ein geringes Risiko, da der llama-server neu gestartet wird und die Änderungen, die wir vornehmen, keine großen Auswirkungen auf die Plattform haben.
+[2026-04-23 11:00:09] 🛡️ Sicherheitscheck...
+[2026-04-23 11:00:09]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-23 11:00:09] 🚀 Führe Aktion C aus...
+[2026-04-23 11:00:11]   ✅ llama-server (70B) neu gestartet
+[2026-04-23 11:00:11] 🔍 Prüfe ob Problem gelöst...
+[2026-04-23 11:00:17]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-23 11:00:17] 📋 Incident Report:
+[2026-04-23 11:00:17]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-23 11:00:17]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, da die verfügbare RAM zu gering ist, um das Hauptmodell (Llama 3.3 70B) zu hosten.
+[2026-04-23 11:00:17]   Aktion:    llama-server neu gestartet (PID 10087)
+[2026-04-23 11:00:17]   Eskaliert: False
+[2026-04-23 11:00:17]   Gelöst:    False
+[2026-04-23 11:00:17]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-23 11:00:17] ────────────────────────────────────────────────────────────
+[2026-04-23 11:00:17]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-23 11:00:17] 💻 [4/6] System Health...
+[2026-04-23 11:00:17]   💾 Frei: 465 GB | Modelle: 106 GB
+[2026-04-23 11:00:17]   ✅ Speicher OK
+[2026-04-23 11:00:17]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-23 11:00:17]   ✅ Port-Forward neu gestartet
+[2026-04-23 11:00:17]   ✅ Build-Stand: 8590cbf (bereits bekannt)
+[2026-04-23 11:00:17]   ⚠️ MemPalace Build-Update: [Errno 2] No such file or directory: 'mempalace'
+[2026-04-23 11:00:17]   ✅ intelligence.json compiled-Flags aktualisiert
+[2026-04-23 11:00:17] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-23 11:00:17]   ✅ llama33-70b: keine Änderung
+[2026-04-23 11:00:17]   ✅ gemma4-31b: keine Änderung
+[2026-04-23 11:00:17] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-23 11:00:17]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-23 11:00:18]   ✅ TurboQuant: kein neuer Commit (9e3fb40)
+[2026-04-23 11:00:18] 🧠 [7/7] Intelligence Agent...
+[2026-04-23 11:00:19] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-23 11:00:20]   🆕 10 neue Commits gefunden
+[2026-04-23 11:00:20]   🤔 Analysiere: [b3401ea] Cherry-pick upstream CMake glob for model sources...
+[2026-04-23 11:00:22]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:22]   🤔 Analysiere: [dad4e2e] Cherry-pick upstream speculative decoding for hybr...
+[2026-04-23 11:00:23]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:23]   🤔 Analysiere: [87102fb] Merge pull request #1041 from MemPalace/release/3....
+[2026-04-23 11:00:25]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:25]   🤔 Analysiere: [cf0477b] Merge pull request #1052 from MemPalace/merge/main...
+[2026-04-23 11:00:27]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:27]   🤔 Analysiere: [936f186] release: merge main into release/3.3.2 — keep 3.3....
+[2026-04-23 11:00:28]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:28]   🤔 Analysiere: [336c8a8] Merge pull request #76 from SharpAI/fix/issue-72-d...
+[2026-04-23 11:00:30]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:30]   🤔 Analysiere: [9b0a31c] fix(ssd-stream): address Copilot review on PR #76...
+[2026-04-23 11:00:32]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:32]   🤔 Analysiere: [8a04b2b] test(ssd-stream): add regression suite for Issue #...
+[2026-04-23 11:00:34]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:34]   🤔 Analysiere: [54a18fc] Serialization, __init__ exports, test coverage for...
+[2026-04-23 11:00:35]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:35]   🤔 Analysiere: [4b5808a] Fix edge cases from second audit...
+[2026-04-23 11:00:37]   ❌ Analyse Fehler: Error code: 503 - {'error': {'message': 'Loading model', 'type': 'unavailable_error', 'code': 503}}
+[2026-04-23 11:00:37] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-23 11:00:37]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-23 11:00:37]   ℹ️ Wochenbericht: letzter vor 4 Tagen — noch nicht fällig
+[2026-04-23 11:00:37] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-23 11:00:37]   ✅ Keine neuen Erkenntnisse
+[2026-04-23 11:00:37] ────────────────────────────────────────────────────────────
+[2026-04-23 11:00:37] 📋 Zusammenfassung:
+[2026-04-23 11:00:37]   📊 turboquant: vtqp-v0.1.1 verfügbar — manuelle Prüfung empfohlen
+[2026-04-23 11:00:37]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-23 11:00:37]   ⏳ llama-server wird wiederhergestellt
+[2026-04-23 11:00:37]   Aktionen durchgeführt:
+[2026-04-23 11:00:37]     → Port-Forward Port 80 neu gestartet
+[2026-04-23 11:00:37] ────────────────────────────────────────────────────────────
+[2026-04-23 11:00:37] 🤖 Platform Agent v3 beendet
+[2026-04-23 21:00:01] ============================================================
+[2026-04-23 21:00:01] 🤖 Platform Agent v3 gestartet
+[2026-04-23 21:00:01] 🔍 [1/6] GitHub Update-Check...
+[2026-04-23 21:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-23 21:00:02]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-23 21:00:02]   ✅ Keine operationalen Updates.
+[2026-04-23 21:00:02] 🏥 [2/6] K8s Health Check...
+[2026-04-23 21:00:02]   ⚠️ K8s nicht erreichbar
+[2026-04-23 21:00:02] 🧠 [3/6] llama-server Watchdog...
+[2026-04-23 21:00:02]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-23 21:00:02] 📊 Sammle System-Kontext...
+[2026-04-23 21:00:02]   RAM frei: 32.6 GB
+[2026-04-23 21:00:02]   Aktive Slots: 0/0
+[2026-04-23 21:00:02]   Cached Tokens: 0
+[2026-04-23 21:00:02]   Crashes letzte Stunde: 1
+[2026-04-23 21:00:02] 🤔 LLM analysiert Incident...
+[2026-04-23 21:00:02]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-23 21:00:02]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-23 21:00:02]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-23 21:00:22]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-23 22:00:02] ============================================================
+[2026-04-23 22:00:02] 🤖 Platform Agent v3 gestartet
+[2026-04-23 22:00:02] 🔍 [1/6] GitHub Update-Check...
+[2026-04-23 22:00:02]   open-webui: aktuell=v0.9.1, latest=v0.9.1
+[2026-04-23 22:00:03]   turboquant: vtqp-v0.1.1 (performance-relevant)
+[2026-04-23 22:00:03]   ✅ Keine operationalen Updates.
+[2026-04-23 22:00:03] 🏥 [2/6] K8s Health Check...
+[2026-04-23 22:00:03]   ⚠️ K8s nicht erreichbar
+[2026-04-23 22:00:03] 🧠 [3/6] llama-server Watchdog...
+[2026-04-23 22:00:03]   ❌ llama-server down — rufe Incident Agent auf...
+[2026-04-23 22:00:03] 📊 Sammle System-Kontext...
+[2026-04-23 22:00:03]   RAM frei: 18.0 GB
+[2026-04-23 22:00:03]   Aktive Slots: 0/0
+[2026-04-23 22:00:03]   Cached Tokens: 0
+[2026-04-23 22:00:03]   Crashes letzte Stunde: 1
+[2026-04-23 22:00:03] 🤔 LLM analysiert Incident...
+[2026-04-23 22:00:03]   ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...
+[2026-04-23 22:00:03]   🚀 Starte Llama 3.1 8B auf Port 8082...
+[2026-04-23 22:00:03]   ⏳ Warte 20s bis 8B geladen...
+[2026-04-23 22:00:25]   📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)
+[2026-04-23 22:00:32]   LLM Antwort:
+URSACHE: Der llama-server ist nicht erreichbar, möglicherweise aufgrund eines Speicherlecks oder eines anderen Fehlers, der zu einem Crasht des Servers geführt hat.
+
+AKTION: C) llama-server neu starten ohne Änderungen
+
+BEGRÜNDUNG: Da aktive Nutzer nicht vorhanden sind und die Crashes in der letzten Stunde nicht über 3x liegen, ist es sicher, den llama-server neu zu starten, um mögliche Speicherlecks zu beheben und den Server wiederherzustellen. Dies ist eine sichere Aktion, da sie nicht zu einer Unterbrechung der WebUI oder einer Reduzierung der Kontexte führt.
+
+RISIKO: niedrig
+
+Begründung: Die Aktion ist relativ sicher, da sie nicht zu einer Unterbrechung der WebUI oder einer Reduzierung der Kontexte führt. Der neu gestartete Server sollte in der Lage sein, die Anforderungen der Plattform zu erfüllen, ohne dass es zu einem Crasht kommt.
+[2026-04-23 22:00:32] 🛡️ Sicherheitscheck...
+[2026-04-23 22:00:32]   ✅ Sicherheitscheck bestanden — Aktion C ist sicher
+[2026-04-23 22:00:32] 🚀 Führe Aktion C aus...
+[2026-04-23 22:00:34]   ✅ llama-server (70B) neu gestartet
+[2026-04-23 22:00:34] 🔍 Prüfe ob Problem gelöst...
+[2026-04-23 22:00:39]   ❌ llama-server noch nicht bereit (lädt noch...)
+[2026-04-23 22:00:39] 📋 Incident Report:
+[2026-04-23 22:00:39]   Incident:  llama-server nicht erreichbar — automatisch erkannt durch Watchdog
+[2026-04-23 22:00:39]   Analyse:   URSACHE: Der llama-server ist nicht erreichbar, möglicherweise aufgrund eines Speicherlecks oder eines anderen Fehlers, der zu einem Crasht des Servers geführt hat.
+[2026-04-23 22:00:39]   Aktion:    llama-server neu gestartet (PID 15861)
+[2026-04-23 22:00:39]   Eskaliert: False
+[2026-04-23 22:00:39]   Gelöst:    False
+[2026-04-23 22:00:39]   ⏳ Lösung in Arbeit (Server lädt)
+[2026-04-23 22:00:39] ────────────────────────────────────────────────────────────
+[2026-04-23 22:00:39]   ⏳ Incident Agent: Lösung in Arbeit
+[2026-04-23 22:00:39] 💻 [4/6] System Health...
+[2026-04-23 22:00:39]   💾 Frei: 444 GB | Modelle: 106 GB
+[2026-04-23 22:00:39]   ✅ Speicher OK
+[2026-04-23 22:00:39]   ⚠️ Port-Forward Port 80: nicht aktiv — starte neu...
+[2026-04-23 22:00:39]   ✅ Port-Forward neu gestartet
+[2026-04-23 22:00:39]   ✅ Build-Stand: 8590cbf (bereits bekannt)
+[2026-04-23 22:00:39]   ⚠️ MemPalace Build-Update: [Errno 2] No such file or directory: 'mempalace'
+[2026-04-23 22:00:39]   ✅ intelligence.json compiled-Flags aktualisiert
+[2026-04-23 22:00:39] 🤗 [5/6] Unsloth Modell-Watcher...
+[2026-04-23 22:00:39]   ✅ llama33-70b: keine Änderung
+[2026-04-23 22:00:40]   ✅ gemma4-31b: keine Änderung
+[2026-04-23 22:00:40] 🔄 [6/6] ArgoCD + TurboQuant Commits...
+[2026-04-23 22:00:40]   ⚠️ ArgoCD nicht erreichbar
+[2026-04-23 22:00:40]   🔬 TurboQuant neuer Commit: [67559e5] Upstream sync to b8871 (64 commits)
+[2026-04-23 22:00:40] 🧠 [7/7] Intelligence Agent...
+[2026-04-23 22:00:40] 🔬 Intelligence: Analysiere neue Commits...
+[2026-04-23 22:00:42]   🆕 10 neue Commits gefunden
+[2026-04-23 22:00:42]   🤔 Analysiere: [7f320bb] Merge commit '7fc1c4ef7' into rebase/upstream-sync...
+[2026-04-23 22:02:56]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:02:56]   🤔 Analysiere: [b8b1d49] fix(hip): add missing f16-turbo fattn-vec instance...
+[2026-04-23 22:02:58]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:02:58]   🤔 Analysiere: [87102fb] Merge pull request #1041 from MemPalace/release/3....
+[2026-04-23 22:03:00]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:03:00]   🤔 Analysiere: [cf0477b] Merge pull request #1052 from MemPalace/merge/main...
+[2026-04-23 22:03:01]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:03:01]   🤔 Analysiere: [936f186] release: merge main into release/3.3.2 — keep 3.3....
+[2026-04-23 22:03:03]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:03:03]   🤔 Analysiere: [336c8a8] Merge pull request #76 from SharpAI/fix/issue-72-d...
+[2026-04-23 22:03:05]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:03:05]   🤔 Analysiere: [9b0a31c] fix(ssd-stream): address Copilot review on PR #76...
+[2026-04-23 22:03:07]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:03:07]   🤔 Analysiere: [8a04b2b] test(ssd-stream): add regression suite for Issue #...
+[2026-04-23 22:03:08]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:03:08]   🤔 Analysiere: [7c6e3dc] Add Server Integration section to README...
+[2026-04-23 22:03:10]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:03:10]   🤔 Analysiere: [54a18fc] Serialization, __init__ exports, test coverage for...
+[2026-04-23 22:03:11]   ❌ Analyse Fehler: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}
+[2026-04-23 22:03:12] 📊 Intelligence: Tracke Performance-Metriken...
+[2026-04-23 22:03:12]   📈 tokens/sec: 0.0 | RAM frei: 0.1 GB
+[2026-04-23 22:03:12]   ℹ️ Wochenbericht: letzter vor 5 Tagen — noch nicht fällig
+[2026-04-23 22:03:12] 🧠 Intelligence Agent Zusammenfassung:
+[2026-04-23 22:03:12]   ✅ Keine neuen Erkenntnisse
+[2026-04-23 22:03:12] ────────────────────────────────────────────────────────────
+[2026-04-23 22:03:12] 📋 Zusammenfassung:
+[2026-04-23 22:03:12]   📊 turboquant: vtqp-v0.1.1 verfügbar — manuelle Prüfung empfohlen
+[2026-04-23 22:03:12]   ⚠️ K8s nicht erreichbar — Docker läuft evtl. nicht
+[2026-04-23 22:03:12]   ⏳ llama-server wird wiederhergestellt
+[2026-04-23 22:03:12]   🔬 TurboQuant neuer Commit: [67559e5] Upstream sync to b8871 (64 commits)
+[2026-04-23 22:03:12]   Aktionen durchgeführt:
+[2026-04-23 22:03:12]     → Port-Forward Port 80 neu gestartet
+[2026-04-23 22:03:12] ────────────────────────────────────────────────────────────
+[2026-04-23 22:03:12] 🤖 Platform Agent v3 beendet

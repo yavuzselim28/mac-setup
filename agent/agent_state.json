@@ -1,31 +1,28 @@
 {
   "llama_restarts": [
-    "2026-04-21T21:31:23.676725"
+    "2026-04-23T22:00:03.174189"
   ],
   "seen_commits": [
-    "b552bcf",
-    "7ce93af",
-    "05ad2dc",
-    "667d895",
-    "da64016",
-    "59798f1",
-    "69afba3",
-    "3a0f782",
-    "ad806cf",
-    "8ba9f12",
-    "87102fb",
-    "963c04c",
-    "4d24ad8",
     "cffcbf0",
-    "85cfe0b",
-    "f81ee30",
-    "eb5a677",
+    "ad806cf",
     "6ad2d01",
-    "c6e6212",
-    "54a18fc",
-    "8590cbf",
+    "b552bcf",
+    "667d895",
+    "85cfe0b",
+    "67559e5",
+    "eb5a677",
+    "f81ee30",
+    "69afba3",
+    "da64016",
+    "4d24ad8",
+    "b609c8a",
+    "05ad2dc",
+    "7ce93af",
+    "8ba9f12",
+    "59798f1",
+    "963c04c",
     "f4ffeb4",
-    "b609c8a"
+    "9e3fb40"
   ],
   "seen_models": {
     "llama33-70b": "2025-05-10T04:18:57.000Z",
@@ -329,6 +326,38 @@
     {
       "timestamp": "2026-04-21T21:47:44.190694",
       "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-22T01:00:49.112260",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-22T02:00:30.056446",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-22T23:00:34.112655",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-23T00:00:56.419817",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-23T01:00:54.688958",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-23T02:00:33.664277",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-23T11:00:37.228266",
+      "ram_free_gb": 0.1
+    },
+    {
+      "timestamp": "2026-04-23T22:03:12.448305",
+      "ram_free_gb": 0.1
     }
   ],
   "compiled_sha": "8590cbf",
@@ -340,11 +369,13 @@
     "acad28d",
     "cffcbf0"
   ],
-  "last_check": "2026-04-13T11:36:43.724823",
-  "last_report": "# Platform Agent Report\n_2026-04-13 11:36:43_\n\n## System\n- GPU Limit: ? MB\n- Disk: 12Gi used, 595Gi frei\n- Port-Forward: \u2705\n- Build SHA: `8590cbf`\n\n## llama-server\n- Status: \u274c down\n- Restarts/h: 0\n\n## Kubernetes\n- Pods: 34\n- Issues:\n  - argocd/argocd-applicationset-controller-7dc85c9598-m2rgs: Running, restarts=1411\n  - argocd/argocd-redis-65b5bbd8cb-khz5t: Pending, restarts=26\n  - cert-manager/cert-manager-868586f9dc-rlvg4: Running, restarts=510\n\n## Updates\n- Open WebUI latest: `v0.8.12`\n\n## Aktionen (2)\n- k8s: 3 issue(s)\n- Fallback 8B auf Port 8082 gestartet\n\n## Fehler\n- \u26a0\ufe0f llama-server 70B tot \u2014 Fallback aktiv",
-  "last_run": "2026-04-13 11:36:43",
-  "actions_count": 2,
+  "last_check": "2026-04-23T00:06:58.042444",
+  "last_report": "# Platform Agent Report\n_2026-04-23 00:06:58_\n\n## System\n- GPU Limit: ? MB\n- Disk: 12Gi used, 468Gi frei\n- Port-Forward: \u274c\n- Build SHA: `8590cbf`\n\n## llama-server\n- Status: \u274c down\n- Restarts/h: 1\n\n## Kubernetes\n- Pods: 43\n- Issues:\n  - argocd/argocd-applicationset-controller-7dc85c9598-m2rgs: Running, restarts=1806\n  - argocd/argocd-redis-65b5bbd8cb-khz5t: Pending, restarts=37\n  - cert-manager/cert-manager-868586f9dc-rlvg4: Running, restarts=784\n\n## Updates\n- Open WebUI latest: `v0.9.1`\n\n## Aktionen (4)\n- k8s: 1 issue(s)\n- k8s: 2 issue(s)\n- k8s: 3 issue(s)\n- Fallback 8B auf Port 8082 gestartet\n\n## Fehler\n- \u26a0\ufe0f llama-server 70B tot \u2014 Fallback aktiv",
+  "last_run": "2026-04-23 00:06:58",
+  "actions_count": 4,
   "restart_history": [
-    1776073001.0419252
+    1776073001.0419252,
+    1776892369.108696,
+    1776895615.350267
   ]
 }

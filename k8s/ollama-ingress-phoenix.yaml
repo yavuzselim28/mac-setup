@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"nginx.ingress.kubernetes.io/rewrite-target":"/"},"name":"ollama-ingress","namespace":"phoenix"},"spec":{"ingressClassName":"nginx","rules":[{"host":"ollama.local","http":{"paths":[{"backend":{"service":{"name":"ollama-app-open-webui","port":{"number":8080}}},"path":"/","pathType":"Prefix"}]}}]}}
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  creationTimestamp: "2026-05-10T15:07:59Z"
+  generation: 1
+  name: ollama-ingress
+  namespace: phoenix
+  resourceVersion: "142131"
+  uid: e55873e8-41fe-40c3-becd-529df57fd896
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ollama.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: ollama-app-open-webui
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+    - ip: 172.18.0.4

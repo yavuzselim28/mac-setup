@@ -5,15 +5,21 @@ import re
 import os
 import shutil
 import json
+import functools
+import traceback
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import TypedDict
 from langgraph.graph import StateGraph, END
-from langchain_openai import ChatOpenAI
 from incident_agent import handle_incident
 
+# Cron läuft mit einem minimalen PATH ohne /opt/homebrew/bin — helm/kubectl/git
+# wären sonst über subprocess.run() nicht auffindbar.
+for _p in ("/opt/homebrew/bin", "/usr/local/bin"):
+    if _p not in os.environ.get("PATH", "").split(os.pathsep):
+        os.environ["PATH"] = _p + os.pathsep + os.environ.get("PATH", "")
+
 # ── Konfiguration ─────────────────────────────────────────────
-LLAMA_SERVER  = "http://localhost:8080/v1"
 VALUES_YAML   = Path.home() / "mac-setup/charts/ollama/values.yaml"
 LOG_FILE      = Path.home() / "mac-setup/agent/agent.log"
 STATE_FILE    = Path.home() / "mac-setup/agent/agent_state.json"
@@ -23,6 +29,9 @@ LLAMA_DIR     = Path.home() / "llama-cpp-turboquant"
 DISK_WARN_GB  = 50
 GPU_LIMIT_MB  = 52429
 MAX_RESTARTS_PER_HOUR = 3
+K8S_NAMESPACE = "phoenix"
+HELM_RELEASE  = "ollama-app"
+HELM_CHART    = Path.home() / "ollama-k8s/ollama-chart"
 
 LLAMA_CMD = [
     str(LLAMA_DIR / "build/bin/llama-server"),
@@ -37,8 +46,8 @@ LLAMA_CMD = [
     "-fa", "on",
     "--host", "0.0.0.0",
     "--port", "8080",
-    "--draft-max", "8",
-    "--draft-min", "2"
+    "--spec-draft-n-max", "8",
+    "--spec-draft-n-min", "2"
 ]
 
 WATCH_REPOS = {
@@ -54,20 +63,15 @@ WATCH_REPOS = {
 }
 
 UNSLOTH_MODELS = {
-    "llama33-70b": {
-        "hf_repo": "unsloth/Llama-3.3-70B-Instruct-GGUF",
-        "local_file": "llama33-70b-q4km.gguf",
-        "pattern": "Q4_K_M"
-    },
     "gemma4-31b": {
         "hf_repo": "unsloth/gemma-4-31B-it-GGUF",
         "local_file": "gemma4-31b/gemma-4-31B-it-UD-Q4_K_XL.gguf",
         "pattern": "UD-Q4_K_XL"
     },
-    "qwen25-72b": {
-        "hf_repo": "unsloth/Qwen2.5-72B-Instruct-GGUF",
-        "local_file": "qwen25-72b/qwen2.5-72b-instruct-q4_k_m-00001-of-00012.gguf",
-        "pattern": "Q4_K_M"
+    "glm-4.7-flash": {
+        "hf_repo": "unsloth/GLM-4.7-Flash-GGUF",
+        "local_file": "glm-4.7-flash/GLM-4.7-Flash-UD-Q4_K_XL.gguf",
+        "pattern": "UD-Q4_K_XL"
     }
 }
 
@@ -78,14 +82,6 @@ class AgentState(TypedDict):
     actions_taken: list
     notifications: list
     current_check: str
-
-# ── LLM ───────────────────────────────────────────────────────
-llm = ChatOpenAI(
-    base_url=LLAMA_SERVER,
-    api_key="dummy",
-    model="llama33-70b-q4km.gguf",
-    temperature=0
-)
 
 # ── Persistenter State (für Neustart-Limit) ────────────────────
 def load_state() -> dict:
@@ -167,9 +163,11 @@ def update_values_yaml(new_version: str) -> bool:
     try:
         with open(VALUES_YAML) as f:
             content = f.read()
+        # Kein "v"-Präfix: ghcr.io/open-webui/open-webui taggt Images ohne "v"
+        # (z.B. "0.10.2"), auch wenn der GitHub-Release-Tag "v0.10.2" heißt.
         updated = re.sub(
-            r"(open-webui:v?)[\d.]+",
-            f"open-webui:v{new_version}",
+            r"open-webui:v?[\d.]+",
+            f"open-webui:{new_version}",
             content
         )
         with open(VALUES_YAML, "w") as f:
@@ -187,7 +185,23 @@ def git_commit_and_push(message: str) -> bool:
     code, _ = run(["git", "push"], cwd=MAC_SETUP_DIR)
     return code == 0
 
+def safe_node(func):
+    """Isoliert Node-Fehler: eine fehlschlagende Node darf die restliche Pipeline
+    (Health-Checks, Watchdog, etc.) nicht mit runterreißen."""
+    @functools.wraps(func)
+    def wrapper(state: AgentState) -> AgentState:
+        try:
+            return func(state)
+        except Exception as e:
+            msg = f"⚠️ Node '{func.__name__}' fehlgeschlagen: {e}"
+            log(msg)
+            log(traceback.format_exc())
+            state.setdefault("notifications", []).append(msg)
+            return state
+    return wrapper
+
 # ── Node 1: GitHub Updates ─────────────────────────────────────
+@safe_node
 def check_updates(state: AgentState) -> AgentState:
     log("🔍 [1/6] GitHub Update-Check...")
     updates = []
@@ -217,15 +231,19 @@ def check_updates(state: AgentState) -> AgentState:
     state["updates"] = updates
     return state
 
-# ── Node 2: LLM Klassifikation ─────────────────────────────────
+# ── Node 2: Klassifikation ──────────────────────────────────────
+# Deterministisch statt LLM-Aufruf: die Regel selbst ist bereits eine feste
+# Regel ("PATCH immer JA, MINOR JA wenn operational, MAJOR NEIN") und braucht
+# kein LLM. Der vorherige llm.invoke() gegen localhost:8080 crashte die ganze
+# Pipeline (inkl. aller nachgelagerten Health-Checks/Watchdog), sobald
+# llama-server nicht lief — was hier der Regelfall war.
+@safe_node
 def classify_and_decide(state: AgentState) -> AgentState:
     if not state["updates"]:
         log("  ✅ Keine operationalen Updates.")
         return state
 
     for update in state["updates"]:
-        log(f"🤔 LLM klassifiziert: {update['name']} v{update['current']} → v{update['latest']}")
-
         curr = [int(x) for x in update["current"].split(".")]
         new  = [int(x) for x in update["latest"].split(".")]
         if new[0] > curr[0]:
@@ -235,17 +253,16 @@ def classify_and_decide(state: AgentState) -> AgentState:
         else:
             version_type = "PATCH"
 
-        prompt = f"""Du bist ein Platform Operations Agent.
-Regeln:
-- PATCH Updates: IMMER JA
-- MINOR Updates: JA wenn operational
-- MAJOR Updates: NEIN
+        log(f"🤔 Klassifiziert: {update['name']} v{update['current']} → v{update['latest']} ({version_type})")
 
-Update: {update['name']} {update['current']} → {update['latest']} ({version_type})
-Antworte NUR mit JA oder NEIN."""
+        if version_type == "PATCH":
+            decision = True
+        elif version_type == "MINOR":
+            decision = update["type"] == "operational"
+        else:
+            decision = False
 
-        response = llm.invoke(prompt)
-        if "JA" in response.content.strip().upper()[:10]:
+        if decision:
             update["action"] = "execute"
             log(f"  → JA — wird eingespielt")
         else:
@@ -255,25 +272,56 @@ Antworte NUR mit JA oder NEIN."""
     return state
 
 # ── Node 3: Updates ausführen ──────────────────────────────────
+@safe_node
 def execute_updates(state: AgentState) -> AgentState:
     for update in state["updates"]:
         if update.get("action") != "execute":
             continue
         log(f"🚀 Update: {update['name']} v{update['current']} → v{update['latest']}")
-        if update_values_yaml(update["latest"]):
-            log("  ✅ values.yaml aktualisiert")
-            if git_commit_and_push(f"chore: update {update['name']} to v{update['latest']}"):
-                log("  ✅ Git push — ArgoCD deployt automatisch")
-                state["actions_taken"].append(f"Updated {update['name']} → v{update['latest']}")
-                state["notifications"].append(
-                    f"✅ AUTO-UPDATE: {update['name']} auf v{update['latest']}"
-                )
+        if not update_values_yaml(update["latest"]):
+            continue
+        log("  ✅ values.yaml aktualisiert")
+
+        code, out = run([
+            "helm", "upgrade", HELM_RELEASE, str(HELM_CHART),
+            "-n", K8S_NAMESPACE, "-f", str(VALUES_YAML)
+        ])
+        if code != 0:
+            msg = f"❌ helm upgrade für {update['name']} fehlgeschlagen: {out.strip()[-300:]}"
+            log(f"  {msg}")
+            state["notifications"].append(msg)
+            continue
+        log("  ✅ helm upgrade ausgeführt")
+
+        deployment = f"ollama-app-{update['name']}"
+        code, out = run([
+            "kubectl", "rollout", "status", f"deployment/{deployment}",
+            "-n", K8S_NAMESPACE, "--timeout=120s"
+        ])
+        if code != 0:
+            msg = f"❌ Rollout für {deployment} fehlgeschlagen/timeout: {out.strip()[-300:]}"
+            log(f"  {msg}")
+            state["notifications"].append(msg)
+            continue
+        log("  ✅ Rollout erfolgreich")
+
+        if git_commit_and_push(f"chore: update {update['name']} to v{update['latest']}"):
+            log("  ✅ Git committed & gepusht")
+            state["actions_taken"].append(f"Updated {update['name']} → v{update['latest']} (deployed + committed)")
+            state["notifications"].append(
+                f"✅ AUTO-UPDATE: {update['name']} auf v{update['latest']} — live deployed"
+            )
+        else:
+            msg = f"⚠️ {update['name']} deployed, aber Git-Push fehlgeschlagen — values.yaml lokal geändert, nicht committed"
+            log(f"  {msg}")
+            state["notifications"].append(msg)
     return state
 
 # ── Node 4: K8s Health ─────────────────────────────────────────
+@safe_node
 def check_k8s_health(state: AgentState) -> AgentState:
     log("🏥 [2/6] K8s Health Check...")
-    code, out = run(["kubectl", "get", "pods", "-n", "ollama"])
+    code, out = run(["kubectl", "get", "pods", "-n", K8S_NAMESPACE])
 
     if code != 0:
         log("  ⚠️ K8s nicht erreichbar")
@@ -293,7 +341,7 @@ def check_k8s_health(state: AgentState) -> AgentState:
             log(f"  ❌ Pod {name}: {status} — starte neu...")
             deploy = "-".join(name.split("-")[:-2])
             code2, _ = run(["kubectl", "rollout", "restart",
-                            f"deployment/{deploy}", "-n", "ollama"])
+                            f"deployment/{deploy}", "-n", K8S_NAMESPACE])
             if code2 == 0:
                 log(f"  ✅ {name} neu gestartet")
                 state["actions_taken"].append(f"Pod {name} neu gestartet ({status})")
@@ -307,6 +355,7 @@ def check_k8s_health(state: AgentState) -> AgentState:
     return state
 
 # ── Node 5: llama-server Watchdog ─────────────────────────────
+@safe_node
 def check_llama_server(state: AgentState) -> AgentState:
     log("🧠 [3/6] llama-server Watchdog...")
 
@@ -353,6 +402,7 @@ def check_llama_server(state: AgentState) -> AgentState:
     return state
 
 # ── Node 6: System Health ──────────────────────────────────────
+@safe_node
 def check_system_health(state: AgentState) -> AgentState:
     log("💻 [4/6] System Health...")
 
@@ -473,6 +523,7 @@ def check_system_health(state: AgentState) -> AgentState:
     return state
 
 # ── Node 7: Unsloth Modell-Watcher ────────────────────────────
+@safe_node
 def check_unsloth_models(state: AgentState) -> AgentState:
     log("🤗 [5/6] Unsloth Modell-Watcher...")
     persistent = load_state()
@@ -499,6 +550,7 @@ def check_unsloth_models(state: AgentState) -> AgentState:
     return state
 
 # ── Node 8: ArgoCD + TurboQuant Commits ───────────────────────
+@safe_node
 def check_argocd_and_commits(state: AgentState) -> AgentState:
     log("🔄 [6/6] ArgoCD + TurboQuant Commits...")
 
@@ -535,6 +587,7 @@ def check_argocd_and_commits(state: AgentState) -> AgentState:
     return state
 
 # ── Node 9: Zusammenfassung ────────────────────────────────────
+@safe_node
 def notify(state: AgentState) -> AgentState:
     log("📋 Zusammenfassung:")
     if not state["notifications"] and not state["actions_taken"]:
@@ -550,6 +603,7 @@ def notify(state: AgentState) -> AgentState:
 
 
 # ── Intelligence Agent Integration ────────────────────────────
+@safe_node
 def run_intelligence(state: AgentState) -> AgentState:
     log("🧠 [7/7] Intelligence Agent...")
     import sys

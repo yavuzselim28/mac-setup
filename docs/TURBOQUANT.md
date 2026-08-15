@@ -136,6 +136,10 @@ llama_kv_cache: attn_rot_v = 1
 
 Wenn dort `K (f16)` steht, ist TurboQuant **nicht** aktiv.
 
+> **Update 15.08.2026:** Seit dem Upstream-Stand `fca3093c9` erscheinen diese Zeilen bei der
+> Standard-Verbosity (`-lv 3`) nicht mehr im Log — dafür `-v` bzw. `--log-verbose` an den Start-Befehl
+> anhängen. Funktional bleibt alles gleich, nur das Logging ist zurückhaltender geworden.
+
 ### Memory Breakdown (Erwartungswerte)
 
 ```

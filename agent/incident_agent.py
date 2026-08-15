@@ -14,10 +14,12 @@ LLAMA_SERVER  = "http://localhost:8080/v1"
 LOG_FILE      = Path.home() / "mac-setup/agent/agent.log"
 STATE_FILE    = Path.home() / "mac-setup/agent/agent_state.json"
 LLAMA_DIR     = Path.home() / "llama-cpp-turboquant"
+K8S_NAMESPACE = "phoenix"
+MAIN_MODEL    = Path.home() / "models/glm-4.7-flash/GLM-4.7-Flash-UD-Q4_K_XL.gguf"
 
 LLAMA_CMD_8K = [
     str(LLAMA_DIR / "build/bin/llama-server"),
-    "-m", str(Path.home() / "models/llama33-70b-q4km.gguf"),
+    "-m", str(MAIN_MODEL),
     "--cache-type-k", "turbo4",
     "--cache-type-v", "turbo4",
     "-ngl", "99", "-c", "8192",
@@ -26,13 +28,10 @@ LLAMA_CMD_8K = [
 
 LLAMA_CMD_16K = [
     str(LLAMA_DIR / "build/bin/llama-server"),
-    "-m", str(Path.home() / "models/llama33-70b-q4km.gguf"),
-    "--model-draft", str(Path.home() / "models/llama31-8b-draft.gguf"),
+    "-m", str(MAIN_MODEL),
     "--cache-type-k", "turbo4", "--cache-type-v", "turbo4",
-    "--cache-type-k-draft", "turbo4", "--cache-type-v-draft", "turbo4",
     "-ngl", "99", "-c", "16384", "-np", "1",
-    "-fa", "on", "--host", "0.0.0.0", "--port", "8080",
-    "--draft-max", "8", "--draft-min", "2"
+    "-fa", "on", "--host", "0.0.0.0", "--port", "8080"
 ]
 
 # ── State ──────────────────────────────────────────────────────
@@ -51,14 +50,15 @@ class IncidentState(TypedDict):
 llm = ChatOpenAI(
     base_url=LLAMA_SERVER,
     api_key="dummy",
-    model="llama33-70b-q4km.gguf",
+    model="glm-4.7-flash",
     temperature=0
 )
 
 FALLBACK_SERVER = "http://localhost:8082/v1"
+FALLBACK_MODEL  = Path.home() / "models/mistral-7b-q4km.gguf"
 FALLBACK_CMD = [
     str(LLAMA_DIR / "build/bin/llama-server"),
-    "-m", str(Path.home() / "models/llama31-8b-draft.gguf"),
+    "-m", str(FALLBACK_MODEL),
     "--cache-type-k", "turbo4",
     "--cache-type-v", "turbo4",
     "-ngl", "99",
@@ -75,17 +75,17 @@ def get_llm():
         return ChatOpenAI(
             base_url=LLAMA_SERVER,
             api_key="dummy",
-            model="llama33-70b-q4km.gguf",
+            model="glm-4.7-flash",
             temperature=0
         ), False
     except:
-        log("  ⚠️ Haupt-LLM (70B) nicht erreichbar — starte Fallback (8B)...")
+        log("  ⚠️ Haupt-LLM (GLM-4.7-Flash) nicht erreichbar — starte Fallback (Mistral 7B)...")
         # Fallback starten falls noch nicht läuft
         try:
             requests.get("http://localhost:8082/health", timeout=3)
             log("  ✅ Fallback-LLM bereits aktiv")
         except:
-            log("  🚀 Starte Llama 3.1 8B auf Port 8082...")
+            log("  🚀 Starte Mistral 7B auf Port 8082...")
             log_path = Path.home() / "mac-setup/agent/fallback-llm.log"
             with open(log_path, "a") as lf:
                 subprocess.Popen(
@@ -94,13 +94,13 @@ def get_llm():
                     cwd=str(LLAMA_DIR)
                 )
             import time
-            log("  ⏳ Warte 20s bis 8B geladen...")
+            log("  ⏳ Warte 20s bis Mistral 7B geladen...")
             time.sleep(20)
 
         return ChatOpenAI(
             base_url=FALLBACK_SERVER,
             api_key="dummy",
-            model="llama31-8b-draft.gguf",
+            model="mistral-7b-q4km.gguf",
             temperature=0
         ), True
 
@@ -175,7 +175,7 @@ def collect_context(state: IncidentState) -> IncidentState:
         ctx["tokens_cached"] = 0
 
     # K8s Pod Status
-    code, out = run(["kubectl", "get", "pods", "-n", "ollama"])
+    code, out = run(["kubectl", "get", "pods", "-n", K8S_NAMESPACE])
     ctx["k8s_pods"] = out if code == 0 else "nicht erreichbar"
 
     # Crash-Historie
@@ -222,7 +222,7 @@ SYSTEM-ZUSTAND:
 - K8s Pods: {ctx.get("k8s_pods", "unbekannt")}
 
 KONTEXT:
-- Das Hauptmodell (Llama 3.3 70B) braucht ~40 GB GPU-RAM
+- Das Hauptmodell (GLM-4.7-Flash, 30B MoE ~3.6B aktiv) braucht ~18 GB GPU-RAM
 - K8s (Docker) braucht ~6 GB RAM
 - KV-Cache bei 16K Kontext: ~2 GB (turbo4)
 - KV-Cache bei 8K Kontext: ~1 GB (turbo4)
@@ -247,7 +247,7 @@ RISIKO: [niedrig oder mittel oder hoch]"""
 
     active_llm, is_fallback = get_llm()
     if is_fallback:
-        log("  📝 Analyse läuft mit Fallback-LLM (Llama 3.1 8B)")
+        log("  📝 Analyse läuft mit Fallback-LLM (Mistral 7B)")
     response = active_llm.invoke(prompt)
     analysis = response.content.strip()
     log(f"  LLM Antwort:\n{analysis}")
@@ -314,9 +314,9 @@ def execute_action(state: IncidentState) -> IncidentState:
     if action == "A":
         # K8s Pods auf 0
         run(["kubectl", "scale", "deployment", "ollama-app-ollama",
-             "-n", "ollama", "--replicas=0"])
+             "-n", K8S_NAMESPACE, "--replicas=0"])
         run(["kubectl", "scale", "deployment", "ollama-app-open-webui",
-             "-n", "ollama", "--replicas=0"])
+             "-n", K8S_NAMESPACE, "--replicas=0"])
         state["action_taken"] = "K8s Pods auf 0 skaliert"
         log("  ✅ K8s Pods gestoppt — 6 GB RAM freigegeben")
 
@@ -342,7 +342,7 @@ def execute_action(state: IncidentState) -> IncidentState:
         with open(log_path, "a") as lf:
             proc = subprocess.Popen(LLAMA_CMD_16K, stdout=lf, stderr=lf, cwd=str(LLAMA_DIR))
         state["action_taken"] = f"llama-server neu gestartet (PID {proc.pid})"
-        log(f"  ✅ llama-server (70B) neu gestartet")
+        log(f"  ✅ llama-server (GLM-4.7-Flash) neu gestartet")
 
     elif action == "D":
         state["action_taken"] = "Keine Aktion — Eskalation"
@@ -363,7 +363,7 @@ def verify_resolution(state: IncidentState) -> IncidentState:
     code, out = run(["lsof", "-ti:8080"])
     server_ok = code == 0 and bool(out.strip())
 
-    code2, out2 = run(["kubectl", "get", "pods", "-n", "ollama"])
+    code2, out2 = run(["kubectl", "get", "pods", "-n", K8S_NAMESPACE])
     k8s_ok = "Running" in out2 or state["recommended_action"] == "A"
 
     if server_ok:
@@ -373,7 +373,7 @@ def verify_resolution(state: IncidentState) -> IncidentState:
         log("  ❌ llama-server noch nicht bereit (lädt noch...)")
         state["resolved"] = False  # lädt noch, ist OK
 
-    # 8B Fallback beenden
+    # Fallback-LLM beenden
     import subprocess
     subprocess.run(["bash", "-c", "lsof -ti:8082 | xargs kill -9 2>/dev/null"])
 

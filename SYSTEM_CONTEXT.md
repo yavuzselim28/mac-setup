@@ -20,11 +20,8 @@ Dieses Projekt ist mein lokales AI-Setup zum Lernen und Testen.
 | ai-qwen-vllm | vllm-swift | Qwen3 30B A3B 4bit | ~15–18GB | ~75–85 tok/s | **Daily Driver** ✅ |
 | ai-qwen-mlx | ekryski MLXServer | Qwen3 30B A3B 4bit | ~18GB | ~100 tok/s | Single-User Speed |
 | ai-gemma | llama.cpp TurboQuant | Gemma 4 31B Q4 | ~20GB | 12.65 tok/s | Tool Use / HolmesGPT |
-| ai-llama | llama.cpp | Llama 3.3 70B Q4_K_M | 40GB | 8.31 tok/s | Heavy Tasks |
-| ai-llama-fast | llama.cpp + Spec. Dec. | 70B + 8B Draft | 40+4.6GB | ~10 tok/s | Heavy Reasoning |
-| ai-qwen | llama.cpp | Qwen 2.5 72B Q4_K_M | 44GB | - | Large Context |
+| ai-glm | llama.cpp TurboQuant | GLM-4.7-Flash Q4 | ~18GB | ~26 tok/s | Tool Use / HolmesGPT (Kandidat) |
 | ai-mistral | llama.cpp | Mistral 7B Q4_K_M | 4GB | - | Schnell/leicht |
-| ai-llama-mlx | SwiftLM | Llama 3.3 70B 4bit | ~40GB | ~7 tok/s | Legacy |
 
 ---
 
@@ -104,17 +101,17 @@ source activate.sh
 - Repo: TheTom/llama-cpp-turboquant (branch: feature/turboquant-kv-cache)
 - Binary: ~/llama-cpp-turboquant/build/bin/llama-server
 - Kompilieren: cd ~/llama-cpp-turboquant && cmake --build build --config Release -j$(sysctl -n hw.logicalcpu)
-- Stabiler HEAD: 8590cbff9 (Merge PR #62 Vulkan turbo3 + Metal TurboFlash kernel)
+- Stabiler HEAD: fca3093c9 (Stand 15.08.2026 — Details siehe agent/SYSTEM_CONTEXT.md,
+  war 4 Monate auf 8590cbff9 gepinnt und wurde neu kompiliert/validiert)
 
-### TurboFlash V4 — NICHT kompilieren
-- Commits 6946763 + b0b8dde: OOM auf M5 Pro
-- Workaround: git reset --hard 8590cbff9
+### TurboFlash V4 — weiterhin Vorsicht geboten
+- Commits 6946763 + b0b8dde verursachten OOM auf M5 Pro, tauchen in der Historie aktuell nicht mehr auf
+  (vermutlich Rebase) — TurboFlash V4 wurde beim Update auf fca3093c9 nicht gezielt erneut getestet.
 
 ### Aliases
 ```bash
 alias ai-gemma="lsof -ti:8080 | xargs kill -9 2>/dev/null; sleep 1; cd ~/llama-cpp-turboquant && ./build/bin/llama-server -m ~/models/gemma4-31b/gemma-4-31B-it-UD-Q4_K_XL.gguf --cache-type-k q8_0 --cache-type-v turbo4 -ngl 99 -c 49152 --flash-attn on --host 0.0.0.0 --port 8080 -np 1"
-alias ai-llama="lsof -ti:8080 | xargs kill -9 2>/dev/null; sleep 1; cd ~/llama-cpp-turboquant && ./build/bin/llama-server -m ~/models/llama33-70b-q4km.gguf --cache-type-k q8_0 --cache-type-v turbo4 -ngl 99 -c 49152 --flash-attn on --host 0.0.0.0 --port 8080"
-alias ai-llama-fast="lsof -ti:8080 | xargs kill -9 2>/dev/null; sleep 1; cd ~/llama-cpp-turboquant && ./build/bin/llama-server -m ~/models/llama33-70b-q4km.gguf --model-draft ~/models/llama31-8b-draft.gguf --cache-type-k q8_0 --cache-type-v turbo4 --cache-type-k-draft q8_0 --cache-type-v-draft turbo4 -ngl 99 -c 49152 -np 1 -fa on --host 0.0.0.0 --port 8080 --draft-max 8 --draft-min 2 --metrics"
+alias ai-glm="lsof -ti:8080 | xargs kill -9 2>/dev/null; sleep 1; cd ~/llama-cpp-turboquant && ./build/bin/llama-server -m ~/models/glm-4.7-flash/GLM-4.7-Flash-UD-Q4_K_XL.gguf --cache-type-k turbo4 --cache-type-v turbo4 -ngl 99 -c 49152 --flash-attn on --host 0.0.0.0 --port 8080 -np 1"  # 15.08.2026: GLM-4.7-Flash, Kandidat fuer ai-gemma-Ablösung (Tool-Use/HolmesGPT), getestet ~26 tok/s. Achtung: braucht symmetrisches turbo4 fuer K+V, kein q8_0/turbo4-Mix wie bei Gemma.
 ```
 
 ---
@@ -268,7 +265,7 @@ kubectl -n kagent patch modelconfig default-model-config --type=merge -p '{
 
 ## Bekannte Lösungen
 - Loopback nach Neustart: sudo ifconfig lo0 alias 10.254.254.254 255.255.255.255
-- TurboFlash V4 OOM: git reset --hard 8590cbff9
+- TurboFlash V4 OOM (falls Problem wieder auftritt): git reset --hard fca3093c9 (letzter validierter HEAD, 15.08.2026)
 - Grafana PromQL Division: sum by (namespace)
 - Loki URL: http://loki.monitoring.svc.cluster.local:3100
 - vllm-swift metallib fehlt: bash ~/vllm-swift/scripts/install.sh

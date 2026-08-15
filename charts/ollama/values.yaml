@@ -11,7 +11,7 @@ ollama:
   storage: 10Gi
 
 openWebui:
-  image: ghcr.io/open-webui/open-webui:v0.9.5
+  image: ghcr.io/open-webui/open-webui:0.11.0
   port: 8080
   auth: "False"
   storage: 2Gi
@@ -23,5 +23,5 @@ openWebui:
       memory: "1Gi"
       cpu: "500m"
   env:
-    OPENAI_API_BASE_URL: "http://10.254.254.254:8080/v1"
+    OPENAI_API_BASE_URL: "http://10.254.254.254:8000/v1"
     OPENAI_API_KEY: "dummy"

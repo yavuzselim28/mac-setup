@@ -27,6 +27,7 @@ sudo pkill -f "port-forward svc/ingress-nginx" 2>/dev/null
 sleep 2
 
 # Port-Forward auf Port 80 (ollama.local)
+kubectl apply -f ~/mac-setup/k8s/ollama-ingress-phoenix.yaml
 sudo kubectl port-forward svc/ingress-nginx-controller 80:80 -n ingress-nginx &
 
 echo "✅ Done!"
@@ -36,9 +37,12 @@ echo "🔗 OpenCost:   http://opencost.local"
 echo "🤖 kagent LLM: http://localhost:11434"
 echo ""
 echo "AI Backends starten:"
-echo "  ai-qwen-vllm   → vllm-swift + TurboQuant (Port 8083) ✅ empfohlen"
+echo "  ai-qwen-vllm   → vllm-swift + TurboQuant (Port 8000) ✅ empfohlen"
 echo "  ai-qwen-mlx    → ekryski MLXServer (Port 8081)"
 echo "  ai-gemma-mlx   → SwiftLM Gemma (Port 8081)"
+echo "  ai-glm         → llama.cpp TurboQuant GLM-4.7-Flash (Port 8080) — Tool Use / HolmesGPT"
+echo "  ai-gemma       → llama.cpp TurboQuant Gemma 4 31B (Port 8080) — Tool Use / HolmesGPT (Alternative)"
+echo "  ai-mistral     → llama.cpp TurboQuant Mistral 7B (Port 8080) — schnell/leicht"
 echo ""
 echo "Press Ctrl+C to stop"
 wait

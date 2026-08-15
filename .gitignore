@@ -11,5 +11,13 @@
 # Temporäre Dateien
 *.tmp
 /tmp/
+*.profraw
 agent/.env
-agent/.env
+
+# Laufzeit-Logs, State und Build-Artefakte des Platform-Agent
+agent/*.log
+agent/agent_state.json
+agent/intelligence.json
+agent/checkpoint.db
+agent/*.bak
+agent/__pycache__/

@@ -126,7 +126,7 @@ api_key: "dummy"
 api_base: "http://localhost:8080/v1"
 max_steps: 10
 ```
-- Wichtig: ai-gemma muss laufen bevor Holmes gestartet wird
+- Wichtig: ai-glm muss laufen bevor Holmes gestartet wird (model: "openai/glm" in ~/.holmes/config.yaml)
 - Wichtig: Holmes immer aus ~ starten
 
 ### Aliases
